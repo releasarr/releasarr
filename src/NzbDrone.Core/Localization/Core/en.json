@@ -336,6 +336,7 @@
   "IndexerFlags": "Indexer Flags",
   "IndexerGazelleGamesSettingsApiKeyHelpText": "API Key from the Site (Found in Settings => Access Settings)",
   "IndexerGazelleGamesSettingsApiKeyHelpTextWarning": "Must have User and Torrents permissions",
+  "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "Search freeleech releases only",
   "IndexerGazelleGamesSettingsSearchGroupNames": "Search Group Names",
   "IndexerGazelleGamesSettingsSearchGroupNamesHelpText": "Search releases by group names",
   "IndexerHDBitsSettingsCodecs": "Codecs",

@@ -324,6 +324,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 categoryMappings.ForEach(category => parameters.Add("artistcheck[]", category));
             }
 
+            if (_settings.FreeleechOnly)
+            {
+                parameters.Add("freetorrent", "1");
+            }
+
             if (searchCriteria.MinSize is > 0)
             {
                 var minSize = searchCriteria.MinSize.Value / 1024L / 1024L;
@@ -404,6 +409,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 foreach (var torrent in torrents)
                 {
+                    Enum.TryParse(torrent.Value.FreeTorrent, true, out GazelleGamesFreeTorrent freeTorrent);
+                    var downloadVolumeFactor = freeTorrent is GazelleGamesFreeTorrent.FreeLeech or GazelleGamesFreeTorrent.Neutral || torrent.Value.LowSeedFL ? 0 : 1;
+
+                    // Skip non-freeleech results when freeleech only is set
+                    if (_settings.FreeleechOnly && downloadVolumeFactor != 0.0)
+                    {
+                        continue;
+                    }
+
                     var torrentId = torrent.Key;
                     var infoUrl = GetInfoUrl(group.Key, torrentId);
 
@@ -411,8 +425,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                     {
                         categories = _categories.MapTrackerCatToNewznab(torrent.Value.CategoryId.ToString()).ToArray();
                     }
-
-                    Enum.TryParse(torrent.Value.FreeTorrent, true, out GazelleGamesFreeTorrent freeTorrent);
 
                     var release = new TorrentInfo
                     {
@@ -428,7 +440,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         Peers = torrent.Value.Leechers + torrent.Value.Seeders,
                         PublishDate = torrent.Value.Time.ToUniversalTime(),
                         Scene = torrent.Value.Scene == 1,
-                        DownloadVolumeFactor = freeTorrent is GazelleGamesFreeTorrent.FreeLeech or GazelleGamesFreeTorrent.Neutral || torrent.Value.LowSeedFL ? 0 : 1,
+                        DownloadVolumeFactor = downloadVolumeFactor,
                         UploadVolumeFactor = freeTorrent == GazelleGamesFreeTorrent.Neutral ? 0 : 1,
                         MinimumSeedTime = 288000 // Minimum of 3 days and 8 hours (80 hours in total)
                     };
@@ -542,6 +554,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(3, Label = "IndexerGazelleGamesSettingsSearchGroupNames", Type = FieldType.Checkbox, HelpText = "IndexerGazelleGamesSettingsSearchGroupNamesHelpText")]
         public bool SearchGroupNames { get; set; }
+
+        [FieldDefinition(4, Label = "IndexerSettingsFreeleechOnly", HelpText = "IndexerGazelleGamesSettingsFreeleechOnlyHelpText", Type = FieldType.Checkbox, Advanced = true)]
+        public bool FreeleechOnly { get; set; }
 
         public string Passkey { get; set; }
 
