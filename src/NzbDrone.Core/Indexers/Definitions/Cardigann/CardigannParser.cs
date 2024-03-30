@@ -508,19 +508,23 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     }
 
                     var cats = _categories.MapTrackerCatToNewznab(value);
+
                     if (cats.Any())
                     {
-                        if (release.Categories == null || fieldModifiers.Contains("noappend"))
-                        {
-                            release.Categories = cats;
-                        }
-                        else
-                        {
-                            release.Categories = release.Categories.Union(cats).ToList();
-                        }
+                        release.Categories = release.Categories == null || fieldModifiers.Contains("noappend")
+                            ? cats
+                            : release.Categories.Union(cats).ToList();
                     }
 
-                    value = release.Categories.ToString();
+                    if (value.IsNotNullOrWhiteSpace() && !release.Categories.Any())
+                    {
+                        _logger.Warn("[{0}] Invalid category for value: '{1}'", _definition.Id, value);
+                    }
+                    else
+                    {
+                        value = release.Categories.ToString();
+                    }
+
                     break;
                 case "categorydesc":
                     if (fieldModifiers.Contains("noappend"))
@@ -529,19 +533,23 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     }
 
                     var catsDesc = _categories.MapTrackerCatDescToNewznab(value);
+
                     if (catsDesc.Any())
                     {
-                        if (release.Categories == null || fieldModifiers.Contains("noappend"))
-                        {
-                            release.Categories = catsDesc;
-                        }
-                        else
-                        {
-                            release.Categories = release.Categories.Union(catsDesc).ToList();
-                        }
+                        release.Categories = release.Categories == null || fieldModifiers.Contains("noappend")
+                            ? catsDesc
+                            : release.Categories.Union(catsDesc).ToList();
                     }
 
-                    value = release.Categories.ToString();
+                    if (value.IsNotNullOrWhiteSpace() && !release.Categories.Any())
+                    {
+                        _logger.Warn("[{0}] Invalid category for value: '{1}'", _definition.Id, value);
+                    }
+                    else
+                    {
+                        value = release.Categories.ToString();
+                    }
+
                     break;
                 case "size":
                     release.Size = ParseUtil.GetBytes(value);
