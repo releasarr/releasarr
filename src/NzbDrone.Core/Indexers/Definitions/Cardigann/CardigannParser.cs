@@ -502,6 +502,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     value = release.Description;
                     break;
                 case "category":
+                    if (fieldModifiers.Contains("noappend"))
+                    {
+                        _logger.Warn("The \"noappend\" modifier is deprecated. Please switch to \"default\". See the Definition Format in the Wiki for more information.");
+                    }
+
                     var cats = _categories.MapTrackerCatToNewznab(value);
                     if (cats.Any())
                     {
@@ -518,6 +523,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     value = release.Categories.ToString();
                     break;
                 case "categorydesc":
+                    if (fieldModifiers.Contains("noappend"))
+                    {
+                        _logger.Warn("The \"noappend\" modifier is deprecated. Please switch to \"default\". See the Definition Format in the Wiki for more information.");
+                    }
+
                     var catsDesc = _categories.MapTrackerCatDescToNewznab(value);
                     if (catsDesc.Any())
                     {
