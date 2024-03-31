@@ -23,7 +23,7 @@
     "Updates": "Aggiornamenti",
     "UpdateUiNotWritableHealthCheckMessage": "Impossibile installare l'aggiornamento perché l'utente '{userName}' non ha i permessi di scrittura per la cartella dell'interfaccia '{uiFolder}'.",
     "UpdateStartupNotWritableHealthCheckMessage": "Impossibile installare l'aggiornamento perché l'utente '{userName}' non ha i permessi di scrittura per la cartella di avvio '{startupFolder}'.",
-    "UpdateCheckStartupTranslocationMessage": "Impossibile installare l'aggiornamento perché la cartella '{0}' si trova in una cartella di \"App Translocation\".",
+    "UpdateStartupTranslocationHealthCheckMessage": "Impossibile installare l'aggiornamento perché la cartella '{startupFolder}' si trova in una cartella di \"App Translocation\".",
     "UI": "Interfaccia",
     "Tasks": "Attività",
     "Tags": "Etichette",

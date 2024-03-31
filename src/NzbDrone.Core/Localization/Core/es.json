@@ -29,7 +29,7 @@
     "View": "Vista",
     "Updates": "Actualizaciones",
     "UpdateUiNotWritableHealthCheckMessage": "No se puede instalar la actualización porque la carpeta UI '{uiFolder}' no tiene permisos de escritura para el usuario '{userName}'.",
-    "UpdateCheckStartupTranslocationMessage": "No se puede instalar la actualización porque la carpeta de arranque '{0}' está en una carpeta de \"App Translocation\".",
+    "UpdateStartupTranslocationHealthCheckMessage": "No se puede instalar la actualización porque la carpeta de arranque '{startupFolder}' está en una carpeta de \"App Translocation\".",
     "UpdateStartupNotWritableHealthCheckMessage": "No se puede instalar la actualización porque la carpeta de arranque '{startupFolder}' no tiene permisos de escritura para el usuario '{userName}'.",
     "UnselectAll": "Desmarcar todo",
     "UI": "UI",

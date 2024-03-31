@@ -264,7 +264,7 @@
     "UnselectAll": "Снять все выделения",
     "UpdateAutomaticallyHelpText": "Автоматически загружать и устанавливать обновления. Вы так же можете установить в Система: Обновления",
     "UpdateStartupNotWritableHealthCheckMessage": "Невозможно установить обновление так как загрузочная папка '{startupFolder}' недоступна для записи для пользователя '{userName}'.",
-    "UpdateCheckStartupTranslocationMessage": "Не удается установить обновление, поскольку папка автозагрузки \"{0}\" находится в папке перемещения приложений.",
+    "UpdateStartupTranslocationHealthCheckMessage": "Не удается установить обновление, поскольку папка автозагрузки \"{startupFolder}\" находится в папке перемещения приложений.",
     "UpdateUiNotWritableHealthCheckMessage": "Невозможно установить обновление так как UI папка '{uiFolder}' недоступна для записи для пользователя '{userName}'.",
     "UpdateScriptPathHelpText": "Путь к пользовательскому скрипту, который обрабатывает остатки после процесса обновления",
     "Uptime": "Время работы",

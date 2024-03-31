@@ -35,7 +35,7 @@
     "View": "Vy",
     "Updates": "Uppdateringar",
     "UpdateUiNotWritableHealthCheckMessage": "Ej möjligt att installera uppdatering då användargränssnittsmappen '{uiFolder}' inte är skrivbar för användaren '{userName}'.",
-    "UpdateCheckStartupTranslocationMessage": "Ej möjligt att installera uppdatering då uppstartsmappen '{0}' är i en \"App translocation\"-mapp.",
+    "UpdateStartupTranslocationHealthCheckMessage": "Ej möjligt att installera uppdatering då uppstartsmappen '{startupFolder}' är i en \"App translocation\"-mapp.",
     "UpdateStartupNotWritableHealthCheckMessage": "Ej möjligt att installera uppdatering då uppstartsmappen '{startupFolder}' inte är skrivbar för användaren '{userName}'.",
     "UnselectAll": "Avmarkera samtliga",
     "UISettingsSummary": "Datum, språk, och färgblindhetsinställningar",
