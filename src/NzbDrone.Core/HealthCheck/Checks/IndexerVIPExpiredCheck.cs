@@ -11,6 +11,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
     [CheckOn(typeof(ProviderAddedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderUpdatedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderDeletedEvent<IIndexer>))]
+    [CheckOn(typeof(ProviderBulkUpdatedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderBulkDeletedEvent<IIndexer>))]
     public class IndexerVIPExpiredCheck : HealthCheckBase
     {
@@ -24,7 +25,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
         public override HealthCheck Check()
         {
-            var indexers = _indexerFactory.AllProviders(false);
+            var indexers = _indexerFactory.Enabled(false);
             var expiredProviders = new List<IIndexer>();
 
             foreach (var provider in indexers)
@@ -39,12 +40,8 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
                 var expiration = (string)vipProp.GetValue(provider.Definition.Settings);
 
-                if (expiration.IsNullOrWhiteSpace())
-                {
-                    continue;
-                }
-
-                if (DateTime.Parse(expiration).Before(DateTime.Now))
+                if (expiration.IsNotNullOrWhiteSpace() &&
+                    DateTime.Parse(expiration).Before(DateTime.Now))
                 {
                     expiredProviders.Add(provider);
                 }
@@ -53,10 +50,12 @@ namespace NzbDrone.Core.HealthCheck.Checks
             if (!expiredProviders.Empty())
             {
                 return new HealthCheck(GetType(),
-                HealthCheckResult.Error,
-                string.Format(_localizationService.GetLocalizedString("IndexerVipCheckExpiredClientMessage"),
-                    string.Join(", ", expiredProviders.Select(v => v.Definition.Name))),
-                "#indexer-vip-expired");
+                    HealthCheckResult.Error,
+                    _localizationService.GetLocalizedString("IndexerVipExpiredHealthCheckMessage", new Dictionary<string, object>
+                    {
+                        { "indexerNames", string.Join(", ", expiredProviders.Select(v => v.Definition.Name).ToArray()) }
+                    }),
+                    "#indexer-vip-expired");
             }
 
             return new HealthCheck(GetType());
