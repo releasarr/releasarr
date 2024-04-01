@@ -33,6 +33,10 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             };
 
             _caps = new IndexerCapabilities();
+
+            _caps.Categories.AddCategoryMapping(2000, NewznabStandardCategory.Movies, "Movies");
+            _caps.Categories.AddCategoryMapping(5000, NewznabStandardCategory.TV, "TV");
+
             Mocker.GetMock<INewznabCapabilitiesProvider>()
                 .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>(), It.IsAny<IndexerDefinition>()))
                 .Returns(_caps);

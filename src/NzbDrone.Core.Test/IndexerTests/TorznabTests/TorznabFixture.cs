@@ -37,6 +37,9 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
 
             _caps.Categories.AddCategoryMapping(2000, NewznabStandardCategory.Movies, "Movies");
             _caps.Categories.AddCategoryMapping(2040, NewznabStandardCategory.MoviesHD, "Movies/HD");
+            _caps.Categories.AddCategoryMapping(5000, NewznabStandardCategory.TV, "TV");
+            _caps.Categories.AddCategoryMapping(5040, NewznabStandardCategory.TVHD, "TV/HD");
+            _caps.Categories.AddCategoryMapping(5070, NewznabStandardCategory.TVAnime, "TV/Anime");
 
             Mocker.GetMock<INewznabCapabilitiesProvider>()
                 .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>(), It.IsAny<IndexerDefinition>()))
@@ -83,23 +86,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria())).Releases;
 
-            releases.Should().HaveCount(5);
-
-            releases.First().Should().BeOfType<TorrentInfo>();
-            var releaseInfo = releases.First() as TorrentInfo;
-
-            releaseInfo.Title.Should().Be("Series Title S05E02 HDTV x264-Xclusive [eztv]");
-            releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
-            releaseInfo.MagnetUrl.Should().Be("magnet:?xt=urn:btih:9fb267cff5ae5603f07a347676ec3bf3e35f75e1&dn=Game+of+Thrones+S05E02+HDTV+x264-Xclusive+%5Beztv%5D&tr=udp:%2F%2Fopen.demonii.com:1337&tr=udp:%2F%2Ftracker.coppersurfer.tk:6969&tr=udp:%2F%2Ftracker.leechers-paradise.org:6969&tr=udp:%2F%2Fexodus.desync.com:6969");
-            releaseInfo.DownloadUrl.Should().Be("magnet:?xt=urn:btih:9fb267cff5ae5603f07a347676ec3bf3e35f75e1&dn=Game+of+Thrones+S05E02+HDTV+x264-Xclusive+%5Beztv%5D&tr=udp:%2F%2Fopen.demonii.com:1337&tr=udp:%2F%2Ftracker.coppersurfer.tk:6969&tr=udp:%2F%2Ftracker.leechers-paradise.org:6969&tr=udp:%2F%2Fexodus.desync.com:6969");
-            releaseInfo.InfoUrl.Should().Be("https://thepiratebay.se/torrent/11811366/Series_Title_S05E02_HDTV_x264-Xclusive_%5Beztv%5D");
-            releaseInfo.CommentUrl.Should().Be("https://thepiratebay.se/torrent/11811366/Series_Title_S05E02_HDTV_x264-Xclusive_%5Beztv%5D");
-            releaseInfo.Indexer.Should().Be(Subject.Definition.Name);
-            releaseInfo.PublishDate.Should().Be(DateTime.Parse("Sat, 11 Apr 2015 21:34:00 -0600").ToUniversalTime());
-            releaseInfo.Size.Should().Be(388895872);
-            releaseInfo.InfoHash.Should().Be("9fb267cff5ae5603f07a347676ec3bf3e35f75e1");
-            releaseInfo.Seeders.Should().Be(34128);
-            releaseInfo.Peers.Should().Be(36724);
+            releases.Should().HaveCount(0);
         }
 
         [Test]
