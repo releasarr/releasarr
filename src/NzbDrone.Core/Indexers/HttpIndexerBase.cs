@@ -478,6 +478,20 @@ namespace NzbDrone.Core.Indexers
                 return false;
             }
 
+            if (release.Size == null)
+            {
+                _logger.Warn("Invalid Release: '{0}' from indexer: {1}. No size provided.", release.Title, Definition.Name);
+
+                return false;
+            }
+
+            if (release.Categories == null || !release.Categories.Any())
+            {
+                _logger.Warn("Invalid Release: '{0}' from indexer: {1}. No categories provided.", release.Title, Definition.Name);
+
+                return false;
+            }
+
             return true;
         }
 
