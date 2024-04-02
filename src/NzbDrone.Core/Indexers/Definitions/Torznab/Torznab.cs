@@ -91,8 +91,8 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             get
             {
-                yield return GetDefinition("AnimeTosho", "Anime NZB/DDL mirror", settings: GetSettings("https://feed.animetosho.org"));
-                yield return GetDefinition("MoreThanTV", "Private torrent tracker for TV / MOVIES", settings: GetSettings("https://www.morethantv.me", apiPath: @"/api/torznab"));
+                yield return GetDefinition("AnimeTosho", "Anime NZB/DDL mirror", settings: GetSettings("https://feed.animetosho.org"), categories: new[] { 2020, 5070 });
+                yield return GetDefinition("MoreThanTV", "Private torrent tracker for TV / MOVIES", settings: GetSettings("https://www.morethantv.me", apiPath: @"/api/torznab"), categories: new[] { 2000, 5000 });
                 yield return GetDefinition("Torrent Network", "Torrent Network (TN) is a GERMAN Private site for TV / MOVIES / GENERAL", language: "de-DE", settings: GetSettings("https://tntracker.org", apiPath: @"/api/torznab/api"));
                 yield return GetDefinition("Generic Torznab", "A Newznab-like api for torrents.", settings: GetSettings(""));
             }
@@ -104,8 +104,23 @@ namespace NzbDrone.Core.Indexers.Torznab
             _capabilitiesProvider = capabilitiesProvider;
         }
 
-        private IndexerDefinition GetDefinition(string name, string description, string language = null, TorznabSettings settings = null)
+        private IndexerDefinition GetDefinition(string name, string description, string language = null, TorznabSettings settings = null, IEnumerable<int> categories = null)
         {
+            var caps = new IndexerCapabilities();
+
+            if (categories != null)
+            {
+                foreach (var categoryId in categories)
+                {
+                    var mappedCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == categoryId);
+
+                    if (mappedCat != null)
+                    {
+                        caps.Categories.AddCategoryMapping(mappedCat.Id, mappedCat);
+                    }
+                }
+            }
+
             return new IndexerDefinition
             {
                 Enable = true,
@@ -119,7 +134,7 @@ namespace NzbDrone.Core.Indexers.Torznab
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
                 SupportsPagination = SupportsPagination,
-                Capabilities = Capabilities
+                Capabilities = caps
             };
         }
 

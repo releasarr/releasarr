@@ -208,7 +208,7 @@ namespace NzbDrone.Core.Indexers
                 definition.Description ??= provider.Description;
                 definition.Encoding = provider.Encoding;
                 definition.Language ??= provider.Language;
-                definition.Capabilities = provider.Capabilities;
+                definition.Capabilities ??= provider.Capabilities;
             }
         }
 
