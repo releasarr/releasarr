@@ -104,6 +104,7 @@ public class SecretCinemaParser : IParseIndexerResponse
                 foreach (var torrent in result.Torrents)
                 {
                     var id = torrent.TorrentId;
+                    var infoUrl = GetInfoUrl(result.GroupId, id);
 
                     // in SC movies, artist=director and GroupName=title
                     var artist = WebUtility.HtmlDecode(result.Artist);
@@ -112,8 +113,8 @@ public class SecretCinemaParser : IParseIndexerResponse
 
                     var release = new TorrentInfo
                     {
-                        Guid = $"SecretCinema-{id}",
-                        InfoUrl = GetInfoUrl(result.GroupId, id),
+                        Guid = infoUrl,
+                        InfoUrl = infoUrl,
                         DownloadUrl = GetDownloadUrl(id),
                         Title = title,
                         Container = torrent.Encoding,
@@ -143,7 +144,12 @@ public class SecretCinemaParser : IParseIndexerResponse
                     {
                         // Remove director from title
                         // SC API returns no more useful information than this
-                        release.Title = $"{title} ({result.GroupYear}) {torrent.Media}";
+                        release.Title = $"{title} ({result.GroupYear}) {torrent.Media}".Trim();
+
+                        if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
+                        {
+                            release.Title += $" [{torrent.RemasterTitle.Trim()}]";
+                        }
 
                         // Replace media formats with standards
                         release.Title = Regex.Replace(release.Title, @"\bBDMV\b", "COMPLETE BLURAY", RegexOptions.IgnoreCase);
@@ -168,12 +174,13 @@ public class SecretCinemaParser : IParseIndexerResponse
             else
             {
                 var id = result.TorrentId;
+                var infoUrl = GetInfoUrl(result.GroupId, id);
                 var groupName = WebUtility.HtmlDecode(result.GroupName);
 
                 var release = new TorrentInfo
                 {
-                    Guid = $"SecretCinema-{id}",
-                    InfoUrl = GetInfoUrl(result.GroupId, id),
+                    Guid = infoUrl,
+                    InfoUrl = infoUrl,
                     DownloadUrl = GetDownloadUrl(id),
                     Title = groupName,
                     Size = long.Parse(result.Size),
@@ -209,7 +216,7 @@ public class SecretCinemaParser : IParseIndexerResponse
 
     private bool IsAnyMovieCategory(ICollection<IndexerCategory> category)
     {
-        return category.Contains(NewznabStandardCategory.Movies) || NewznabStandardCategory.Movies.SubCategories.Any(subCat => category.Contains(subCat));
+        return category.Contains(NewznabStandardCategory.Movies) || NewznabStandardCategory.Movies.SubCategories.Any(category.Contains);
     }
 
     private string GetDownloadUrl(int torrentId)
