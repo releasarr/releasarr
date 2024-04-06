@@ -120,6 +120,7 @@ public class XSpeeds : TorrentIndexerBase<XSpeedsSettings>
         caps.Categories.AddCategoryMapping(113, NewznabStandardCategory.TVAnime, "Anime Boxsets");
         caps.Categories.AddCategoryMapping(112, NewznabStandardCategory.MoviesOther, "Anime Movies");
         caps.Categories.AddCategoryMapping(111, NewznabStandardCategory.MoviesOther, "Anime TV");
+        caps.Categories.AddCategoryMapping(150, NewznabStandardCategory.PC, "Apps");
         caps.Categories.AddCategoryMapping(80, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
         caps.Categories.AddCategoryMapping(48, NewznabStandardCategory.Books, "Books Magazines");
         caps.Categories.AddCategoryMapping(68, NewznabStandardCategory.MoviesOther, "Cams/TS");
@@ -154,7 +155,7 @@ public class XSpeeds : TorrentIndexerBase<XSpeedsSettings>
         caps.Categories.AddCategoryMapping(13, NewznabStandardCategory.Audio, "Music");
         caps.Categories.AddCategoryMapping(135, NewznabStandardCategory.AudioLossless, "Music/FLAC");
         caps.Categories.AddCategoryMapping(136, NewznabStandardCategory.Audio, "Music Boxset");
-        caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.AudioVideo, "Music Videos");
+        caps.Categories.AddCategoryMapping(148, NewznabStandardCategory.AudioVideo, "Music Videos");
         caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.Other, "Other");
         caps.Categories.AddCategoryMapping(125, NewznabStandardCategory.Other, "Other/Pictures");
         caps.Categories.AddCategoryMapping(54, NewznabStandardCategory.TVOther, "Soaps");
@@ -168,6 +169,7 @@ public class XSpeeds : TorrentIndexerBase<XSpeedsSettings>
         caps.Categories.AddCategoryMapping(86, NewznabStandardCategory.TVSport, "Sports/MotorSports");
         caps.Categories.AddCategoryMapping(89, NewznabStandardCategory.TVSport, "Sports/Olympics");
         caps.Categories.AddCategoryMapping(126, NewznabStandardCategory.TV, "TV");
+        caps.Categories.AddCategoryMapping(149, NewznabStandardCategory.TV, "TV Specials");
         caps.Categories.AddCategoryMapping(127, NewznabStandardCategory.TVUHD, "TV 4K");
         caps.Categories.AddCategoryMapping(129, NewznabStandardCategory.TVHD, "TV HD");
         caps.Categories.AddCategoryMapping(130, NewznabStandardCategory.TVHD, "TV HEVC");
