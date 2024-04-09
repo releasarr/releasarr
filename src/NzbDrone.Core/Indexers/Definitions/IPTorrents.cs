@@ -333,7 +333,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var publishDate = DateTimeUtil.FromTimeAgo(dateSplit.First());
                 var description = descrSplit.Length > 1 ? "Tags: " + descrSplit.First().Trim() : "";
 
-                var catIcon = row.QuerySelector("td:nth-of-type(1) a");
+                var catIcon = row.QuerySelector("td:nth-of-type(1) a[href^=\"?\"]");
                 if (catIcon == null)
                 {
                     // Torrents - Category column == Text or Code
@@ -342,7 +342,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
 
                 // Torrents - Category column == Icons
-                var cat = _categories.MapTrackerCatToNewznab(catIcon.GetAttribute("href").Substring(1));
+                var cat = _categories.MapTrackerCatToNewznab(catIcon.GetAttribute("href")?.Substring(1));
 
                 var size = ParseUtil.GetBytes(row.Children[sizeIndex].TextContent);
 
