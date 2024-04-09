@@ -495,6 +495,8 @@
   "Notifications": "Notifications",
   "NotificationsEmailSettingsUseEncryption": "Use Encryption",
   "NotificationsEmailSettingsUseEncryptionHelpText": "Whether to prefer using encryption if configured on the server, to always use encryption via SSL (Port 465 only) or StartTLS (any other port) or to never use encryption",
+  "NotificationsTelegramSettingsIncludeAppName": "Include {appName} in Title",
+  "NotificationsTelegramSettingsIncludeAppNameHelpText": "Optionally prefix message title with {appName} to differentiate notifications from different applications",
   "OAuthPopupMessage": "Pop-ups are being blocked by your browser",
   "Ok": "Ok",
   "OnApplicationUpdate": "On Application Update",

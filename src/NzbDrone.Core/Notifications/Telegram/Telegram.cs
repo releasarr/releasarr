@@ -18,22 +18,30 @@ namespace NzbDrone.Core.Notifications.Telegram
 
         public override void OnGrab(GrabMessage message)
         {
-            _proxy.SendNotification(RELEASE_GRABBED_TITLE, message.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? RELEASE_GRABBED_TITLE_BRANDED : RELEASE_GRABBED_TITLE;
+
+            _proxy.SendNotification(title, message.Message, Settings);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
-            _proxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? HEALTH_ISSUE_TITLE_BRANDED : HEALTH_ISSUE_TITLE;
+
+            _proxy.SendNotification(title, healthCheck.Message, Settings);
         }
 
         public override void OnHealthRestored(HealthCheck.HealthCheck previousCheck)
         {
-            _proxy.SendNotification(HEALTH_RESTORED_TITLE, $"The following issue is now resolved: {previousCheck.Message}", Settings);
+            var title = Settings.IncludeAppNameInTitle ? HEALTH_RESTORED_TITLE_BRANDED : HEALTH_RESTORED_TITLE;
+
+            _proxy.SendNotification(title, $"The following issue is now resolved: {previousCheck.Message}", Settings);
         }
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            _proxy.SendNotification(APPLICATION_UPDATE_TITLE, updateMessage.Message, Settings);
+            var title = Settings.IncludeAppNameInTitle ? APPLICATION_UPDATE_TITLE_BRANDED : APPLICATION_UPDATE_TITLE;
+
+            _proxy.SendNotification(title, updateMessage.Message, Settings);
         }
 
         public override ValidationResult Test()
