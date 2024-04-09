@@ -171,10 +171,15 @@ namespace NzbDrone.Core.Indexers
                 var splitRegex = new Regex("[^\\w]+");
 
                 // split search term to individual terms for less aggressive filtering, filter common terms
-                var terms = splitRegex.Split(searchCriteria.SearchTerm).Where(t => t.IsNotNullOrWhiteSpace() && t.Length > 1 && !commonWords.ContainsIgnoreCase(t));
+                var terms = splitRegex.Split(searchCriteria.SearchTerm).Where(t => t.IsNotNullOrWhiteSpace() && t.Length > 1 && !commonWords.ContainsIgnoreCase(t)).ToArray();
 
                 // check in title and description for any term searched for
-                releases = releases.Where(r => terms.Any(t => (r.Title.IsNotNullOrWhiteSpace() && r.Title.ContainsIgnoreCase(t)) || (r.Description.IsNotNullOrWhiteSpace() && r.Description.ContainsIgnoreCase(t)))).ToList();
+                releases = releases.Where(r =>
+                {
+                    var matches = terms.Where(t => (r.Title.IsNotNullOrWhiteSpace() && r.Title.ContainsIgnoreCase(t)) || (r.Description.IsNotNullOrWhiteSpace() && r.Description.ContainsIgnoreCase(t)));
+
+                    return terms.Length > 1 ? matches.Skip(1).Any() : matches.Any();
+                }).ToList();
             }
 
             return releases;
