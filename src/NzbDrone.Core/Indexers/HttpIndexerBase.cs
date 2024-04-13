@@ -397,7 +397,7 @@ namespace NzbDrone.Core.Indexers
                             }
                         }
 
-                        releases.AddRange(pagedReleases.Where(IsValidRelease));
+                        releases.AddRange(pagedReleases.Where(r => IsValidRelease(r, searchCriteria.InteractiveSearch)));
                     }
 
                     if (releases.Any())
@@ -503,13 +503,19 @@ namespace NzbDrone.Core.Indexers
             return Capabilities ?? ((IndexerDefinition)Definition).Capabilities;
         }
 
-        protected virtual bool IsValidRelease(ReleaseInfo release)
+        protected virtual bool IsValidRelease(ReleaseInfo release, bool interactiveSearch = false)
         {
             if (release.Title.IsNullOrWhiteSpace())
             {
                 _logger.Error("Invalid Release: '{0}' from indexer: {1}. No title provided.", release.InfoUrl, Definition.Name);
 
                 return false;
+            }
+
+            if (interactiveSearch)
+            {
+                // Show releases with issues in the interactive search
+                return true;
             }
 
             if (release.Size == null)

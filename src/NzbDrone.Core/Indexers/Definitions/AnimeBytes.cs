@@ -467,6 +467,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     // Ignore these categories as they'll cause hell with the matcher
                     // TV Special, DVD Special, BD Special
+                    if (groupName is "TV Special" or "DVD Special" or "BD Special")
+                    {
+                        continue;
+                    }
+
                     if (groupName is "TV Series" or "OVA" or "ONA")
                     {
                         categories = new List<IndexerCategory> { NewznabStandardCategory.TVAnime };
