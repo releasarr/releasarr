@@ -139,7 +139,9 @@ public class MTeamTp : TorrentIndexerBase<MTeamTpSettings>
         caps.Categories.AddCategoryMapping(407, NewznabStandardCategory.TVSport, "Sports(運動)");
         caps.Categories.AddCategoryMapping(422, NewznabStandardCategory.PC0day, "Software(軟體)");
         caps.Categories.AddCategoryMapping(423, NewznabStandardCategory.PCGames, "PCGame(PC遊戲)");
-        caps.Categories.AddCategoryMapping(427, NewznabStandardCategory.Books, "eBook(電子書)");
+        caps.Categories.AddCategoryMapping(427, NewznabStandardCategory.BooksEBook, "Study/Edu ebook(教育書面)");
+        caps.Categories.AddCategoryMapping(441, NewznabStandardCategory.BooksOther, "Study/Edu video(教育影片)");
+        caps.Categories.AddCategoryMapping(442, NewznabStandardCategory.AudioAudiobook, "Study/Edu audio(教育音檔)");
         caps.Categories.AddCategoryMapping(409, NewznabStandardCategory.Other, "Misc(其他)");
 
         // music
