@@ -695,7 +695,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             ExcludeHentai = false;
             SearchByYear = false;
             EnableSonarrCompatibility = true;
-            UseFilenameForSingleEpisodes = false;
+            UseFilenameForSingleEpisodes = true;
             AddJapaneseTitle = true;
             AddRomajiTitle = true;
             AddAlternativeTitle = true;
