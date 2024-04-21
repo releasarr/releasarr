@@ -42,7 +42,16 @@ export interface CustomFilter {
   filers: PropertyFilter[];
 }
 
+export interface AppSectionState {
+  dimensions: {
+    isSmallScreen: boolean;
+    width: number;
+    height: number;
+  };
+}
+
 interface AppState {
+  app: AppSectionState;
   commands: CommandAppState;
   history: HistoryAppState;
   indexerHistory: IndexerHistoryAppState;
