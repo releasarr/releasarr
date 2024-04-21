@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 TvSearchParams = new List<TvSearchParam>
                 {
-                    TvSearchParam.Q
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
                 },
                 MusicSearchParams = new List<MusicSearchParam>
                 {
@@ -117,7 +117,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}", searchCriteria.Categories));
 
             return pageableRequests;
         }
