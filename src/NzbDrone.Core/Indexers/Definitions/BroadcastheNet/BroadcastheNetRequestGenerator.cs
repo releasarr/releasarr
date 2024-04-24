@@ -81,7 +81,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             else if (searchCriteria.Season > 0 && int.TryParse(searchCriteria.Episode, out var episode) && episode > 0)
             {
                 // Standard (S/E) Episode
-                parameters.Name = $"S{searchCriteria.Season:00}E{episode:00}";
+                parameters.Name = $"S{searchCriteria.Season:00}E{episode:00}%";
                 parameters.Category = "Episode";
                 pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }
