@@ -114,7 +114,7 @@ namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
             query.Tvrage.Should().BeNull();
             query.Search.Should().BeNull();
             query.Category.Should().Be("Episode");
-            query.Name.Should().Be("S01E03");
+            query.Name.Should().Be("S01E03%");
         }
 
         [Test]
@@ -249,7 +249,7 @@ namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
             query.Tvrage.Should().BeNull();
             query.Search.Should().Be("Malcolm%in%the%Middle");
             query.Category.Should().Be("Episode");
-            query.Name.Should().Be("S02E03");
+            query.Name.Should().Be("S02E03%");
         }
 
         [Test]
