@@ -114,6 +114,24 @@ namespace NzbDrone.Core.Indexers.Definitions
             // Amstrad
             caps.Categories.AddCategoryMapping("Amstrad CPC", NewznabStandardCategory.ConsoleOther, "Amstrad CPC");
 
+            // Bandai
+            caps.Categories.AddCategoryMapping("Bandai WonderSwan", NewznabStandardCategory.ConsoleOther, "Bandai WonderSwan");
+            caps.Categories.AddCategoryMapping("Bandai WonderSwan Color", NewznabStandardCategory.ConsoleOther, "Bandai WonderSwan Color");
+
+            // Commodore
+            caps.Categories.AddCategoryMapping("Commodore 64", NewznabStandardCategory.ConsoleOther, "Commodore 64");
+            caps.Categories.AddCategoryMapping("Commodore 128", NewznabStandardCategory.ConsoleOther, "Commodore 128");
+            caps.Categories.AddCategoryMapping("Commodore Amiga", NewznabStandardCategory.ConsoleOther, "Commodore Amiga");
+            caps.Categories.AddCategoryMapping("Amiga CD32", NewznabStandardCategory.ConsoleOther, "Amiga CD32");
+            caps.Categories.AddCategoryMapping("Commodore Plus-4", NewznabStandardCategory.ConsoleOther, "Commodore Plus-4");
+            caps.Categories.AddCategoryMapping("Commodore VIC-20", NewznabStandardCategory.ConsoleOther, "Commodore VIC-20");
+
+            // NEC
+            caps.Categories.AddCategoryMapping("NEC PC-98", NewznabStandardCategory.ConsoleOther, "NEC PC-98");
+            caps.Categories.AddCategoryMapping("NEC PC-FX", NewznabStandardCategory.ConsoleOther, "NEC PC-FX");
+            caps.Categories.AddCategoryMapping("NEC SuperGrafx", NewznabStandardCategory.ConsoleOther, "NEC SuperGrafx");
+            caps.Categories.AddCategoryMapping("NEC TurboGrafx-16", NewznabStandardCategory.ConsoleOther, "NEC TurboGrafx-16");
+
             // Sinclair
             caps.Categories.AddCategoryMapping("ZX Spectrum", NewznabStandardCategory.ConsoleOther, "ZX Spectrum");
 
@@ -137,16 +155,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             // Other
             caps.Categories.AddCategoryMapping("3DO", NewznabStandardCategory.ConsoleOther, "3DO");
-            caps.Categories.AddCategoryMapping("Bandai WonderSwan", NewznabStandardCategory.ConsoleOther, "Bandai WonderSwan");
-            caps.Categories.AddCategoryMapping("Bandai WonderSwan Color", NewznabStandardCategory.ConsoleOther, "Bandai WonderSwan Color");
             caps.Categories.AddCategoryMapping("Casio Loopy", NewznabStandardCategory.ConsoleOther, "Casio Loopy");
             caps.Categories.AddCategoryMapping("Casio PV-1000", NewznabStandardCategory.ConsoleOther, "Casio PV-1000");
             caps.Categories.AddCategoryMapping("Colecovision", NewznabStandardCategory.ConsoleOther, "Colecovision");
-            caps.Categories.AddCategoryMapping("Commodore 64", NewznabStandardCategory.ConsoleOther, "Commodore 64");
-            caps.Categories.AddCategoryMapping("Commodore 128", NewznabStandardCategory.ConsoleOther, "Commodore 128");
-            caps.Categories.AddCategoryMapping("Commodore Amiga", NewznabStandardCategory.ConsoleOther, "Commodore Amiga");
-            caps.Categories.AddCategoryMapping("Commodore Plus-4", NewznabStandardCategory.ConsoleOther, "Commodore Plus-4");
-            caps.Categories.AddCategoryMapping("Commodore VIC-20", NewznabStandardCategory.ConsoleOther, "Commodore VIC-20");
             caps.Categories.AddCategoryMapping("Emerson Arcadia 2001", NewznabStandardCategory.ConsoleOther, "Emerson Arcadia 2001");
             caps.Categories.AddCategoryMapping("Entex Adventure Vision", NewznabStandardCategory.ConsoleOther, "Entex Adventure Vision");
             caps.Categories.AddCategoryMapping("Epoch Super Casette Vision", NewznabStandardCategory.ConsoleOther, "Epoch Super Casette Vision");
@@ -161,13 +172,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping("Mattel Intellivision", NewznabStandardCategory.ConsoleOther, "Mattel Intellivision");
             caps.Categories.AddCategoryMapping("Memotech MTX", NewznabStandardCategory.ConsoleOther, "Memotech MTX");
             caps.Categories.AddCategoryMapping("Miles Gordon Sam Coupe", NewznabStandardCategory.ConsoleOther, "Miles Gordon Sam Coupe");
-            caps.Categories.AddCategoryMapping("NEC PC-98", NewznabStandardCategory.ConsoleOther, "NEC PC-98");
-            caps.Categories.AddCategoryMapping("NEC PC-FX", NewznabStandardCategory.ConsoleOther, "NEC PC-FX");
-            caps.Categories.AddCategoryMapping("NEC SuperGrafx", NewznabStandardCategory.ConsoleOther, "NEC SuperGrafx");
-            caps.Categories.AddCategoryMapping("NEC TurboGrafx-16", NewznabStandardCategory.ConsoleOther, "NEC TurboGrafx-16");
             caps.Categories.AddCategoryMapping("Nokia N-Gage", NewznabStandardCategory.ConsoleOther, "Nokia N-Gage");
+            caps.Categories.AddCategoryMapping("Oculus Quest", NewznabStandardCategory.ConsoleOther, "Oculus Quest");
             caps.Categories.AddCategoryMapping("Ouya", NewznabStandardCategory.ConsoleOther, "Ouya");
             caps.Categories.AddCategoryMapping("Philips Videopac+", NewznabStandardCategory.ConsoleOther, "Philips Videopac+");
+            caps.Categories.AddCategoryMapping("Philips CD-i", NewznabStandardCategory.ConsoleOther, "Philips CD-i");
             caps.Categories.AddCategoryMapping("Phone/PDA", NewznabStandardCategory.ConsoleOther, "Phone/PDA");
             caps.Categories.AddCategoryMapping("RCA Studio II", NewznabStandardCategory.ConsoleOther, "RCA Studio II");
             caps.Categories.AddCategoryMapping("Sharp X1", NewznabStandardCategory.ConsoleOther, "Sharp X1");
