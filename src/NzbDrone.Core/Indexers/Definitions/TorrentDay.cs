@@ -20,16 +20,21 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "TorrentDay";
         public override string[] IndexerUrls => new[]
         {
-            "https://torrentday.cool/",
             "https://tday.love/",
+            "https://torrentday.cool/",
             "https://secure.torrentday.com/",
             "https://classic.torrentday.com/",
             "https://www.torrentday.com/",
+            "https://www.torrentday.me/",
             "https://torrentday.it/",
             "https://td.findnemo.net/",
             "https://td.getcrazy.me/",
             "https://td.venom.global/",
-            "https://td.workisboring.net/"
+            "https://td.workisboring.net/",
+            "https://tday.findnemo.net/",
+            "https://tday.getcrazy.me/",
+            "https://tday.venom.global/",
+            "https://tday.workisboring.net/"
         };
         public override string Description => "TorrentDay (TD) is a Private site for TV / MOVIES / GENERAL";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -266,7 +271,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     DownloadVolumeFactor = downloadMultiplier,
                     UploadVolumeFactor = 1,
                     MinimumRatio = 1,
-                    MinimumSeedTime = 172800 // 48 hours
+                    MinimumSeedTime = 259200 // 72 hours
                 };
 
                 torrentInfos.Add(release);
