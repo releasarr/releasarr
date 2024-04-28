@@ -23,7 +23,7 @@ namespace Prowlarr.Api.V1.Profiles.App
         [RestPostById]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<AppProfileResource> Create(AppProfileResource resource)
+        public ActionResult<AppProfileResource> Create([FromBody] AppProfileResource resource)
         {
             var model = resource.ToModel();
             model = _appProfileService.Add(model);
@@ -41,7 +41,7 @@ namespace Prowlarr.Api.V1.Profiles.App
         [RestPutById]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<AppProfileResource> Update(AppProfileResource resource)
+        public ActionResult<AppProfileResource> Update([FromBody] AppProfileResource resource)
         {
             var model = resource.ToModel();
 

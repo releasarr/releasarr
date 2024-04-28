@@ -55,7 +55,7 @@ namespace Prowlarr.Api.V1.Search
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult<ReleaseResource>> GrabRelease(ReleaseResource release)
+        public async Task<ActionResult<ReleaseResource>> GrabRelease([FromBody] ReleaseResource release)
         {
             ValidateResource(release);
 
@@ -89,7 +89,7 @@ namespace Prowlarr.Api.V1.Search
         [HttpPost("bulk")]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult<ReleaseResource>> GrabReleases(List<ReleaseResource> releases)
+        public async Task<ActionResult<ReleaseResource>> GrabReleases([FromBody] List<ReleaseResource> releases)
         {
             releases.ForEach(release => ValidateResource(release));
 

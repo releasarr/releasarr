@@ -37,7 +37,7 @@ namespace Prowlarr.Api.V1.Tags
         [RestPostById]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<TagResource> Create(TagResource resource)
+        public ActionResult<TagResource> Create([FromBody] TagResource resource)
         {
             return Created(_tagService.Add(resource.ToModel()).Id);
         }
@@ -45,7 +45,7 @@ namespace Prowlarr.Api.V1.Tags
         [RestPutById]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<TagResource> Update(TagResource resource)
+        public ActionResult<TagResource> Update([FromBody] TagResource resource)
         {
             _tagService.Update(resource.ToModel());
             return Accepted(resource.Id);
