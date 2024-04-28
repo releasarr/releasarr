@@ -543,6 +543,8 @@
   "ProxyResolveIpHealthCheckMessage": "Failed to resolve the IP Address for the Configured Proxy Host {proxyHostName}",
   "ProxyType": "Proxy Type",
   "ProxyUsernameHelpText": "You only need to enter a username and password if one is required. Leave them blank otherwise.",
+  "ProxyValidationBadRequest": "Failed to test proxy. Status code: {statusCode}",
+  "ProxyValidationUnableToConnect": "Unable to connect to proxy: {exceptionMessage}. Check the log surrounding this error for details",
   "Public": "Public",
   "Publisher": "Publisher",
   "Query": "Query",

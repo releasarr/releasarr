@@ -190,16 +190,16 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    _logger.Error("Proxy Health Check failed: {0}", response.StatusCode);
-                    failures.Add(new NzbDroneValidationFailure("Host", string.Format(_localizationService.GetLocalizedString("ProxyCheckBadRequestMessage"), response.StatusCode)));
+                    _logger.Error("Proxy validation failed: {0}", response.StatusCode);
+                    failures.Add(new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("ProxyValidationBadRequest", new Dictionary<string, object> { { "statusCode", response.StatusCode } })));
                 }
 
                 var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(response.Content);
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Proxy Health Check failed");
-                failures.Add(new NzbDroneValidationFailure("Host", string.Format(_localizationService.GetLocalizedString("ProxyCheckFailedToTestMessage"), request.Url.Host)));
+                _logger.Error(ex, "Proxy validation failed");
+                failures.Add(new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("ProxyValidationUnableToConnect", new Dictionary<string, object> { { "exceptionMessage", ex.Message } })));
             }
 
             return new ValidationResult(failures);
