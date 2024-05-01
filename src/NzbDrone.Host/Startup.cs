@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DryIoc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -26,6 +27,7 @@ using NzbDrone.SignalR;
 using Prowlarr.Api.V1.System;
 using Prowlarr.Http;
 using Prowlarr.Http.Authentication;
+using Prowlarr.Http.ClientSchema;
 using Prowlarr.Http.ErrorManagement;
 using Prowlarr.Http.Frontend;
 using Prowlarr.Http.Middleware;
@@ -208,6 +210,7 @@ namespace NzbDrone.Host
         }
 
         public void Configure(IApplicationBuilder app,
+                              IContainer container,
                               IStartupContext startupContext,
                               Lazy<IMainDatabase> mainDatabaseFactory,
                               Lazy<ILogDatabase> logDatabaseFactory,
@@ -238,6 +241,7 @@ namespace NzbDrone.Host
             _ = logDatabaseFactory.Value;
 
             dbTarget.Register();
+            SchemaBuilder.Initialize(container);
 
             if (OsInfo.IsNotWindows)
             {
