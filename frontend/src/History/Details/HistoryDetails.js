@@ -21,6 +21,7 @@ function HistoryDetails(props) {
       limit,
       offset,
       source,
+      host,
       url
     } = data;
 
@@ -82,6 +83,15 @@ function HistoryDetails(props) {
             <DescriptionListItem
               title={translate('Source')}
               data={source}
+            /> :
+            null
+        }
+
+        {
+          data ?
+            <DescriptionListItem
+              title={translate('Host')}
+              data={host}
             /> :
             null
         }

@@ -83,6 +83,12 @@ export const defaultState = {
       isVisible: false
     },
     {
+      name: 'host',
+      label: () => translate('Host'),
+      isSortable: false,
+      isVisible: false
+    },
+    {
       name: 'elapsedTime',
       label: () => translate('ElapsedTime'),
       isSortable: false,

@@ -331,6 +331,21 @@ class HistoryRow extends Component {
               );
             }
 
+            if (name === 'host') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.indexer}
+                >
+                  {
+                    data.host ?
+                      data.host :
+                      null
+                  }
+                </TableRowCell>
+              );
+            }
+
             if (name === 'elapsedTime') {
               return (
                 <TableRowCell
