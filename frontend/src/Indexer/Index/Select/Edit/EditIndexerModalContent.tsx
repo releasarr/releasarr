@@ -224,6 +224,7 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
             name="seedRatio"
             value={seedRatio}
             helpText={translate('SeedRatioHelpText')}
+            isFloat={true}
             onChange={onInputChange}
           />
         </FormGroup>

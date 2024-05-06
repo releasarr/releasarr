@@ -256,6 +256,7 @@ FormInputGroup.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.any,
   values: PropTypes.arrayOf(PropTypes.any),
+  isFloat: PropTypes.bool,
   type: PropTypes.string.isRequired,
   kind: PropTypes.oneOf(kinds.all),
   min: PropTypes.number,

@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Indexers
         [FieldDefinition(1, Type = FieldType.Number, Label = "IndexerSettingsAppsMinimumSeeders", HelpText = "IndexerSettingsAppsMinimumSeedersHelpText", Advanced = true)]
         public int? AppMinimumSeeders { get; set; }
 
-        [FieldDefinition(2, Type = FieldType.Textbox, Label = "IndexerSettingsSeedRatio", HelpText = "IndexerSettingsSeedRatioHelpText")]
+        [FieldDefinition(2, Type = FieldType.Number, Label = "IndexerSettingsSeedRatio", HelpText = "IndexerSettingsSeedRatioHelpText")]
         public double? SeedRatio { get; set; }
 
         [FieldDefinition(3, Type = FieldType.Number, Label = "IndexerSettingsSeedTime", Unit = "minutes", HelpText = "IndexerSettingsSeedTimeHelpText", Advanced = true)]
