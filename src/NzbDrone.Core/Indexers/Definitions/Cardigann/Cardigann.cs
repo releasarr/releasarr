@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
+using NzbDrone.Common;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.IndexerVersions;
@@ -47,7 +49,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            var generator = _generatorCache.Get(Settings.DefinitionFile, () =>
+            var cacheKey = $"{Settings.DefinitionFile}.{HashUtil.ComputeSha256Hash(Settings.ToJson())}";
+            var generator = _generatorCache.Get(cacheKey, () =>
                 new CardigannRequestGenerator(_configService,
                     _definitionService.GetCachedDefinition(Settings.DefinitionFile),
                     _logger,
