@@ -387,14 +387,14 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
-            var torrentInfos = new List<TorrentInfo>();
+            var releaseInfos = new List<ReleaseInfo>();
 
             var jsonResponse = JsonConvert.DeserializeObject<MyAnonamouseResponse>(indexerResponse.Content);
 
             var error = jsonResponse.Error;
-            if (error is "Nothing returned, out of 0" or "Nothing returned, out of 1")
+            if (error.IsNotNullOrWhiteSpace() && error.StartsWithIgnoreCase("Nothing returned, out of"))
             {
-                return torrentInfos.ToArray();
+                return releaseInfos.ToArray();
             }
 
             var hasUserVip = HasUserVip();
@@ -462,10 +462,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.MinimumRatio = 1;
                 release.MinimumSeedTime = 259200; // 72 hours
 
-                torrentInfos.Add(release);
+                releaseInfos.Add(release);
             }
 
-            return torrentInfos.ToArray();
+            return releaseInfos.ToArray();
         }
 
         private bool HasUserVip()
