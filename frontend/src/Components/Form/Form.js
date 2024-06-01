@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Alert from 'Components/Alert';
-import { kinds } from 'Helpers/Props';
+import Icon from 'Components/Icon';
+import { icons, kinds } from 'Helpers/Props';
 import styles from './Form.css';
 
 function Form(props) {
@@ -26,6 +27,16 @@ function Form(props) {
                     kind={kinds.DANGER}
                   >
                     {error.errorMessage}
+
+                    {
+                      error.detailedDescription ?
+                        <Icon
+                          containerClassName={styles.details}
+                          name={icons.INFO}
+                          title={error.detailedDescription}
+                        /> :
+                        null
+                    }
                   </Alert>
                 );
               })
@@ -39,6 +50,16 @@ function Form(props) {
                     kind={kinds.WARNING}
                   >
                     {warning.errorMessage}
+
+                    {
+                      warning.detailedDescription ?
+                        <Icon
+                          containerClassName={styles.details}
+                          name={icons.INFO}
+                          title={warning.detailedDescription}
+                        /> :
+                        null
+                    }
                   </Alert>
                 );
               })

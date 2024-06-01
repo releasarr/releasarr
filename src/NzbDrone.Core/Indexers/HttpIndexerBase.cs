@@ -18,6 +18,7 @@ using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Validation;
 using Polly;
 using Polly.Retry;
 
@@ -814,7 +815,10 @@ namespace NzbDrone.Core.Indexers
             {
                 _logger.Warn(ex, "Unable to connect to indexer");
 
-                return new ValidationFailure(string.Empty, "Unable to connect to indexer, please check your DNS settings and ensure IPv6 is working or disabled. " + ex.Message);
+                return new NzbDroneValidationFailure(string.Empty, "Unable to connect to indexer, please check your DNS settings and ensure IPv6 is working or disabled. " + ex.Message)
+                {
+                    DetailedDescription = ex.InnerException?.Message
+                };
             }
             catch (TaskCanceledException ex)
             {
@@ -841,7 +845,10 @@ namespace NzbDrone.Core.Indexers
             {
                 _logger.Warn(ex, "Unable to connect to indexer");
 
-                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details. " + ex.Message);
+                return new NzbDroneValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details. " + ex.Message)
+                {
+                    DetailedDescription = ex.InnerException?.Message
+                };
             }
 
             return null;
