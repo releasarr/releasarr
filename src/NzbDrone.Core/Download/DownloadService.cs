@@ -1,10 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using NLog;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Common.TPL;
 using NzbDrone.Core.Download.Clients;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
@@ -27,7 +25,6 @@ namespace NzbDrone.Core.Download
         private readonly IDownloadClientStatusService _downloadClientStatusService;
         private readonly IIndexerFactory _indexerFactory;
         private readonly IIndexerStatusService _indexerStatusService;
-        private readonly IRateLimitService _rateLimitService;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;
 
@@ -35,7 +32,6 @@ namespace NzbDrone.Core.Download
                                IDownloadClientStatusService downloadClientStatusService,
                                IIndexerFactory indexerFactory,
                                IIndexerStatusService indexerStatusService,
-                               IRateLimitService rateLimitService,
                                IEventAggregator eventAggregator,
                                Logger logger)
         {
@@ -43,7 +39,6 @@ namespace NzbDrone.Core.Download
             _downloadClientStatusService = downloadClientStatusService;
             _indexerFactory = indexerFactory;
             _indexerStatusService = indexerStatusService;
-            _rateLimitService = rateLimitService;
             _eventAggregator = eventAggregator;
             _logger = logger;
         }
@@ -132,15 +127,7 @@ namespace NzbDrone.Core.Download
             _logger.Trace("Attempting download of {0}", link);
             var url = new Uri(link);
 
-            // Limit grabs to 2 per second.
-            if (link.IsNotNullOrWhiteSpace() && !link.StartsWith("magnet:"))
-            {
-                await _rateLimitService.WaitAndPulseAsync(url.Host, TimeSpan.FromSeconds(2));
-            }
-
             var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(indexerId));
-            var success = false;
-            var downloadedBytes = Array.Empty<byte>();
 
             var release = new ReleaseInfo
             {
@@ -151,11 +138,13 @@ namespace NzbDrone.Core.Download
                 DownloadProtocol = indexer.Protocol
             };
 
-            var grabEvent = new IndexerDownloadEvent(release, success, source, host, release.Title, release.DownloadUrl)
+            var grabEvent = new IndexerDownloadEvent(release, false, source, host, release.Title, release.DownloadUrl)
             {
                 Indexer = indexer,
                 GrabTrigger = source == "Prowlarr" ? GrabTrigger.Manual : GrabTrigger.Api
             };
+
+            byte[] downloadedBytes;
 
             try
             {
