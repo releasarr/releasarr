@@ -1178,14 +1178,14 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                 if (method == HttpMethod.Get && searchUrls.Contains(searchUrl))
                 {
-                    _logger.Trace("Skip duplicated request {0}", searchUrl);
+                    _logger.Trace("Skip duplicated request for {0}: {1}", Definition.Name, searchUrl);
 
                     continue;
                 }
 
                 searchUrls.Add(searchUrl);
 
-                _logger.Debug($"Adding request: {searchUrl}");
+                _logger.Debug("Adding request for {0}: {1}", Definition.Name, searchUrl);
 
                 var requestBuilder = new HttpRequestBuilder(searchUrl)
                 {

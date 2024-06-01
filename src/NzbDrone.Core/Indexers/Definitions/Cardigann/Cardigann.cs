@@ -4,10 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.IndexerVersions;
@@ -24,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
         private readonly ICached<CardigannRequestGenerator> _generatorCache;
 
         public override string Name => "Cardigann";
-        public override string[] IndexerUrls => new string[] { "" };
+        public override string[] IndexerUrls => new[] { "" };
         public override string Description => "";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
@@ -49,8 +47,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            var cacheKey = $"{Settings.DefinitionFile}.{HashUtil.ComputeSha256Hash(Settings.ToJson())}";
-            var generator = _generatorCache.Get(cacheKey, () =>
+            var generator = _generatorCache.Get(Settings.DefinitionFile, () =>
                 new CardigannRequestGenerator(_configService,
                     _definitionService.GetCachedDefinition(Settings.DefinitionFile),
                     _logger,
@@ -61,9 +58,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     Settings = Settings
                 });
 
-            generator = (CardigannRequestGenerator)SetCookieFunctions(generator);
-
+            generator.Definition = Definition;
             generator.Settings = Settings;
+
+            generator = (CardigannRequestGenerator)SetCookieFunctions(generator);
 
             _generatorCache.ClearExpired();
 
