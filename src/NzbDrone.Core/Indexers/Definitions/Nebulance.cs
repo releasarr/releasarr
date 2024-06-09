@@ -228,10 +228,21 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
+                throw new IndexerException(indexerResponse, "Unexpected response status '{0}' code from indexer request", indexerResponse.HttpResponse.StatusCode);
             }
 
-            var jsonResponse = STJson.Deserialize<JsonRpcResponse<NebulanceTorrents>>(indexerResponse.HttpResponse.Content);
+            JsonRpcResponse<NebulanceTorrents> jsonResponse;
+
+            try
+            {
+                jsonResponse = STJson.Deserialize<JsonRpcResponse<NebulanceTorrents>>(indexerResponse.HttpResponse.Content);
+            }
+            catch (Exception ex)
+            {
+                STJson.TryDeserialize<JsonRpcResponse<string>>(indexerResponse.HttpResponse.Content, out var response);
+
+                throw new IndexerException(indexerResponse, "Unexpected response from indexer request: {0}", ex, response?.Result ?? ex.Message);
+            }
 
             if (jsonResponse.Error != null || jsonResponse.Result == null)
             {
