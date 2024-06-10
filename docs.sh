@@ -1,3 +1,7 @@
+#!/bin/bash
+set -e
+
+FRAMEWORK="net6.0"
 PLATFORM=$1
 
 if [ "$PLATFORM" = "Windows" ]; then
@@ -35,9 +39,9 @@ dotnet msbuild -restore $slnFile -p:Configuration=Debug -p:Platform=$platform -p
 dotnet new tool-manifest
 dotnet tool install --version 6.6.2 Swashbuckle.AspNetCore.Cli
 
-dotnet tool run swagger tofile --output ./src/Prowlarr.Api.V1/openapi.json "$outputFolder/net6.0/$RUNTIME/$application" v1 &
+dotnet tool run swagger tofile --output ./src/Prowlarr.Api.V1/openapi.json "$outputFolder/$FRAMEWORK/$RUNTIME/$application" v1 &
 
-sleep 30
+sleep 45
 
 kill %1
 
