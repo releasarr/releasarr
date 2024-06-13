@@ -20,6 +20,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Moved to YML for Cardigann")]
     public class HDSpace : TorrentIndexerBase<HDSpaceSettings>
     {
         public override string Name => "HD-Space";
