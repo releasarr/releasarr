@@ -61,7 +61,7 @@ public class FileListParser : IParseIndexerResponse
             var imdbId = 0;
             if (row.ImdbId is { Length: > 2 })
             {
-                imdbId = int.Parse(row.ImdbId.Substring(2));
+                int.TryParse(row.ImdbId.TrimStart('t'), out imdbId);
             }
 
             var downloadVolumeFactor = row.FreeLeech ? 0 : 1;
