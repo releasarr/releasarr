@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Alert from 'Components/Alert';
 import Icon from 'Components/Icon';
-import { icons, kinds } from 'Helpers/Props';
+import Tooltip from 'Components/Tooltip/Tooltip';
+import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 import styles from './Form.css';
 
 function Form(props) {
@@ -30,10 +31,12 @@ function Form(props) {
 
                     {
                       error.detailedDescription ?
-                        <Icon
-                          containerClassName={styles.details}
-                          name={icons.INFO}
-                          title={error.detailedDescription}
+                        <Tooltip
+                          className={styles.details}
+                          anchor={<Icon name={icons.INFO} />}
+                          tooltip={error.detailedDescription}
+                          kind={kinds.INVERSE}
+                          position={tooltipPositions.TOP}
                         /> :
                         null
                     }
@@ -53,10 +56,12 @@ function Form(props) {
 
                     {
                       warning.detailedDescription ?
-                        <Icon
-                          containerClassName={styles.details}
-                          name={icons.INFO}
-                          title={warning.detailedDescription}
+                        <Tooltip
+                          className={styles.details}
+                          anchor={<Icon name={icons.INFO} />}
+                          tooltip={warning.detailedDescription}
+                          kind={kinds.INVERSE}
+                          position={tooltipPositions.TOP}
                         /> :
                         null
                     }
