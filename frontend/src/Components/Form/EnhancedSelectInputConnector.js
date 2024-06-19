@@ -34,7 +34,8 @@ function getSelectOptions(items) {
       key: option.value,
       value: option.name,
       hint: option.hint,
-      parentKey: option.parentValue
+      parentKey: option.parentValue,
+      isDisabled: option.isDisabled
     };
   });
 }
