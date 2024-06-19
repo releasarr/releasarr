@@ -290,9 +290,9 @@ namespace NzbDrone.Core.Indexers
                             Length = v.Attribute("length")?.Value?.ParseInt64() ?? 0
                         };
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                        _logger.Warn(e, "Failed to get enclosure for: {0}", item.Title());
+                        _logger.Warn(ex, "Failed to get enclosure for: {0}", item.Title());
                     }
 
                     return null;
