@@ -393,7 +393,7 @@
     "HistoryCleanupDaysHelpTextWarning": "A kiválasztott napszámnál régebbi előzmények automatikusan törlődnek",
     "IndexerAlreadySetup": "Az indexelő legalább egy példánya már be van állítva",
     "IndexerInfo": "Indexer információ",
-    "IndexerNoDefCheckMessage": "Az indexereknek nincs definíciójuk, és nem működnek: {0}. Kérjük, távolítsa el és (vagy) adja hozzá újra a {appName}hoz",
+    "IndexerNoDefinitionCheckHealthCheckMessage": "Az indexereknek nincs definíciójuk, és nem működnek: {0}. Kérjük, távolítsa el és (vagy) adja hozzá újra a {appName}hoz",
     "MassEditor": "Tömeges szerkesztő",
     "OnApplicationUpdate": "Alkalmazásfrissítésről",
     "OnApplicationUpdateHelpText": "Alkalmazásfrissítésről",

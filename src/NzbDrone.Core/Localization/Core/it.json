@@ -385,7 +385,7 @@
     "IndexerDetails": "Dettagli dell'Indicizzatore",
     "IndexerInfo": "Info sull'Indicizzatore",
     "IndexerName": "Nome dell'Indicizzatore",
-    "IndexerNoDefCheckMessage": "Gli indicizzatori non hanno una definizione e non funzioneranno: {0}. Si prega di rimuoverli e/o di riaggiungerli a {appName}",
+    "IndexerNoDefinitionCheckHealthCheckMessage": "Gli indicizzatori non hanno una definizione e non funzioneranno: {0}. Si prega di rimuoverli e/o di riaggiungerli a {appName}",
     "HistoryCleanup": "Pulizia della Cronologia",
     "IndexerRss": "RSS dell'Indicizzatore",
     "IndexerSite": "Sito dell'Indicizzatore",

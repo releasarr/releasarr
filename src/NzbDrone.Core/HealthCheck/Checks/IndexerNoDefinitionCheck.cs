@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
@@ -9,12 +10,12 @@ namespace NzbDrone.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ProviderDeletedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderBulkDeletedEvent<IIndexer>))]
-    public class NoDefinitionCheck : HealthCheckBase
+    public class IndexerNoDefinitionCheck : HealthCheckBase
     {
         private readonly IIndexerDefinitionUpdateService _indexerDefinitionUpdateService;
         private readonly IIndexerFactory _indexerFactory;
 
-        public NoDefinitionCheck(IIndexerDefinitionUpdateService indexerDefinitionUpdateService, IIndexerFactory indexerFactory, ILocalizationService localizationService)
+        public IndexerNoDefinitionCheck(IIndexerDefinitionUpdateService indexerDefinitionUpdateService, IIndexerFactory indexerFactory, ILocalizationService localizationService)
             : base(localizationService)
         {
             _indexerDefinitionUpdateService = indexerDefinitionUpdateService;
@@ -23,23 +24,22 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
         public override HealthCheck Check()
         {
-            var currentDefs = _indexerDefinitionUpdateService.All();
+            var currentDefinitions = _indexerDefinitionUpdateService.All();
+            var noDefinitionIndexers = _indexerFactory.AllProviders(false)
+                    .Where(i => i.Definition.Implementation == "Cardigann" && currentDefinitions.All(d => d.File != ((CardigannSettings)i.Definition.Settings).DefinitionFile))
+                    .ToList();
 
-            var noDefIndexers = _indexerFactory.AllProviders(false)
-                    .Where(i => i.Definition.Implementation == "Cardigann" && currentDefs.All(d => d.File != ((CardigannSettings)i.Definition.Settings).DefinitionFile)).ToList();
-
-            if (noDefIndexers.Count == 0)
+            if (noDefinitionIndexers.Count == 0)
             {
                 return new HealthCheck(GetType());
             }
 
-            var healthType = HealthCheckResult.Error;
-            var healthMessage = string.Format(_localizationService.GetLocalizedString("IndexerNoDefCheckMessage"),
-                string.Join(", ", noDefIndexers.Select(v => v.Definition.Name)));
-
             return new HealthCheck(GetType(),
-                healthType,
-                healthMessage,
+                HealthCheckResult.Error,
+                _localizationService.GetLocalizedString("IndexerNoDefinitionCheckHealthCheckMessage", new Dictionary<string, object>
+                {
+                    { "indexerNames", string.Join(", ", noDefinitionIndexers.Select(v => v.Definition.Name).ToArray()) }
+                }),
                 "#indexers-have-no-definition");
         }
 

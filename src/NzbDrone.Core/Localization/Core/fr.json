@@ -406,7 +406,7 @@
     "BookSearch": "Recherche de livres",
     "OnApplicationUpdate": "Sur la mise à jour de l'application",
     "OnApplicationUpdateHelpText": "Lors de la mise à jour de l'app",
-    "IndexerNoDefCheckMessage": "Les indexeurs ne sont pas définis et ne fonctionneront pas : {0}. Merci de les retirer et (ou) les ajouter à nouveau à {appName}",
+    "IndexerNoDefinitionCheckHealthCheckMessage": "Les indexeurs ne sont pas définis et ne fonctionneront pas: {indexerNames}. Merci de les retirer et (ou) les ajouter à nouveau à {appName}",
     "MovieSearch": "Recherche de films",
     "TvSearch": "Recherche de séries TV",
     "Application": "Applications",

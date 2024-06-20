@@ -431,7 +431,7 @@
     "IndexerInfo": "Πληροφορίες ευρετηρίου",
     "IndexerName": "Όνομα ευρετηρίου",
     "IndexerProxies": "Proxer Indexer",
-    "IndexerNoDefCheckMessage": "Τα ευρετήρια δεν έχουν ορισμό και δεν θα λειτουργήσουν: {0}. Αφαιρέστε και (ή) προσθέστε ξανά στο {appName}",
+    "IndexerNoDefinitionCheckHealthCheckMessage": "Τα ευρετήρια δεν έχουν ορισμό και δεν θα λειτουργήσουν: {0}. Αφαιρέστε και (ή) προσθέστε ξανά στο {appName}",
     "SemiPrivate": "Ημι-ιδιωτικό",
     "SettingsIndexerLoggingHelpText": "Καταγραφή πρόσθετων δεδομένων ευρετηρίου συμπεριλαμβανομένης της απόκρισης",
     "SearchTypes": "Τύποι αναζήτησης",
