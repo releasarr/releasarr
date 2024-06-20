@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Serialization;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -145,32 +146,31 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var releaseInfos = new List<ReleaseInfo>();
 
-            var jsonContent = JArray.Parse(indexerResponse.Content);
+            var jsonResponse = STJson.Deserialize<TorrentsCSVResponse>(indexerResponse.Content);
 
-            foreach (var torrent in jsonContent)
+            foreach (var torrent in jsonResponse.Torrents)
             {
                 if (torrent == null)
                 {
                     continue;
                 }
 
-                var infoHash = torrent.Value<string>("infohash");
-                var title = torrent.Value<string>("name");
-                var size = torrent.Value<long>("size_bytes");
-                var seeders = torrent.Value<int?>("seeders") ?? 0;
-                var leechers = torrent.Value<int?>("leechers") ?? 0;
-                var grabs = torrent.Value<int?>("completed") ?? 0;
-                var publishDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(torrent.Value<long>("created_unix"));
+                var infoHash = torrent.InfoHash;
+                var title = torrent.Name;
+                var seeders = torrent.Seeders ?? 0;
+                var leechers = torrent.Leechers ?? 0;
+                var grabs = torrent.Completed ?? 0;
+                var publishDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(torrent.Created);
 
                 var release = new TorrentInfo
                 {
-                    Title = title,
-                    InfoUrl = $"{_settings.BaseUrl.TrimEnd('/')}/search/{title}", // there is no details link
                     Guid = $"magnet:?xt=urn:btih:{infoHash}",
+                    InfoUrl = $"{_settings.BaseUrl.TrimEnd('/')}/search?q={title}", // there is no details link
+                    Title = title,
                     InfoHash = infoHash, // magnet link is auto generated from infohash
                     Categories = new List<IndexerCategory> { NewznabStandardCategory.Other },
                     PublishDate = publishDate,
-                    Size = size,
+                    Size = torrent.Size,
                     Grabs = grabs,
                     Seeders = seeders,
                     Peers = leechers + seeders,
@@ -187,5 +187,30 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
+
+    public class TorrentsCSVResponse
+    {
+        public IReadOnlyCollection<TorrentsCSVTorrent> Torrents { get; set; }
+    }
+
+    public class TorrentsCSVTorrent
+    {
+        [JsonPropertyName("infohash")]
+        public string InfoHash { get; set; }
+
+        public string Name { get; set; }
+
+        [JsonPropertyName("size_bytes")]
+        public long Size { get; set; }
+
+        [JsonPropertyName("created_unix")]
+        public long Created { get; set; }
+
+        public int? Leechers { get; set; }
+
+        public int? Seeders { get; set; }
+
+        public int? Completed { get; set; }
     }
 }
