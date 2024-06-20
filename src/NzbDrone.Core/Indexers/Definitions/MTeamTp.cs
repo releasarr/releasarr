@@ -51,12 +51,12 @@ public class MTeamTp : TorrentIndexerBase<MTeamTpSettings>
 
     public override IIndexerRequestGenerator GetRequestGenerator()
     {
-        return new MTeamTpRequestGenerator(Settings, Capabilities);
+        return new MTeamTpRequestGenerator(Settings, Capabilities, BuildApiUrl(Settings));
     }
 
     public override IParseIndexerResponse GetParser()
     {
-        return new MTeamTpParser(Settings, Capabilities.Categories);
+        return new MTeamTpParser(Settings, Capabilities.Categories, BuildApiUrl(Settings));
     }
 
     public override async Task<byte[]> Download(Uri link)
@@ -168,19 +168,26 @@ public class MTeamTp : TorrentIndexerBase<MTeamTpSettings>
 
         return caps;
     }
+
+    private static string BuildApiUrl(IIndexerSettings settings)
+    {
+        return $"https://api.{settings.BaseUrl.AsSpan(settings.BaseUrl.IndexOf('.') + 1)}";
+    }
 }
 
 public class MTeamTpRequestGenerator : IIndexerRequestGenerator
 {
     private readonly MTeamTpSettings _settings;
     private readonly IndexerCapabilities _capabilities;
+    private readonly string _apiUrl;
 
     private readonly int[] _trackerAdultCategories = { 410, 429, 424, 430, 426, 437, 431, 432, 436, 425, 433, 411, 412, 413, 440 };
 
-    public MTeamTpRequestGenerator(MTeamTpSettings settings, IndexerCapabilities capabilities)
+    public MTeamTpRequestGenerator(MTeamTpSettings settings, IndexerCapabilities capabilities, string apiUrl)
     {
         _settings = settings;
         _capabilities = capabilities;
+        _apiUrl = apiUrl;
     }
 
     public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
@@ -253,7 +260,7 @@ public class MTeamTpRequestGenerator : IIndexerRequestGenerator
 
     private IndexerRequest BuildSearchRequest(MTeamTpRequestType requestType, IEnumerable<int> categoryMapping, string searchTerm, string imdbId)
     {
-        var request = new HttpRequestBuilder(_settings.BaseUrl)
+        var request = new HttpRequestBuilder(_apiUrl)
             .Resource("/api/torrent/search")
             .SetHeader("x-api-key", _settings.ApiKey)
             .Accept(HttpAccept.Json)
@@ -299,11 +306,13 @@ public class MTeamTpParser : IParseIndexerResponse
 {
     private readonly MTeamTpSettings _settings;
     private readonly IndexerCapabilitiesCategories _categories;
+    private readonly string _apiUrl;
 
-    public MTeamTpParser(MTeamTpSettings settings, IndexerCapabilitiesCategories categories)
+    public MTeamTpParser(MTeamTpSettings settings, IndexerCapabilitiesCategories categories, string apiUrl)
     {
         _settings = settings;
         _categories = categories;
+        _apiUrl = apiUrl;
     }
 
     public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -390,7 +399,7 @@ public class MTeamTpParser : IParseIndexerResponse
 
     private string GetDownloadUrl(int torrentId)
     {
-        var url = new HttpUri(_settings.BaseUrl)
+        var url = new HttpUri(_apiUrl)
             .CombinePath("/api/torrent/genDlToken")
             .AddQueryParam("id", torrentId);
 
