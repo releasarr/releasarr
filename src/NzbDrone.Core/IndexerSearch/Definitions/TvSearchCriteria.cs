@@ -31,9 +31,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
             !IsIdSearch;
 
         public override bool IsIdSearch =>
-            Episode.IsNotNullOrWhiteSpace() ||
             ImdbId.IsNotNullOrWhiteSpace() ||
-            Season.HasValue ||
             TvdbId.HasValue ||
             RId.HasValue ||
             TraktId.HasValue ||
