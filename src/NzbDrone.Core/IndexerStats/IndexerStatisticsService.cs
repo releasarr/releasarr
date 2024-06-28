@@ -26,11 +26,15 @@ namespace NzbDrone.Core.IndexerStats
         {
             var history = _historyService.Between(start, end);
 
-            var filteredHistory = history.Where(h => indexerIds.Contains(h.IndexerId));
+            var filteredHistory = history.Where(h => indexerIds.Contains(h.IndexerId)).ToArray();
 
-            var groupedByIndexer = filteredHistory.GroupBy(h => h.IndexerId);
-            var groupedByUserAgent = filteredHistory.GroupBy(h => h.Data.GetValueOrDefault("source") ?? "");
-            var groupedByHost = filteredHistory.GroupBy(h => h.Data.GetValueOrDefault("host") ?? "");
+            var groupedByIndexer = filteredHistory.GroupBy(h => h.IndexerId).ToArray();
+            var groupedByUserAgent = filteredHistory
+                .Where(h => h.EventType != HistoryEventType.IndexerAuth)
+                .GroupBy(h => h.Data.GetValueOrDefault("source") ?? "").ToArray();
+            var groupedByHost = filteredHistory
+                .Where(h => h.EventType != HistoryEventType.IndexerAuth)
+                .GroupBy(h => h.Data.GetValueOrDefault("host") ?? "").ToArray();
 
             var indexerStatsList = new List<IndexerStatistics>();
             var userAgentStatsList = new List<UserAgentStatistics>();
@@ -60,7 +64,7 @@ namespace NzbDrone.Core.IndexerStats
                 var temp = 0;
                 var elapsedTimeEvents = sortedEvents
                     .Where(h => int.TryParse(h.Data.GetValueOrDefault("elapsedTime"), out temp) && h.Data.GetValueOrDefault("cached") != "1")
-                    .Select(h => temp)
+                    .Select(_ => temp)
                     .ToArray();
 
                 indexerStats.AverageResponseTime = elapsedTimeEvents.Any() ? (int)elapsedTimeEvents.Average() : 0;
@@ -68,6 +72,7 @@ namespace NzbDrone.Core.IndexerStats
                 foreach (var historyEvent in sortedEvents)
                 {
                     var failed = !historyEvent.Successful;
+
                     switch (historyEvent.EventType)
                     {
                         case HistoryEventType.IndexerQuery:
@@ -102,8 +107,6 @@ namespace NzbDrone.Core.IndexerStats
                             }
 
                             break;
-                        default:
-                            break;
                     }
                 }
 
@@ -118,8 +121,8 @@ namespace NzbDrone.Core.IndexerStats
                 };
 
                 var sortedEvents = indexer.OrderBy(v => v.Date)
-                                          .ThenBy(v => v.Id)
-                                          .ToArray();
+                    .ThenBy(v => v.Id)
+                    .ToArray();
 
                 foreach (var historyEvent in sortedEvents)
                 {
@@ -128,12 +131,9 @@ namespace NzbDrone.Core.IndexerStats
                         case HistoryEventType.IndexerRss:
                         case HistoryEventType.IndexerQuery:
                             indexerStats.NumberOfQueries++;
-
                             break;
                         case HistoryEventType.ReleaseGrabbed:
                             indexerStats.NumberOfGrabs++;
-                            break;
-                        default:
                             break;
                     }
                 }
@@ -149,8 +149,8 @@ namespace NzbDrone.Core.IndexerStats
                 };
 
                 var sortedEvents = indexer.OrderBy(v => v.Date)
-                                          .ThenBy(v => v.Id)
-                                          .ToArray();
+                    .ThenBy(v => v.Id)
+                    .ToArray();
 
                 foreach (var historyEvent in sortedEvents)
                 {
@@ -162,8 +162,6 @@ namespace NzbDrone.Core.IndexerStats
                             break;
                         case HistoryEventType.ReleaseGrabbed:
                             indexerStats.NumberOfGrabs++;
-                            break;
-                        default:
                             break;
                     }
                 }
