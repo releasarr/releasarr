@@ -24,6 +24,8 @@ export interface IndexerCapabilities extends ModelBase {
   categories: IndexerCategory[];
 }
 
+export type IndexerPrivacy = 'public' | 'semiPrivate' | 'private';
+
 export interface IndexerField extends ModelBase {
   order: number;
   name: string;
@@ -47,7 +49,7 @@ interface Indexer extends ModelBase {
   supportsRedirect: boolean;
   supportsPagination: boolean;
   protocol: string;
-  privacy: string;
+  privacy: IndexerPrivacy;
   priority: number;
   fields: IndexerField[];
   tags: number[];

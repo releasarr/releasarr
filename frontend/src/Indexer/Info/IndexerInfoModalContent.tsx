@@ -24,6 +24,7 @@ import TagListConnector from 'Components/TagListConnector';
 import { kinds } from 'Helpers/Props';
 import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
+import PrivacyLabel from 'Indexer/Index/Table/PrivacyLabel';
 import Indexer, { IndexerCapabilities } from 'Indexer/Indexer';
 import { createIndexerSelectorForHook } from 'Store/Selectors/createIndexerSelector';
 import translate from 'Utilities/String/translate';
@@ -64,6 +65,7 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
     fields,
     tags,
     protocol,
+    privacy,
     capabilities = {} as IndexerCapabilities,
   } = indexer as Indexer;
 
@@ -159,6 +161,11 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                       descriptionClassName={styles.description}
                       title={translate('Language')}
                       data={language ?? '-'}
+                    />
+                    <DescriptionListItem
+                      descriptionClassName={styles.description}
+                      title={translate('Privacy')}
+                      data={privacy ? <PrivacyLabel privacy={privacy} /> : '-'}
                     />
                     {vipExpiration ? (
                       <DescriptionListItem

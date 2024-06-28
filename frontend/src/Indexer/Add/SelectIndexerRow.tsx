@@ -4,16 +4,16 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRowButton from 'Components/Table/TableRowButton';
 import { icons } from 'Helpers/Props';
 import CapabilitiesLabel from 'Indexer/Index/Table/CapabilitiesLabel';
+import PrivacyLabel from 'Indexer/Index/Table/PrivacyLabel';
 import ProtocolLabel from 'Indexer/Index/Table/ProtocolLabel';
-import { IndexerCapabilities } from 'Indexer/Indexer';
-import firstCharToUpper from 'Utilities/String/firstCharToUpper';
+import { IndexerCapabilities, IndexerPrivacy } from 'Indexer/Indexer';
 import translate from 'Utilities/String/translate';
 import styles from './SelectIndexerRow.css';
 
 interface SelectIndexerRowProps {
   name: string;
   protocol: string;
-  privacy: string;
+  privacy: IndexerPrivacy;
   language: string;
   description: string;
   capabilities: IndexerCapabilities;
@@ -63,7 +63,9 @@ function SelectIndexerRow(props: SelectIndexerRowProps) {
 
       <TableRowCell>{description}</TableRowCell>
 
-      <TableRowCell>{translate(firstCharToUpper(privacy))}</TableRowCell>
+      <TableRowCell>
+        <PrivacyLabel privacy={privacy} />
+      </TableRowCell>
 
       <TableRowCell>
         <CapabilitiesLabel capabilities={capabilities} />

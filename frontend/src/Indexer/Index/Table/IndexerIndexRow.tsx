@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSelect } from 'App/SelectContext';
-import Label from 'Components/Label';
 import IconButton from 'Components/Link/IconButton';
 import RelativeDateCell from 'Components/Table/Cells/RelativeDateCell';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
@@ -15,10 +14,10 @@ import createIndexerIndexItemSelector from 'Indexer/Index/createIndexerIndexItem
 import Indexer from 'Indexer/Indexer';
 import IndexerTitleLink from 'Indexer/IndexerTitleLink';
 import { SelectStateInputProps } from 'typings/props';
-import firstCharToUpper from 'Utilities/String/firstCharToUpper';
 import translate from 'Utilities/String/translate';
 import CapabilitiesLabel from './CapabilitiesLabel';
 import IndexerStatusCell from './IndexerStatusCell';
+import PrivacyLabel from './PrivacyLabel';
 import ProtocolLabel from './ProtocolLabel';
 import styles from './IndexerIndexRow.css';
 
@@ -175,7 +174,7 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
         if (name === 'privacy') {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
-              <Label>{translate(firstCharToUpper(privacy))}</Label>
+              <PrivacyLabel privacy={privacy} />
             </VirtualTableRowCell>
           );
         }
