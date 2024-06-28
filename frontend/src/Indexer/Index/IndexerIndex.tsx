@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SelectProvider } from 'App/SelectContext';
 import ClientSideCollectionAppState from 'App/State/ClientSideCollectionAppState';
@@ -22,12 +28,17 @@ import AddIndexerModal from 'Indexer/Add/AddIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import NoIndexer from 'Indexer/NoIndexer';
 import { executeCommand } from 'Store/Actions/commandActions';
-import { cloneIndexer, testAllIndexers } from 'Store/Actions/indexerActions';
+import {
+  cloneIndexer,
+  fetchIndexers,
+  testAllIndexers,
+} from 'Store/Actions/indexerActions';
 import {
   setIndexerFilter,
   setIndexerSort,
   setIndexerTableOption,
 } from 'Store/Actions/indexerIndexActions';
+import { fetchIndexerStatus } from 'Store/Actions/indexerStatusActions';
 import scrollPositions from 'Store/scrollPositions';
 import createCommandExecutingSelector from 'Store/Selectors/createCommandExecutingSelector';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
@@ -81,6 +92,11 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
     undefined
   );
   const [isSelectMode, setIsSelectMode] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchIndexers());
+    dispatch(fetchIndexerStatus());
+  }, [dispatch]);
 
   const onAddIndexerPress = useCallback(() => {
     setIsAddIndexerModalOpen(true);
