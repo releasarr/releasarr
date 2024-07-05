@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -230,7 +231,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, "Indexer API call returned an error [{0}]", jsonResponse.Error);
             }
 
-            if (jsonResponse.Result.Items.Count == 0)
+            if (jsonResponse.Result?.Items == null || jsonResponse.Result.Items.Count == 0)
             {
                 return torrentInfos;
             }
@@ -245,14 +246,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 var release = new TorrentInfo
                 {
-                    Title = title,
                     Guid = details,
                     InfoUrl = details,
-                    PosterUrl = row.Banner,
                     DownloadUrl = row.Download,
+                    Title = title.Trim(),
                     Categories = new List<IndexerCategory> { TvCategoryFromQualityParser.ParseTvShowQuality(row.ReleaseTitle) },
                     Size = ParseUtil.CoerceLong(row.Size),
-                    Files = row.FileList.Length,
+                    Files = row.FileList.Count(),
                     PublishDate = DateTime.Parse(row.PublishDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
                     Grabs = ParseUtil.CoerceInt(row.Snatch),
                     Seeders = ParseUtil.CoerceInt(row.Seed),
@@ -261,7 +261,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                     MinimumRatio = 0, // ratioless
                     MinimumSeedTime = row.Category.ToLower() == "season" ? 432000 : 86400, // 120 hours for seasons and 24 hours for episodes
                     DownloadVolumeFactor = 0, // ratioless tracker
-                    UploadVolumeFactor = 1
+                    UploadVolumeFactor = 1,
+                    PosterUrl = row.Banner
                 };
 
                 if (row.TvMazeId.IsNotNullOrWhiteSpace())
@@ -356,7 +357,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string Download { get; set; }
 
         [JsonPropertyName("file_list")]
-        public string[] FileList { get; set; }
+        public IEnumerable<string> FileList { get; set; } = Array.Empty<string>();
 
         [JsonPropertyName("group_name")]
         public string GroupName { get; set; }
@@ -373,6 +374,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         [JsonPropertyName("rls_utc")]
         public string PublishDateUtc { get; set; }
 
-        public IEnumerable<string> Tags { get; set; }
+        public IEnumerable<string> Tags { get; set; } = Array.Empty<string>();
     }
 }
