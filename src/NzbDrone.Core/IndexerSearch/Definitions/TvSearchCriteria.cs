@@ -114,7 +114,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
             string episodeString;
             if (DateTime.TryParseExact($"{Season} {Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
             {
-                episodeString = showDate.ToString("yyyy.MM.dd");
+                episodeString = showDate.ToString("yyyy.MM.dd", CultureInfo.InvariantCulture);
             }
             else if (Episode.IsNullOrWhiteSpace())
             {

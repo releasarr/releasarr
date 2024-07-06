@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
 
                 if (DateTime.TryParseExact($"{searchCriteria.Season} {searchCriteria.Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
                 {
-                    query.Search = showDate.ToString("yyyy-MM-dd");
+                    query.Search = showDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                 }
                 else
                 {

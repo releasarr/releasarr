@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new NebulanceRequestGenerator(Settings);
+            return new NebulanceRequestGenerator(Settings, _logger);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -90,10 +90,12 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class NebulanceRequestGenerator : IIndexerRequestGenerator
     {
         private readonly NebulanceSettings _settings;
+        private readonly Logger _logger;
 
-        public NebulanceRequestGenerator(NebulanceSettings settings)
+        public NebulanceRequestGenerator(NebulanceSettings settings, Logger logger)
         {
             _settings = settings;
+            _logger = logger;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
@@ -147,6 +149,17 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     queryParams.Episode = episodeNumber;
                 }
+            }
+
+            if ((queryParams.Season.HasValue || queryParams.Episode.HasValue) &&
+                queryParams.Name.IsNullOrWhiteSpace() &&
+                queryParams.Release.IsNullOrWhiteSpace() &&
+                !queryParams.TvMaze.HasValue &&
+                queryParams.Imdb.IsNullOrWhiteSpace())
+            {
+                _logger.Debug("NBL API does not support season calls without name, series, id, imdb, tvmaze, or time keys.");
+
+                return new IndexerPageableRequestChain();
             }
 
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
