@@ -75,6 +75,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SubsPleaseRequestGenerator : IIndexerRequestGenerator
     {
+        private static readonly Regex ResolutionRegex = new (@"\d{3,4}p", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         private readonly NoAuthTorrentBaseSettings _settings;
 
         public SubsPleaseRequestGenerator(NoAuthTorrentBaseSettings settings)
@@ -134,15 +136,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetSearchRequests(string term, SearchCriteriaBase searchCriteria)
         {
-            var searchTerm = Regex.Replace(term, "\\[?SubsPlease\\]?\\s*", string.Empty, RegexOptions.IgnoreCase).Trim();
-
-            // If the search terms contain a resolution, remove it from the query sent to the API
-            var resMatch = Regex.Match(searchTerm, "\\d{3,4}[p|P]");
-            if (resMatch.Success)
-            {
-                searchTerm = searchTerm.Replace(resMatch.Value, string.Empty).Trim();
-            }
-
             var queryParameters = new NameValueCollection
             {
                 { "tz", "UTC" }
@@ -154,6 +147,16 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
             else
             {
+                var searchTerm = Regex.Replace(term, "\\[?SubsPlease\\]?\\s*", string.Empty, RegexOptions.IgnoreCase).Trim();
+
+                // If the search terms contain a resolution, remove it from the query sent to the API
+                var resolutionMatch = ResolutionRegex.Match(searchTerm);
+
+                if (resolutionMatch.Success)
+                {
+                    searchTerm = searchTerm.Replace(resolutionMatch.Value, string.Empty).Trim();
+                }
+
                 queryParameters.Set("f", "search");
                 queryParameters.Set("s", searchTerm);
             }
@@ -201,7 +204,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     var release = new TorrentInfo
                     {
-                        InfoUrl = _settings.BaseUrl + $"shows/{value.Page}/",
+                        InfoUrl = $"{_settings.BaseUrl}shows/{value.Page}/",
                         PublishDate = value.ReleaseDate.LocalDateTime,
                         Files = 1,
                         Categories = new List<IndexerCategory> { NewznabStandardCategory.TVAnime },
@@ -213,13 +216,18 @@ namespace NzbDrone.Core.Indexers.Definitions
                         UploadVolumeFactor = 1
                     };
 
+                    if (value.ImageUrl.IsNotNullOrWhiteSpace())
+                    {
+                        release.PosterUrl = _settings.BaseUrl + value.ImageUrl.TrimStart('/');
+                    }
+
                     if (value.Episode.ToLowerInvariant() == "movie")
                     {
                         release.Categories.Add(NewznabStandardCategory.MoviesOther);
                     }
 
                     // Ex: [SubsPlease] Shingeki no Kyojin (The Final Season) - 64 (1080p)
-                    release.Title += $"[SubsPlease] {value.Show} - {value.Episode} ({d.Resolution}p)";
+                    release.Title = $"[SubsPlease] {value.Show} - {value.Episode} ({d.Resolution}p)";
                     release.MagnetUrl = d.Magnet;
                     release.DownloadUrl = null;
                     release.Guid = d.Magnet;
@@ -269,6 +277,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string Episode { get; set; }
         public SubPleaseDownloadInfo[] Downloads { get; set; }
         public string Xdcc { get; set; }
+
+        [JsonProperty("image_url")]
         public string ImageUrl { get; set; }
         public string Page { get; set; }
     }
