@@ -128,11 +128,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchQuery.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = searchQuery;
+                queryParams.Release = searchQuery;
             }
 
             if (DateTime.TryParseExact($"{searchCriteria.Season} {searchCriteria.Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
             {
+                queryParams.Name = searchQuery;
                 queryParams.Release = showDate.ToString("yyyy.MM.dd", CultureInfo.InvariantCulture);
             }
             else
@@ -171,7 +172,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchQuery.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = searchQuery;
+                queryParams.Release = searchQuery;
             }
 
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
