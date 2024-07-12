@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Indexers
             }
             catch
             {
-                _logger.Info("Invalid torrent file contents: {0}", Encoding.ASCII.GetString(fileData));
+                _logger.Debug("Invalid torrent file contents: {0}", Encoding.ASCII.GetString(fileData));
                 throw;
             }
         }
