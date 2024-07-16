@@ -267,10 +267,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var details = row.InfoUrl;
                 var link = row.DownloadLink;
 
-                // BHD can return crazy values for tmdb
-                var tmdbId = row.TmdbId.IsNullOrWhiteSpace() ? 0 : ParseUtil.TryCoerceInt(row.TmdbId.Split("/")[1], out var tmdbResult) ? tmdbResult : 0;
-                var imdbId = ParseUtil.GetImdbId(row.ImdbId).GetValueOrDefault();
-
                 var flags = new HashSet<IndexerFlag>();
 
                 if (row.Internal)
@@ -291,14 +287,20 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Size = row.Size,
                     Grabs = row.Grabs,
                     Seeders = row.Seeders,
-                    ImdbId = imdbId,
-                    TmdbId = tmdbId,
+                    ImdbId = ParseUtil.GetImdbId(row.ImdbId).GetValueOrDefault(),
                     Peers = row.Leechers + row.Seeders,
                     DownloadVolumeFactor = row.Freeleech || row.Limited ? 0 : row.Promo75 ? 0.25 : row.Promo50 ? 0.5 : row.Promo25 ? 0.75 : 1,
                     UploadVolumeFactor = 1,
                     MinimumRatio = 1,
                     MinimumSeedTime = 172800, // 120 hours
                 };
+
+                // BHD can return crazy values for tmdb
+                if (row.TmdbId.IsNotNullOrWhiteSpace())
+                {
+                    var tmdbId = row.TmdbId.Split("/").ElementAtOrDefault(1);
+                    release.TmdbId = tmdbId != null && ParseUtil.TryCoerceInt(tmdbId, out var tmdbResult) ? tmdbResult : 0;
+                }
 
                 releaseInfos.Add(release);
             }

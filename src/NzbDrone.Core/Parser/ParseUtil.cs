@@ -15,6 +15,11 @@ namespace NzbDrone.Core.Parser
 
         private static string NormalizeNumber(string s, bool isInt = false)
         {
+            if (s == null)
+            {
+                return null;
+            }
+
             var valStr = new string(s.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray());
 
             valStr = valStr.Trim().Replace("-", "0");
