@@ -5,12 +5,12 @@ import { createSelector } from 'reselect';
 import { deleteApplication, fetchApplications } from 'Store/Actions/settingsActions';
 import createSortedSectionSelector from 'Store/Selectors/createSortedSectionSelector';
 import createTagsSelector from 'Store/Selectors/createTagsSelector';
-import sortByName from 'Utilities/Array/sortByName';
+import sortByProp from 'Utilities/Array/sortByProp';
 import Applications from './Applications';
 
 function createMapStateToProps() {
   return createSelector(
-    createSortedSectionSelector('settings.applications', sortByName),
+    createSortedSectionSelector('settings.applications', sortByProp('name')),
     createTagsSelector(),
     (applications, tagList) => {
       return {

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import SelectInput from 'Components/Form/SelectInput';
 import IconButton from 'Components/Link/IconButton';
 import { filterBuilderTypes, filterBuilderValueTypes, icons } from 'Helpers/Props';
+import sortByProp from 'Utilities/Array/sortByProp';
 import AppProfileFilterBuilderRowValueConnector from './AppProfileFilterBuilderRowValueConnector';
 import BoolFilterBuilderRowValue from './BoolFilterBuilderRowValue';
 import CategoryFilterBuilderRowValue from './CategoryFilterBuilderRowValue';
@@ -212,7 +213,7 @@ class FilterBuilderRow extends Component {
         key: name,
         value: typeof label === 'function' ? label() : label
       };
-    }).sort((a, b) => a.value.localeCompare(b.value));
+    }).sort(sortByProp('value'));
 
     const ValueComponent = getRowValueConnector(selectedFilterBuilderProp);
 

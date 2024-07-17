@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { fetchDownloadClients } from 'Store/Actions/settingsActions';
-import sortByName from 'Utilities/Array/sortByName';
+import sortByProp from 'Utilities/Array/sortByProp';
+import translate from 'Utilities/String/translate';
 import EnhancedSelectInput from './EnhancedSelectInput';
 
 function createMapStateToProps() {
@@ -21,7 +22,7 @@ function createMapStateToProps() {
 
       const values = items
         .filter((downloadClient) => downloadClient.protocol === protocolFilter)
-        .sort(sortByName)
+        .sort(sortByProp('name'))
         .map((downloadClient) => ({
           key: downloadClient.id,
           value: downloadClient.name,
@@ -31,7 +32,7 @@ function createMapStateToProps() {
       if (includeAny) {
         values.unshift({
           key: 0,
-          value: '(Any)'
+          value: `(${translate('Any')})`
         });
       }
 

@@ -4,13 +4,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import createSortedSectionSelector from 'Store/Selectors/createSortedSectionSelector';
-import sortByName from 'Utilities/Array/sortByName';
+import sortByProp from 'Utilities/Array/sortByProp';
 import translate from 'Utilities/String/translate';
 import SelectInput from './SelectInput';
 
 function createMapStateToProps() {
   return createSelector(
-    createSortedSectionSelector('settings.appProfiles', sortByName),
+    createSortedSectionSelector('settings.appProfiles', sortByProp('name')),
     (state, { includeNoChange }) => includeNoChange,
     (state, { includeMixed }) => includeMixed,
     (appProfiles, includeNoChange, includeMixed) => {

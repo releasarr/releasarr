@@ -4,14 +4,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import createSortedSectionSelector from 'Store/Selectors/createSortedSectionSelector';
-import sortByName from 'Utilities/Array/sortByName';
+import sortByProp from 'Utilities/Array/sortByProp';
 import titleCase from 'Utilities/String/titleCase';
 import EnhancedSelectInput from './EnhancedSelectInput';
 
 function createMapStateToProps() {
   return createSelector(
     (state, { value }) => value,
-    createSortedSectionSelector('indexers', sortByName),
+    createSortedSectionSelector('indexers', sortByProp('name')),
     (value, indexers) => {
       const values = [];
       const groupedIndexers = map(groupBy(indexers.items, 'protocol'), (val, key) => ({ protocol: key, indexers: val }));
