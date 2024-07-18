@@ -14,6 +14,7 @@ import Scroller from 'Components/Scroller/Scroller';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { kinds, scrollDirections } from 'Helpers/Props';
+import sortByProp from 'Utilities/Array/sortByProp';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
 import SelectIndexerRow from './SelectIndexerRow';
@@ -131,8 +132,8 @@ class AddIndexerModalContent extends Component {
     } = this.props;
 
     const languages = Array.from(new Set(indexers.map(({ language }) => language)))
-      .sort((a, b) => a.localeCompare(b))
-      .map((language) => ({ key: language, value: language }));
+      .map((language) => ({ key: language, value: language }))
+      .sort(sortByProp('value'));
 
     const filteredIndexers = indexers.filter((indexer) => {
       const {

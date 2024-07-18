@@ -231,7 +231,9 @@ function SearchIndexOverview(props: SearchIndexOverviewProps) {
 
               {indexerFlags.length
                 ? indexerFlags
-                    .sort((a, b) => a.localeCompare(b))
+                    .sort((a, b) =>
+                      a.localeCompare(b, undefined, { numeric: true })
+                    )
                     .map((flag, index) => {
                       return (
                         <Label key={index} kind={kinds.INFO}>
