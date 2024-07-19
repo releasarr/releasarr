@@ -338,6 +338,13 @@ public class MTeamTpParser : IParseIndexerResponse
 
         if (jsonResponse?.Data?.Torrents == null)
         {
+            if (jsonResponse != null &&
+                jsonResponse.Message.IsNotNullOrWhiteSpace() &&
+                jsonResponse.Message.ToUpperInvariant() != "SUCCESS")
+            {
+                throw new IndexerException(indexerResponse, $"Invalid response received from M-Team. Response from API: {jsonResponse.Message}");
+            }
+
             return releaseInfos;
         }
 
@@ -464,6 +471,7 @@ internal class MTeamTpApiSearchQuery
 internal class MTeamTpApiResponse
 {
     public MTeamTpApiData Data { get; set; }
+    public string Message { get; set; }
 }
 
 internal class MTeamTpApiData
