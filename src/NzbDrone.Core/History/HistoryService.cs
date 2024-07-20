@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Indexers;
@@ -203,8 +204,24 @@ namespace NzbDrone.Core.History
             history.Data.Add("Host", message.Host ?? string.Empty);
             history.Data.Add("GrabMethod", message.Redirect ? "Redirect" : "Proxy");
             history.Data.Add("GrabTitle", message.Title);
-            history.Data.Add("Categories", string.Join(",", message.Release.Categories.Select(x => x.Id) ?? Array.Empty<int>()));
             history.Data.Add("Url", message.Url ?? string.Empty);
+            history.Data.Add("ElapsedTime", message.ElapsedTime.ToString());
+
+            if (message.Release.InfoUrl.IsNotNullOrWhiteSpace())
+            {
+                history.Data.Add("InfoUrl", message.Release.InfoUrl);
+            }
+
+            if (message.DownloadClient.IsNotNullOrWhiteSpace() || message.DownloadClientName.IsNotNullOrWhiteSpace())
+            {
+                history.Data.Add("DownloadClient", message.DownloadClient ?? string.Empty);
+                history.Data.Add("DownloadClientName", message.DownloadClientName ?? string.Empty);
+            }
+
+            if (message.Release.PublishDate != DateTime.MinValue)
+            {
+                history.Data.Add("PublishedDate", message.Release.PublishDate.ToString("s") + "Z");
+            }
 
             _historyRepository.Insert(history);
         }
@@ -219,7 +236,7 @@ namespace NzbDrone.Core.History
                 Successful = message.Successful
             };
 
-            history.Data.Add("ElapsedTime", message.Time.ToString());
+            history.Data.Add("ElapsedTime", message.ElapsedTime.ToString());
 
             _historyRepository.Insert(history);
         }

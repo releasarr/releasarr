@@ -3,6 +3,7 @@ import React from 'react';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
 import Link from 'Components/Link/Link';
+import formatDateTime from 'Utilities/Date/formatDateTime';
 import translate from 'Utilities/String/translate';
 import styles from './HistoryDetails.css';
 
@@ -10,7 +11,10 @@ function HistoryDetails(props) {
   const {
     indexer,
     eventType,
-    data
+    date,
+    data,
+    shortDateFormat,
+    timeFormat
   } = props;
 
   if (eventType === 'indexerQuery' || eventType === 'indexerRss') {
@@ -22,7 +26,9 @@ function HistoryDetails(props) {
       offset,
       source,
       host,
-      url
+      url,
+      elapsedTime,
+      cached
     } = data;
 
     return (
@@ -104,6 +110,24 @@ function HistoryDetails(props) {
             /> :
             null
         }
+
+        {
+          elapsedTime ?
+            <DescriptionListItem
+              title={translate('ElapsedTime')}
+              data={`${elapsedTime}ms${cached === '1' ? ' (cached)' : null}`}
+            /> :
+            null
+        }
+
+        {
+          date ?
+            <DescriptionListItem
+              title={translate('Date')}
+              data={formatDateTime(date, shortDateFormat, timeFormat, { includeSeconds: true })}
+            /> :
+            null
+        }
       </DescriptionList>
     );
   }
@@ -111,9 +135,18 @@ function HistoryDetails(props) {
   if (eventType === 'releaseGrabbed') {
     const {
       source,
+      host,
       grabTitle,
-      url
+      url,
+      publishedDate,
+      infoUrl,
+      downloadClient,
+      downloadClientName,
+      elapsedTime,
+      grabMethod
     } = data;
+
+    const downloadClientNameInfo = downloadClientName ?? downloadClient;
 
     return (
       <DescriptionList>
@@ -138,8 +171,44 @@ function HistoryDetails(props) {
         {
           data ?
             <DescriptionListItem
+              title={translate('Host')}
+              data={host}
+            /> :
+            null
+        }
+
+        {
+          data ?
+            <DescriptionListItem
               title={translate('GrabTitle')}
               data={grabTitle ? grabTitle : '-'}
+            /> :
+            null
+        }
+
+        {
+          infoUrl ?
+            <DescriptionListItem
+              title={translate('InfoUrl')}
+              data={<Link to={infoUrl}>{infoUrl}</Link>}
+            /> :
+            null
+        }
+
+        {
+          publishedDate ?
+            <DescriptionListItem
+              title={translate('PublishedDate')}
+              data={formatDateTime(publishedDate, shortDateFormat, timeFormat, { includeSeconds: true })}
+            /> :
+            null
+        }
+
+        {
+          downloadClientNameInfo ?
+            <DescriptionListItem
+              title={translate('DownloadClient')}
+              data={downloadClientNameInfo}
             /> :
             null
         }
@@ -152,11 +221,40 @@ function HistoryDetails(props) {
             /> :
             null
         }
+
+        {
+          elapsedTime ?
+            <DescriptionListItem
+              title={translate('ElapsedTime')}
+              data={`${elapsedTime}ms`}
+            /> :
+            null
+        }
+
+        {
+          grabMethod ?
+            <DescriptionListItem
+              title={translate('Redirected')}
+              data={grabMethod.toLowerCase() === 'redirect' ? translate('Yes') : translate('No')}
+            /> :
+            null
+        }
+
+        {
+          date ?
+            <DescriptionListItem
+              title={translate('Date')}
+              data={formatDateTime(date, shortDateFormat, timeFormat, { includeSeconds: true })}
+            /> :
+            null
+        }
       </DescriptionList>
     );
   }
 
   if (eventType === 'indexerAuth') {
+    const { elapsedTime } = data;
+
     return (
       <DescriptionList
         descriptionClassName={styles.description}
@@ -167,6 +265,24 @@ function HistoryDetails(props) {
             <DescriptionListItem
               title={translate('Indexer')}
               data={indexer.name}
+            /> :
+            null
+        }
+
+        {
+          elapsedTime ?
+            <DescriptionListItem
+              title={translate('ElapsedTime')}
+              data={`${elapsedTime}ms`}
+            /> :
+            null
+        }
+
+        {
+          date ?
+            <DescriptionListItem
+              title={translate('Date')}
+              data={formatDateTime(date, shortDateFormat, timeFormat, { includeSeconds: true })}
             /> :
             null
         }
@@ -181,6 +297,15 @@ function HistoryDetails(props) {
         title={translate('Name')}
         data={data.query}
       />
+
+      {
+        date ?
+          <DescriptionListItem
+            title={translate('Date')}
+            data={formatDateTime(date, shortDateFormat, timeFormat, { includeSeconds: true })}
+          /> :
+          null
+      }
     </DescriptionList>
   );
 }
@@ -188,6 +313,7 @@ function HistoryDetails(props) {
 HistoryDetails.propTypes = {
   indexer: PropTypes.object.isRequired,
   eventType: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
   shortDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired

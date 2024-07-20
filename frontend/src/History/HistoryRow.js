@@ -370,8 +370,9 @@ class HistoryRow extends Component {
               return (
                 <RelativeDateCell
                   key={name}
-                  date={date}
                   className={styles.date}
+                  date={date}
+                  includeSeconds={true}
                 />
               );
             }
@@ -408,6 +409,7 @@ class HistoryRow extends Component {
         <HistoryDetailsModal
           isOpen={this.state.isDetailsModalOpen}
           eventType={eventType}
+          date={date}
           data={data}
           indexer={indexer}
           isMarkingAsFailed={isMarkingAsFailed}

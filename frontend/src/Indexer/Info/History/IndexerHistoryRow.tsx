@@ -74,7 +74,7 @@ function IndexerHistoryRow(props: IndexerHistoryRowProps) {
         </div>
       </TableRowCell>
 
-      <RelativeDateCell date={date} />
+      <RelativeDateCell date={date} includeSeconds={true} />
 
       <TableRowCell className={styles.source}>
         {data.source ? data.source : null}
@@ -91,6 +91,7 @@ function IndexerHistoryRow(props: IndexerHistoryRowProps) {
       <HistoryDetailsModal
         isOpen={isDetailsModalOpen}
         eventType={eventType}
+        date={date}
         data={data}
         indexer={indexer}
         shortDateFormat={shortDateFormat}

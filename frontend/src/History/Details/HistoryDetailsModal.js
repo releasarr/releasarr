@@ -29,6 +29,7 @@ function HistoryDetailsModal(props) {
     isOpen,
     eventType,
     indexer,
+    date,
     data,
     shortDateFormat,
     timeFormat,
@@ -49,6 +50,7 @@ function HistoryDetailsModal(props) {
           <HistoryDetails
             eventType={eventType}
             indexer={indexer}
+            date={date}
             data={data}
             shortDateFormat={shortDateFormat}
             timeFormat={timeFormat}
@@ -71,6 +73,7 @@ HistoryDetailsModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   eventType: PropTypes.string.isRequired,
   indexer: PropTypes.object.isRequired,
+  date: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
   shortDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,

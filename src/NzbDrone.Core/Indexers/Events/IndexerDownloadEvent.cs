@@ -18,6 +18,7 @@ namespace NzbDrone.Core.Indexers.Events
         public string DownloadId { get; set; }
         public IIndexer Indexer { get; set; }
         public GrabTrigger GrabTrigger { get; set; }
+        public long ElapsedTime { get; set; }
 
         public IndexerDownloadEvent(ReleaseInfo release, bool successful, string source, string host, string title, string url)
         {
