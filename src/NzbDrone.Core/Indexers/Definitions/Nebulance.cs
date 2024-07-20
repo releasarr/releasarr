@@ -162,6 +162,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return new IndexerPageableRequestChain();
             }
 
+            if (queryParams.Name is { Length: < 3 } || queryParams.Release is { Length: < 3 })
+            {
+                _logger.Debug("NBL API does not support release calls that are 2 characters or fewer.");
+
+                return new IndexerPageableRequestChain();
+            }
+
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
 
             return pageableRequests;
