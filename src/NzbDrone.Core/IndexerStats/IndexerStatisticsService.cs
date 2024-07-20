@@ -61,13 +61,8 @@ namespace NzbDrone.Core.IndexerStats
                     .ThenBy(v => v.Id)
                     .ToArray();
 
-                var temp = 0;
-                var elapsedTimeEvents = sortedEvents
-                    .Where(h => int.TryParse(h.Data.GetValueOrDefault("elapsedTime"), out temp) && h.Data.GetValueOrDefault("cached") != "1")
-                    .Select(_ => temp)
-                    .ToArray();
-
-                indexerStats.AverageResponseTime = elapsedTimeEvents.Any() ? (int)elapsedTimeEvents.Average() : 0;
+                indexerStats.AverageResponseTime = CalculateAverageElapsedTime(sortedEvents.Where(h => h.EventType is HistoryEventType.IndexerRss or HistoryEventType.IndexerQuery).ToArray());
+                indexerStats.AverageGrabResponseTime = CalculateAverageElapsedTime(sortedEvents.Where(h => h.EventType is HistoryEventType.ReleaseGrabbed).ToArray());
 
                 foreach (var historyEvent in sortedEvents)
                 {
@@ -175,6 +170,18 @@ namespace NzbDrone.Core.IndexerStats
                 UserAgentStatistics = userAgentStatsList,
                 HostStatistics = hostStatsList
             };
+        }
+
+        private static int CalculateAverageElapsedTime(History.History[] sortedEvents)
+        {
+            var temp = 0;
+
+            var elapsedTimeEvents = sortedEvents
+                .Where(h => int.TryParse(h.Data.GetValueOrDefault("elapsedTime"), out temp) && temp > 0 && h.Data.GetValueOrDefault("cached") != "1")
+                .Select(_ => temp)
+                .ToArray();
+
+            return elapsedTimeEvents.Any() ? (int)elapsedTimeEvents.Average() : 0;
         }
     }
 }

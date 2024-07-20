@@ -88,6 +88,8 @@
   "Author": "Author",
   "Automatic": "Automatic",
   "AutomaticSearch": "Automatic Search",
+  "AverageGrabs": "Average Grabs",
+  "AverageQueries": "Average Queries",
   "AverageResponseTimesMs": "Average Indexer Response Times (ms)",
   "Backup": "Backup",
   "BackupFolderHelpText": "Relative paths will be under {appName}'s AppData directory",

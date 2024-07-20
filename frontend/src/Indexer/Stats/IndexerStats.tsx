@@ -32,136 +32,123 @@ import IndexerStatsFilterModal from './IndexerStatsFilterModal';
 import styles from './IndexerStats.css';
 
 function getAverageResponseTimeData(indexerStats: IndexerStatsIndexer[]) {
-  const data = indexerStats.map((indexer) => {
-    return {
-      label: indexer.indexerName,
-      value: indexer.averageResponseTime,
-    };
-  });
+  const statistics = [...indexerStats].sort((a, b) =>
+    a.averageResponseTime === b.averageResponseTime
+      ? b.averageGrabResponseTime - a.averageGrabResponseTime
+      : b.averageResponseTime - a.averageResponseTime
+  );
 
-  data.sort((a, b) => {
-    return b.value - a.value;
-  });
-
-  return data;
+  return {
+    labels: statistics.map((indexer) => indexer.indexerName),
+    datasets: [
+      {
+        label: translate('AverageQueries'),
+        data: statistics.map((indexer) => indexer.averageResponseTime),
+      },
+      {
+        label: translate('AverageGrabs'),
+        data: statistics.map((indexer) => indexer.averageGrabResponseTime),
+      },
+    ],
+  };
 }
 
 function getFailureRateData(indexerStats: IndexerStatsIndexer[]) {
-  const data = indexerStats.map((indexer) => {
-    return {
-      label: indexer.indexerName,
-      value:
-        (indexer.numberOfFailedQueries +
-          indexer.numberOfFailedRssQueries +
-          indexer.numberOfFailedAuthQueries +
-          indexer.numberOfFailedGrabs) /
-        (indexer.numberOfQueries +
-          indexer.numberOfRssQueries +
-          indexer.numberOfAuthQueries +
-          indexer.numberOfGrabs),
-    };
-  });
+  const data = indexerStats.map((indexer) => ({
+    label: indexer.indexerName,
+    value:
+      (indexer.numberOfFailedQueries +
+        indexer.numberOfFailedRssQueries +
+        indexer.numberOfFailedAuthQueries +
+        indexer.numberOfFailedGrabs) /
+      (indexer.numberOfQueries +
+        indexer.numberOfRssQueries +
+        indexer.numberOfAuthQueries +
+        indexer.numberOfGrabs),
+  }));
 
-  data.sort((a, b) => {
-    return b.value - a.value;
-  });
+  data.sort((a, b) => b.value - a.value);
 
   return data;
 }
 
 function getTotalRequestsData(indexerStats: IndexerStatsIndexer[]) {
-  const data = {
-    labels: indexerStats.map((indexer) => indexer.indexerName),
+  const statistics = [...indexerStats].sort((a, b) =>
+    a.numberOfQueries === b.numberOfQueries
+      ? b.numberOfRssQueries - a.numberOfRssQueries
+      : b.numberOfQueries - a.numberOfQueries
+  );
+
+  return {
+    labels: statistics.map((indexer) => indexer.indexerName),
     datasets: [
       {
         label: translate('SearchQueries'),
-        data: indexerStats.map((indexer) => indexer.numberOfQueries),
+        data: statistics.map((indexer) => indexer.numberOfQueries),
       },
       {
         label: translate('RssQueries'),
-        data: indexerStats.map((indexer) => indexer.numberOfRssQueries),
+        data: statistics.map((indexer) => indexer.numberOfRssQueries),
       },
       {
         label: translate('AuthQueries'),
-        data: indexerStats.map((indexer) => indexer.numberOfAuthQueries),
+        data: statistics.map((indexer) => indexer.numberOfAuthQueries),
       },
     ],
   };
-
-  return data;
 }
 
 function getNumberGrabsData(indexerStats: IndexerStatsIndexer[]) {
-  const data = indexerStats.map((indexer) => {
-    return {
-      label: indexer.indexerName,
-      value: indexer.numberOfGrabs - indexer.numberOfFailedGrabs,
-    };
-  });
+  const data = indexerStats.map((indexer) => ({
+    label: indexer.indexerName,
+    value: indexer.numberOfGrabs - indexer.numberOfFailedGrabs,
+  }));
 
-  data.sort((a, b) => {
-    return b.value - a.value;
-  });
+  data.sort((a, b) => b.value - a.value);
 
   return data;
 }
 
 function getUserAgentGrabsData(indexerStats: IndexerStatsUserAgent[]) {
-  const data = indexerStats.map((indexer) => {
-    return {
-      label: indexer.userAgent ? indexer.userAgent : 'Other',
-      value: indexer.numberOfGrabs,
-    };
-  });
+  const data = indexerStats.map((indexer) => ({
+    label: indexer.userAgent ? indexer.userAgent : 'Other',
+    value: indexer.numberOfGrabs,
+  }));
 
-  data.sort((a, b) => {
-    return b.value - a.value;
-  });
+  data.sort((a, b) => b.value - a.value);
 
   return data;
 }
 
 function getUserAgentQueryData(indexerStats: IndexerStatsUserAgent[]) {
-  const data = indexerStats.map((indexer) => {
-    return {
-      label: indexer.userAgent ? indexer.userAgent : 'Other',
-      value: indexer.numberOfQueries,
-    };
-  });
+  const data = indexerStats.map((indexer) => ({
+    label: indexer.userAgent ? indexer.userAgent : 'Other',
+    value: indexer.numberOfQueries,
+  }));
 
-  data.sort((a, b) => {
-    return b.value - a.value;
-  });
+  data.sort((a, b) => b.value - a.value);
 
   return data;
 }
 
 function getHostGrabsData(indexerStats: IndexerStatsHost[]) {
-  const data = indexerStats.map((indexer) => {
-    return {
-      label: indexer.host ? indexer.host : 'Other',
-      value: indexer.numberOfGrabs,
-    };
-  });
+  const data = indexerStats.map((indexer) => ({
+    label: indexer.host ? indexer.host : 'Other',
+    value: indexer.numberOfGrabs,
+  }));
 
-  data.sort((a, b) => {
-    return b.value - a.value;
-  });
+  data.sort((a, b) => b.value - a.value);
 
   return data;
 }
 
 function getHostQueryData(indexerStats: IndexerStatsHost[]) {
-  const data = indexerStats.map((indexer) => {
-    return {
-      label: indexer.host ? indexer.host : 'Other',
-      value: indexer.numberOfQueries,
-    };
-  });
+  const data = indexerStats.map((indexer) => ({
+    label: indexer.host ? indexer.host : 'Other',
+    value: indexer.numberOfQueries,
+  }));
 
-  data.sort((a, b) => {
-    return b.value - a.value;
-  });
+  data.sort((a, b) => b.value - a.value);
 
   return data;
 }
@@ -294,7 +281,7 @@ function IndexerStats() {
             </div>
             <div className={styles.fullWidthChart}>
               <div className={styles.chartContainer}>
-                <BarChart
+                <StackedBarChart
                   data={getAverageResponseTimeData(item.indexers)}
                   title={translate('AverageResponseTimesMs')}
                   stepSize={100}

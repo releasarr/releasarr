@@ -2,6 +2,7 @@ export interface IndexerStatsIndexer {
   indexerId: number;
   indexerName: string;
   averageResponseTime: number;
+  averageGrabResponseTime: number;
   numberOfQueries: number;
   numberOfGrabs: number;
   numberOfRssQueries: number;
