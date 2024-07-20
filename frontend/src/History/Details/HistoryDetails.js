@@ -115,7 +115,7 @@ function HistoryDetails(props) {
           elapsedTime ?
             <DescriptionListItem
               title={translate('ElapsedTime')}
-              data={`${elapsedTime}ms${cached === '1' ? ' (cached)' : null}`}
+              data={`${elapsedTime}ms${cached === '1' ? ' (cached)' : ''}`}
             /> :
             null
         }
