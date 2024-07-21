@@ -133,9 +133,15 @@ namespace NzbDrone.Core.Indexers.Definitions
                 queryParams.Release = searchQuery;
             }
 
-            if (DateTime.TryParseExact($"{searchCriteria.Season} {searchCriteria.Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
+            if (searchCriteria.Season.HasValue &&
+                searchCriteria.Episode.IsNotNullOrWhiteSpace() &&
+                DateTime.TryParseExact($"{searchCriteria.Season} {searchCriteria.Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
             {
-                queryParams.Name = searchQuery;
+                if (searchQuery.IsNotNullOrWhiteSpace())
+                {
+                    queryParams.Name = searchQuery;
+                }
+
                 queryParams.Release = showDate.ToString("yyyy.MM.dd", CultureInfo.InvariantCulture);
             }
             else
@@ -162,7 +168,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return new IndexerPageableRequestChain();
             }
 
-            if (queryParams.Name is { Length: < 3 } || queryParams.Release is { Length: < 3 })
+            if (queryParams.Name is { Length: > 0 and < 3 } || queryParams.Release is { Length: > 0 and < 3 })
             {
                 _logger.Debug("NBL API does not support release calls that are 2 characters or fewer.");
 
@@ -193,6 +199,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (searchQuery.IsNotNullOrWhiteSpace())
             {
                 queryParams.Release = searchQuery;
+            }
+
+            if (queryParams.Release is { Length: > 0 and < 3 })
+            {
+                _logger.Debug("NBL API does not support release calls that are 2 characters or fewer.");
+
+                return new IndexerPageableRequestChain();
             }
 
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
