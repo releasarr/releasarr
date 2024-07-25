@@ -46,6 +46,10 @@ class StackedBarChart extends Component {
               size: 14,
               family: defaultFontFamily
             }
+          },
+          tooltip: {
+            mode: 'index',
+            position: 'average'
           }
         }
       },

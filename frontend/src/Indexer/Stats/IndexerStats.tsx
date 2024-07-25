@@ -73,10 +73,12 @@ function getFailureRateData(indexerStats: IndexerStatsIndexer[]) {
 }
 
 function getTotalRequestsData(indexerStats: IndexerStatsIndexer[]) {
-  const statistics = [...indexerStats].sort((a, b) =>
-    a.numberOfQueries === b.numberOfQueries
-      ? b.numberOfRssQueries - a.numberOfRssQueries
-      : b.numberOfQueries - a.numberOfQueries
+  const statistics = [...indexerStats].sort(
+    (a, b) =>
+      b.numberOfQueries +
+      b.numberOfRssQueries +
+      b.numberOfAuthQueries -
+      (a.numberOfQueries + a.numberOfRssQueries + a.numberOfAuthQueries)
   );
 
   return {
