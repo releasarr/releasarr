@@ -31,6 +31,7 @@
   "Album": "Album",
   "All": "All",
   "AllIndexersHiddenDueToFilter": "All indexers are hidden due to applied filter.",
+  "AllSearchResultsHiddenByFilter": "All search results are hidden by the applied filter.",
   "Analytics": "Analytics",
   "AnalyticsEnabledHelpText": "Send anonymous usage and error information to {appName}'s servers. This includes information on your browser, which {appName} WebUI pages you use, error reporting as well as OS and runtime version. We will use this information to prioritize features and bug fixes.",
   "Any": "Any",

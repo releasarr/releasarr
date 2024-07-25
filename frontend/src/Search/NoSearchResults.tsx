@@ -1,4 +1,6 @@
 import React from 'react';
+import Alert from 'Components/Alert';
+import { kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import styles from './NoSearchResults.css';
 
@@ -11,18 +13,16 @@ function NoSearchResults(props: NoSearchResultsProps) {
 
   if (totalItems > 0) {
     return (
-      <div>
-        <div className={styles.message}>
-          {translate('AllIndexersHiddenDueToFilter')}
-        </div>
-      </div>
+      <Alert kind={kinds.WARNING} className={styles.message}>
+        {translate('AllSearchResultsHiddenByFilter')}
+      </Alert>
     );
   }
 
   return (
-    <div>
-      <div className={styles.message}>{translate('NoSearchResultsFound')}</div>
-    </div>
+    <Alert kind={kinds.INFO} className={styles.message}>
+      {translate('NoSearchResultsFound')}
+    </Alert>
   );
 }
 

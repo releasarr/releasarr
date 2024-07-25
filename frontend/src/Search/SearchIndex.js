@@ -282,7 +282,7 @@ class SearchIndex extends Component {
 
     const ViewComponent = getViewComponent(isSmallScreen);
     const isLoaded = !!(!error && isPopulated && items.length && this.scrollerRef.current);
-    const hasNoIndexer = !totalItems;
+    const hasNoSearchResults = !totalItems;
 
     return (
       <PageContent title={translate('Search')}>
@@ -306,7 +306,7 @@ class SearchIndex extends Component {
             <SearchIndexSortMenu
               sortKey={sortKey}
               sortDirection={sortDirection}
-              isDisabled={hasNoIndexer}
+              isDisabled={hasNoSearchResults}
               onSortSelect={onSortSelect}
             />
 
@@ -314,7 +314,7 @@ class SearchIndex extends Component {
               selectedFilterKey={selectedFilterKey}
               filters={filters}
               customFilters={customFilters}
-              isDisabled={hasNoIndexer}
+              isDisabled={hasNoSearchResults}
               onFilterSelect={onFilterSelect}
             />
           </PageToolbarSection>

@@ -1,4 +1,5 @@
 import React from 'react';
+import Alert from 'Components/Alert';
 import Button from 'Components/Link/Button';
 import { kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
@@ -14,11 +15,9 @@ function NoIndexer(props: NoIndexerProps) {
 
   if (totalItems > 0) {
     return (
-      <div>
-        <div className={styles.message}>
-          {translate('AllIndexersHiddenDueToFilter')}
-        </div>
-      </div>
+      <Alert kind={kinds.WARNING} className={styles.message}>
+        {translate('AllIndexersHiddenDueToFilter')}
+      </Alert>
     );
   }
 
