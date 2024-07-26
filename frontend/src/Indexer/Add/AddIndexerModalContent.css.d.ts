@@ -10,6 +10,7 @@ interface CssExports {
   'indexers': string;
   'modalBody': string;
   'modalFooter': string;
+  'notice': string;
   'scroller': string;
 }
 export const cssExports: CssExports;

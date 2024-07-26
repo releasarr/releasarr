@@ -3,9 +3,13 @@ import { createAction } from 'redux-actions';
 import { filterTypePredicates, sortDirections } from 'Helpers/Props';
 import createFetchHandler from 'Store/Actions/Creators/createFetchHandler';
 import createRemoveItemHandler from 'Store/Actions/Creators/createRemoveItemHandler';
-import createSaveProviderHandler, { createCancelSaveProviderHandler } from 'Store/Actions/Creators/createSaveProviderHandler';
+import createSaveProviderHandler, {
+  createCancelSaveProviderHandler
+} from 'Store/Actions/Creators/createSaveProviderHandler';
 import createTestAllProvidersHandler from 'Store/Actions/Creators/createTestAllProvidersHandler';
-import createTestProviderHandler, { createCancelTestProviderHandler } from 'Store/Actions/Creators/createTestProviderHandler';
+import createTestProviderHandler, {
+  createCancelTestProviderHandler
+} from 'Store/Actions/Creators/createTestProviderHandler';
 import createSetProviderFieldValueReducer from 'Store/Actions/Creators/Reducers/createSetProviderFieldValueReducer';
 import createSetSettingValueReducer from 'Store/Actions/Creators/Reducers/createSetSettingValueReducer';
 import { createThunk, handleThunks } from 'Store/thunks';
@@ -16,6 +20,7 @@ import translate from 'Utilities/String/translate';
 import createBulkEditItemHandler from './Creators/createBulkEditItemHandler';
 import createBulkRemoveItemHandler from './Creators/createBulkRemoveItemHandler';
 import createHandleActions from './Creators/createHandleActions';
+import createClearReducer from './Creators/Reducers/createClearReducer';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
 
 //
@@ -96,10 +101,7 @@ export const filterPredicates = {
 
 export const sortPredicates = {
   vipExpiration: function(item) {
-    const vipExpiration =
-    item.fields.find((field) => field.name === 'vipExpiration')?.value ?? '';
-
-    return vipExpiration;
+    return item.fields.find((field) => field.name === 'vipExpiration')?.value ?? '';
   }
 };
 
@@ -110,6 +112,7 @@ export const FETCH_INDEXERS = 'indexers/fetchIndexers';
 export const FETCH_INDEXER_SCHEMA = 'indexers/fetchIndexerSchema';
 export const SELECT_INDEXER_SCHEMA = 'indexers/selectIndexerSchema';
 export const SET_INDEXER_SCHEMA_SORT = 'indexers/setIndexerSchemaSort';
+export const CLEAR_INDEXER_SCHEMA = 'indexers/clearIndexerSchema';
 export const CLONE_INDEXER = 'indexers/cloneIndexer';
 export const SET_INDEXER_VALUE = 'indexers/setIndexerValue';
 export const SET_INDEXER_FIELD_VALUE = 'indexers/setIndexerFieldValue';
@@ -129,6 +132,7 @@ export const fetchIndexers = createThunk(FETCH_INDEXERS);
 export const fetchIndexerSchema = createThunk(FETCH_INDEXER_SCHEMA);
 export const selectIndexerSchema = createAction(SELECT_INDEXER_SCHEMA);
 export const setIndexerSchemaSort = createAction(SET_INDEXER_SCHEMA_SORT);
+export const clearIndexerSchema = createAction(CLEAR_INDEXER_SCHEMA);
 export const cloneIndexer = createAction(CLONE_INDEXER);
 
 export const saveIndexer = createThunk(SAVE_INDEXER);
@@ -213,6 +217,8 @@ export const reducers = createHandleActions({
       return selectedSchema;
     });
   },
+
+  [CLEAR_INDEXER_SCHEMA]: createClearReducer(schemaSection, defaultState),
 
   [CLONE_INDEXER]: function(state, { payload }) {
     const id = payload.id;

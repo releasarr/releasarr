@@ -19,10 +19,16 @@
   margin-bottom: 16px;
 }
 
-.alert {
+.notice {
   composes: alert from '~Components/Alert.css';
 
   margin-bottom: 20px;
+}
+
+.alert {
+  composes: alert from '~Components/Alert.css';
+
+  text-align: center;
 }
 
 .scroller {

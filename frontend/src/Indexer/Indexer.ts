@@ -38,6 +38,7 @@ export interface IndexerField extends ModelBase {
 
 interface Indexer extends ModelBase {
   name: string;
+  definitionName: string;
   description: string;
   encoding: string;
   language: string;
