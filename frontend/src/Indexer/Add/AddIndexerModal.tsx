@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import Modal from 'Components/Modal/Modal';
@@ -41,11 +40,5 @@ function AddIndexerModal({
     </Modal>
   );
 }
-
-AddIndexerModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onModalClose: PropTypes.func.isRequired,
-  onSelectIndexer: PropTypes.func.isRequired,
-};
 
 export default AddIndexerModal;
