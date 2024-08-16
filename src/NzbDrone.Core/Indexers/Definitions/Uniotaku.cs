@@ -137,6 +137,7 @@ public class Uniotaku : TorrentIndexerBase<UniotakuSettings>
         caps.Categories.AddCategoryMapping(55, NewznabStandardCategory.XXX, "Hentai");
         caps.Categories.AddCategoryMapping(56, NewznabStandardCategory.XXXOther, "H Doujinshi");
         caps.Categories.AddCategoryMapping(57, NewznabStandardCategory.TVOther, "Tokusatsu");
+        caps.Categories.AddCategoryMapping(58, NewznabStandardCategory.TVOther, "Live Action");
 
         return caps;
     }
