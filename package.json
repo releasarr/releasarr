@@ -86,11 +86,11 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "@babel/core": "7.24.9",
-    "@babel/eslint-parser": "7.24.8",
+    "@babel/core": "7.25.2",
+    "@babel/eslint-parser": "7.25.1",
     "@babel/plugin-proposal-export-default-from": "7.24.7",
     "@babel/plugin-syntax-dynamic-import": "7.8.3",
-    "@babel/preset-env": "7.24.8",
+    "@babel/preset-env": "7.25.3",
     "@babel/preset-react": "7.24.7",
     "@babel/preset-typescript": "7.24.7",
     "@types/lodash": "4.14.194",
