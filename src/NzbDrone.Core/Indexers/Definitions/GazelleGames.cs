@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
@@ -368,6 +369,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly GazelleGamesSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
+        private static Regex YearRegex => new (@"\b(?:19|20|21)\d{2}\b", RegexOptions.Compiled);
+
         public GazelleGamesParser(GazelleGamesSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
@@ -469,14 +472,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var title = WebUtility.HtmlDecode(torrent.ReleaseTitle);
 
-            if (group.Year is > 0 && !title.Contains(group.Year.ToString()))
+            if (group.Year is > 0 && title.IsNotNullOrWhiteSpace() && !YearRegex.Match(title).Success)
             {
                 title += $" ({group.Year})";
             }
 
             if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
             {
-                title += $" [{$"{torrent.RemasterTitle} {torrent.RemasterYear}".Trim()}]";
+                title += $" [{$"{WebUtility.HtmlDecode(torrent.RemasterTitle)} {torrent.RemasterYear}".Trim()}]";
             }
 
             var flags = new List<string>
