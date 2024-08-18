@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new MyAnonamouseRequestGenerator { Settings = Settings, Capabilities = Capabilities };
+            return new MyAnonamouseRequestGenerator(Settings, Capabilities, _logger);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -210,14 +210,31 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class MyAnonamouseRequestGenerator : IIndexerRequestGenerator
     {
-        public MyAnonamouseSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private static readonly Regex SanitizeSearchQueryRegex = new ("[^\\w]+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        private readonly MyAnonamouseSettings _settings;
+        private readonly IndexerCapabilities _capabilities;
+        private readonly Logger _logger;
+
+        public MyAnonamouseRequestGenerator(MyAnonamouseSettings settings, IndexerCapabilities capabilities, Logger logger)
+        {
+            _settings = settings;
+            _capabilities = capabilities;
+            _logger = logger;
+        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria)
         {
-            var term = searchCriteria.SanitizedSearchTerm.Trim();
+            var term = SanitizeSearchQueryRegex.Replace(searchCriteria.SanitizedSearchTerm, " ").Trim();
 
-            var searchType = Settings.SearchType switch
+            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && term.IsNullOrWhiteSpace())
+            {
+                _logger.Debug("Search term is empty after being sanitized, stopping search. Initial search term: '{0}'", searchCriteria.SearchTerm);
+
+                yield break;
+            }
+
+            var searchType = _settings.SearchType switch
             {
                 (int)MyAnonamouseSearchType.Active => "active",
                 (int)MyAnonamouseSearchType.Freeleech => "fl",
@@ -242,22 +259,22 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "description", "1" } // include the description
             };
 
-            if (Settings.SearchInDescription)
+            if (_settings.SearchInDescription)
             {
                 parameters.Set("tor[srchIn][description]", "true");
             }
 
-            if (Settings.SearchInSeries)
+            if (_settings.SearchInSeries)
             {
                 parameters.Set("tor[srchIn][series]", "true");
             }
 
-            if (Settings.SearchInFilenames)
+            if (_settings.SearchInFilenames)
             {
                 parameters.Set("tor[srchIn][filenames]", "true");
             }
 
-            var catList = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
+            var catList = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
             if (catList.Any())
             {
                 var index = 0;
@@ -287,7 +304,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 parameters.Set("tor[unit]", "1");
             }
 
-            var searchUrl = Settings.BaseUrl + "tor/js/loadSearchJSONbasic.php";
+            var searchUrl = _settings.BaseUrl + "tor/js/loadSearchJSONbasic.php";
 
             if (parameters.Count > 0)
             {
