@@ -84,7 +84,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
             if (_definitionService.GetCachedDefinition(Settings.DefinitionFile).Search?.Rows?.Filters?.Any(x => x.Name == "andmatch") ?? false)
             {
-                cleanReleases = FilterReleasesByQuery(releases, searchCriteria).ToList();
+                cleanReleases = FilterReleasesByQuery(cleanReleases, searchCriteria).ToList();
             }
 
             return cleanReleases;
