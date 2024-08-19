@@ -21,6 +21,7 @@ namespace Prowlarr.Api.V1.Config
         public string Password { get; set; }
         public string PasswordConfirmation { get; set; }
         public string LogLevel { get; set; }
+        public int LogSizeLimit { get; set; }
         public string ConsoleLogLevel { get; set; }
         public string Branch { get; set; }
         public string ApiKey { get; set; }
@@ -66,6 +67,7 @@ namespace Prowlarr.Api.V1.Config
                 //Username
                 //Password
                 LogLevel = model.LogLevel,
+                LogSizeLimit = model.LogSizeLimit,
                 ConsoleLogLevel = model.ConsoleLogLevel,
                 Branch = model.Branch,
                 ApiKey = model.ApiKey,
