@@ -1,11 +1,15 @@
 using NzbDrone.Core.Applications;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Prowlarr.Api.V1.Applications
 {
     public class ApplicationResource : ProviderResource<ApplicationResource>
     {
         public ApplicationSyncLevel SyncLevel { get; set; }
+
+        [SwaggerIgnore]
         public bool Enable { get; set; }
+
         public string TestCommand { get; set; }
     }
 
