@@ -57,6 +57,7 @@ class Application extends Component {
     const {
       id,
       name,
+      enable,
       syncLevel,
       fields,
       tags,
@@ -77,7 +78,7 @@ class Application extends Component {
           </div>
 
           {
-            applicationUrl ?
+            enable && applicationUrl ?
               <IconButton
                 className={styles.externalLink}
                 name={icons.EXTERNAL_LINK}
@@ -140,6 +141,7 @@ class Application extends Component {
 Application.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
+  enable: PropTypes.bool.isRequired,
   syncLevel: PropTypes.string.isRequired,
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
