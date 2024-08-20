@@ -339,7 +339,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     mainTitle = seriesName;
                 }
 
-                var synonyms = new HashSet<string>
+                var synonyms = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                 {
                     mainTitle
                 };
