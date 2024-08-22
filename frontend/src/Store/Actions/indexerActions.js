@@ -100,8 +100,22 @@ export const filterPredicates = {
 };
 
 export const sortPredicates = {
-  vipExpiration: function(item) {
-    return item.fields.find((field) => field.name === 'vipExpiration')?.value ?? '';
+  status: function({ enable, redirect }) {
+    let result = 0;
+
+    if (redirect) {
+      result++;
+    }
+
+    if (enable) {
+      result += 2;
+    }
+
+    return result;
+  },
+
+  vipExpiration: function({ fields = [] }) {
+    return fields.find((field) => field.name === 'vipExpiration')?.value ?? '';
   }
 };
 

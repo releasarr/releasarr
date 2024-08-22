@@ -8,6 +8,30 @@ import translate from 'Utilities/String/translate';
 import DisabledIndexerInfo from './DisabledIndexerInfo';
 import styles from './IndexerStatusCell.css';
 
+function getIconKind(enabled: boolean, redirect: boolean) {
+  if (enabled) {
+    return redirect ? kinds.INFO : kinds.SUCCESS;
+  }
+
+  return kinds.DEFAULT;
+}
+
+function getIconName(enabled: boolean, redirect: boolean) {
+  if (enabled) {
+    return redirect ? icons.REDIRECT : icons.CHECK;
+  }
+
+  return icons.BLOCKLIST;
+}
+
+function getIconTooltip(enabled: boolean, redirect: boolean) {
+  if (enabled) {
+    return redirect ? translate('EnabledRedirected') : translate('Enabled');
+  }
+
+  return translate('Disabled');
+}
+
 interface IndexerStatusCellProps {
   className: string;
   enabled: boolean;
@@ -30,19 +54,13 @@ function IndexerStatusCell(props: IndexerStatusCellProps) {
     ...otherProps
   } = props;
 
-  const enableKind = redirect ? kinds.INFO : kinds.SUCCESS;
-  const enableIcon = redirect ? icons.REDIRECT : icons.CHECK;
-  const enableTitle = redirect
-    ? translate('EnabledRedirected')
-    : translate('Enabled');
-
   return (
     <Component className={className} {...otherProps}>
       <Icon
         className={styles.statusIcon}
-        kind={enabled ? enableKind : kinds.DEFAULT}
-        name={enabled ? enableIcon : icons.BLOCKLIST}
-        title={enabled ? enableTitle : translate('Disabled')}
+        kind={getIconKind(enabled, redirect)}
+        name={getIconName(enabled, redirect)}
+        title={getIconTooltip(enabled, redirect)}
       />
       {status ? (
         <Popover
