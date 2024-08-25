@@ -7,7 +7,7 @@ import { icons } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import IndexerSearchInputConnector from './IndexerSearchInputConnector';
 import KeyboardShortcutsModal from './KeyboardShortcutsModal';
-import PageHeaderActionsMenuConnector from './PageHeaderActionsMenuConnector';
+import PageHeaderActionsMenu from './PageHeaderActionsMenu';
 import styles from './PageHeader.css';
 
 class PageHeader extends Component {
@@ -87,7 +87,8 @@ class PageHeader extends Component {
             to="https://translate.servarr.com/projects/servarr/prowlarr/"
             size={24}
           />
-          <PageHeaderActionsMenuConnector
+
+          <PageHeaderActionsMenu
             onKeyboardShortcutsPress={this.onOpenKeyboardShortcutsModal}
           />
         </div>
