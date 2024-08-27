@@ -107,13 +107,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             return CookieUtil.CookieHeaderToDictionary($"mam_id={Settings.MamId}");
         }
 
-        protected override async Task<ValidationFailure> TestConnection()
+        protected override async Task Test(List<ValidationFailure> failures)
         {
             UpdateCookies(null, null);
 
             _logger.Debug("Cookies cleared.");
 
-            return await base.TestConnection().ConfigureAwait(false);
+            await base.Test(failures).ConfigureAwait(false);
         }
 
         private IndexerCapabilities SetCapabilities()
