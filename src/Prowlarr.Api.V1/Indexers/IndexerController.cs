@@ -1,3 +1,4 @@
+using FluentValidation;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Validation;
 using Prowlarr.Http;
@@ -14,9 +15,10 @@ namespace Prowlarr.Api.V1.Indexers
             DownloadClientExistsValidator downloadClientExistsValidator)
             : base(indexerFactory, "indexer", resourceMapper, bulkResourceMapper)
         {
-            Http.Validation.RuleBuilderExtensions.ValidId(SharedValidator.RuleFor(s => s.AppProfileId));
+            SharedValidator.RuleFor(c => c.AppProfileId).Cascade(CascadeMode.Stop)
+                .ValidId()
+                .SetValidator(appProfileExistsValidator);
 
-            SharedValidator.RuleFor(c => c.AppProfileId).SetValidator(appProfileExistsValidator);
             SharedValidator.RuleFor(c => c.DownloadClientId).SetValidator(downloadClientExistsValidator);
         }
     }
