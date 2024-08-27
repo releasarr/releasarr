@@ -93,7 +93,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.IsRssSearch)
             {
-                cleanReleases = cleanReleases.Where((r, index) => r.PublishDate > DateTime.Now.AddDays(-1) || index < 20).ToList();
+                cleanReleases = cleanReleases.Where((r, index) => r.PublishDate > DateTime.UtcNow.AddDays(-1) || index < 20).ToList();
             }
 
             return cleanReleases.Select(r => (ReleaseInfo)r.Clone()).ToList();
