@@ -127,10 +127,12 @@ namespace NzbDrone.Core.ThingiProvider
 
         public virtual IEnumerable<TProviderDefinition> Update(IEnumerable<TProviderDefinition> definitions)
         {
-            _providerRepository.UpdateMany(definitions.ToList());
-            _eventAggregator.PublishEvent(new ProviderBulkUpdatedEvent<TProvider>(definitions));
+            var providerDefinitions = definitions.ToList();
 
-            return definitions;
+            _providerRepository.UpdateMany(providerDefinitions);
+            _eventAggregator.PublishEvent(new ProviderBulkUpdatedEvent<TProvider>(providerDefinitions));
+
+            return providerDefinitions;
         }
 
         public void Delete(int id)

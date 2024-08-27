@@ -318,5 +318,24 @@ namespace NzbDrone.Core.Indexers
 
             base.Update(definition);
         }
+
+        public override IEnumerable<IndexerDefinition> Update(IEnumerable<IndexerDefinition> definitions)
+        {
+            var indexerDefinitions = definitions.ToList();
+
+            foreach (var definition in indexerDefinitions)
+            {
+                var provider = _providers.First(v => v.GetType().Name == definition.Implementation);
+
+                SetProviderCharacteristics(provider, definition);
+
+                if (definition.Implementation == nameof(Cardigann))
+                {
+                    MapCardigannDefinition(definition);
+                }
+            }
+
+            return base.Update(indexerDefinitions);
+        }
     }
 }
