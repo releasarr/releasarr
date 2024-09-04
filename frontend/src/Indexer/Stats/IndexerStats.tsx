@@ -54,18 +54,20 @@ function getAverageResponseTimeData(indexerStats: IndexerStatsIndexer[]) {
 }
 
 function getFailureRateData(indexerStats: IndexerStatsIndexer[]) {
-  const data = indexerStats.map((indexer) => ({
-    label: indexer.indexerName,
-    value:
-      (indexer.numberOfFailedQueries +
-        indexer.numberOfFailedRssQueries +
-        indexer.numberOfFailedAuthQueries +
-        indexer.numberOfFailedGrabs) /
-      (indexer.numberOfQueries +
-        indexer.numberOfRssQueries +
-        indexer.numberOfAuthQueries +
-        indexer.numberOfGrabs),
-  }));
+  const data = [...indexerStats]
+    .map((indexer) => ({
+      label: indexer.indexerName,
+      value:
+        (indexer.numberOfFailedQueries +
+          indexer.numberOfFailedRssQueries +
+          indexer.numberOfFailedAuthQueries +
+          indexer.numberOfFailedGrabs) /
+        (indexer.numberOfQueries +
+          indexer.numberOfRssQueries +
+          indexer.numberOfAuthQueries +
+          indexer.numberOfGrabs),
+    }))
+    .filter((s) => s.value > 0);
 
   data.sort((a, b) => b.value - a.value);
 
@@ -73,13 +75,20 @@ function getFailureRateData(indexerStats: IndexerStatsIndexer[]) {
 }
 
 function getTotalRequestsData(indexerStats: IndexerStatsIndexer[]) {
-  const statistics = [...indexerStats].sort(
-    (a, b) =>
-      b.numberOfQueries +
-      b.numberOfRssQueries +
-      b.numberOfAuthQueries -
-      (a.numberOfQueries + a.numberOfRssQueries + a.numberOfAuthQueries)
-  );
+  const statistics = [...indexerStats]
+    .filter(
+      (s) =>
+        s.numberOfQueries > 0 ||
+        s.numberOfRssQueries > 0 ||
+        s.numberOfAuthQueries > 0
+    )
+    .sort(
+      (a, b) =>
+        b.numberOfQueries +
+        b.numberOfRssQueries +
+        b.numberOfAuthQueries -
+        (a.numberOfQueries + a.numberOfRssQueries + a.numberOfAuthQueries)
+    );
 
   return {
     labels: statistics.map((indexer) => indexer.indexerName),
@@ -101,10 +110,12 @@ function getTotalRequestsData(indexerStats: IndexerStatsIndexer[]) {
 }
 
 function getNumberGrabsData(indexerStats: IndexerStatsIndexer[]) {
-  const data = indexerStats.map((indexer) => ({
-    label: indexer.indexerName,
-    value: indexer.numberOfGrabs - indexer.numberOfFailedGrabs,
-  }));
+  const data = [...indexerStats]
+    .map((indexer) => ({
+      label: indexer.indexerName,
+      value: indexer.numberOfGrabs - indexer.numberOfFailedGrabs,
+    }))
+    .filter((s) => s.value > 0);
 
   data.sort((a, b) => b.value - a.value);
 
