@@ -244,7 +244,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                throw new IndexerException(indexerResponse, "Unexpected response status '{0}' code from indexer request", indexerResponse.HttpResponse.StatusCode);
+                STJson.TryDeserialize<JsonRpcResponse<NebulanceErrorResponse>>(indexerResponse.HttpResponse.Content, out var errorResponse);
+
+                throw new IndexerException(indexerResponse, "Unexpected response status '{0}' code from indexer request: {1}", indexerResponse.HttpResponse.StatusCode, errorResponse?.Result?.Error?.Message ?? "Check the logs for more information.");
             }
 
             JsonRpcResponse<NebulanceResponse> jsonResponse;
@@ -409,5 +411,15 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string PublishDateUtc { get; set; }
 
         public IEnumerable<string> Tags { get; set; } = Array.Empty<string>();
+    }
+
+    public class NebulanceErrorResponse
+    {
+        public NebulanceErrorMessage Error { get; set; }
+    }
+
+    public class NebulanceErrorMessage
+    {
+        public string Message { get; set; }
     }
 }
