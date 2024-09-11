@@ -63,5 +63,8 @@ namespace NzbDrone.Core.Indexers
 
         [FieldDefinition(4, Type = FieldType.Number, Label = "IndexerSettingsPackSeedTime", HelpText = "IndexerSettingsPackSeedTimeIndexerHelpText", Unit = "minutes", Advanced = true)]
         public int? PackSeedTime { get; set; }
+
+        [FieldDefinition(5, Type = FieldType.Checkbox, Label = "IndexerSettingsPreferMagnetUrl", HelpText = "IndexerSettingsPreferMagnetUrlHelpText", Advanced = true)]
+        public bool PreferMagnetUrl { get; set; }
     }
 }

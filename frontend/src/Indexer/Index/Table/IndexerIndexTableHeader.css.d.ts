@@ -8,6 +8,7 @@ interface CssExports {
   'id': string;
   'minimumSeeders': string;
   'packSeedTime': string;
+  'preferMagnetUrl': string;
   'priority': string;
   'privacy': string;
   'protocol': string;

@@ -19,6 +19,7 @@ interface SavePayload {
   seedRatio?: number;
   seedTime?: number;
   packSeedTime?: number;
+  preferMagnetUrl?: boolean;
 }
 
 interface EditIndexerModalContentProps {
@@ -65,6 +66,9 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
   const [packSeedTime, setPackSeedTime] = useState<null | string | number>(
     null
   );
+  const [preferMagnetUrl, setPreferMagnetUrl] = useState<
+    null | string | boolean
+  >(null);
 
   const save = useCallback(() => {
     let hasChanges = false;
@@ -105,6 +109,11 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
       payload.packSeedTime = packSeedTime as number;
     }
 
+    if (preferMagnetUrl !== null) {
+      hasChanges = true;
+      payload.preferMagnetUrl = preferMagnetUrl === 'true';
+    }
+
     if (hasChanges) {
       onSavePress(payload);
     }
@@ -118,6 +127,7 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
     seedRatio,
     seedTime,
     packSeedTime,
+    preferMagnetUrl,
     onSavePress,
     onModalClose,
   ]);
@@ -145,6 +155,9 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
           break;
         case 'packSeedTime':
           setPackSeedTime(value);
+          break;
+        case 'preferMagnetUrl':
+          setPreferMagnetUrl(value);
           break;
         default:
           console.warn(`EditIndexersModalContent Unknown Input: '${name}'`);
@@ -251,6 +264,18 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
             value={packSeedTime}
             unit={translate('minutes')}
             helpText={translate('PackSeedTimeHelpText')}
+            onChange={onInputChange}
+          />
+        </FormGroup>
+
+        <FormGroup size={sizes.MEDIUM}>
+          <FormLabel>{translate('PreferMagnetUrl')}</FormLabel>
+
+          <FormInputGroup
+            type={inputTypes.SELECT}
+            name="preferMagnetUrl"
+            value={preferMagnetUrl}
+            values={enableOptions}
             onChange={onInputChange}
           />
         </FormGroup>

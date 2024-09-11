@@ -117,6 +117,12 @@ export const defaultState = {
       isVisible: false
     },
     {
+      name: 'preferMagnetUrl',
+      label: () => translate('PreferMagnetUrl'),
+      isSortable: true,
+      isVisible: false
+    },
+    {
       name: 'tags',
       label: () => translate('Tags'),
       isSortable: false,

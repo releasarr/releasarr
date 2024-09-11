@@ -29,7 +29,8 @@
 .minimumSeeders,
 .seedRatio,
 .seedTime,
-.packSeedTime {
+.packSeedTime,
+.preferMagnetUrl {
   composes: cell;
 
   flex: 0 0 90px;

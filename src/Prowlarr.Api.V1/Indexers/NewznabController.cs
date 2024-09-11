@@ -198,7 +198,9 @@ namespace NzbDrone.Api.V1.Indexers
                         }
                     }
 
-                    return CreateResponse(results.ToXml(indexer.Protocol));
+                    var preferMagnetUrl = indexer.Protocol == DownloadProtocol.Torrent && indexerDef.Settings is ITorrentIndexerSettings torrentIndexerSettings && (torrentIndexerSettings.TorrentBaseSettings?.PreferMagnetUrl ?? false);
+
+                    return CreateResponse(results.ToXml(indexer.Protocol, preferMagnetUrl));
                 default:
                     return CreateResponse(CreateErrorXML(202, $"No such function ({requestType})"), statusCode: StatusCodes.Status400BadRequest);
             }

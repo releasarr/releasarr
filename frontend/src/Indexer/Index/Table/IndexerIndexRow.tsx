@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSelect } from 'App/SelectContext';
+import CheckInput from 'Components/Form/CheckInput';
 import IconButton from 'Components/Link/IconButton';
 import RelativeDateCell from 'Components/Table/Cells/RelativeDateCell';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
@@ -74,6 +75,10 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
     fields.find((field) => field.name === 'torrentBaseSettings.packSeedTime')
       ?.value ?? undefined;
 
+  const preferMagnetUrl =
+    fields.find((field) => field.name === 'torrentBaseSettings.preferMagnetUrl')
+      ?.value ?? undefined;
+
   const rssUrl = `${window.location.origin}${
     window.Prowlarr.urlBase
   }/${id}/api?apikey=${encodeURIComponent(
@@ -101,6 +106,10 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
   const onDeleteIndexerModalClose = useCallback(() => {
     setIsDeleteIndexerModalOpen(false);
   }, [setIsDeleteIndexerModalOpen]);
+
+  const checkInputCallback = useCallback(() => {
+    // Mock handler to satisfy `onChange` being required for `CheckInput`.
+  }, []);
 
   const onSelectedChange = useCallback(
     ({ id, value, shiftKey }: SelectStateInputProps) => {
@@ -273,6 +282,21 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
               {packSeedTime}
+            </VirtualTableRowCell>
+          );
+        }
+
+        if (name === 'preferMagnetUrl') {
+          return (
+            <VirtualTableRowCell key={name} className={styles[name]}>
+              {preferMagnetUrl === undefined ? null : (
+                <CheckInput
+                  name="preferMagnetUrl"
+                  value={preferMagnetUrl}
+                  isDisabled={true}
+                  onChange={checkInputCallback}
+                />
+              )}
             </VirtualTableRowCell>
           );
         }

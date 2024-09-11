@@ -116,6 +116,26 @@ export const sortPredicates = {
 
   vipExpiration: function({ fields = [] }) {
     return fields.find((field) => field.name === 'vipExpiration')?.value ?? '';
+  },
+
+  minimumSeeders: function({ fields = [] }) {
+    return fields.find((field) => field.name === 'torrentBaseSettings.appMinimumSeeders')?.value ?? undefined;
+  },
+
+  seedRatio: function({ fields = [] }) {
+    return fields.find((field) => field.name === 'torrentBaseSettings.seedRatio')?.value ?? undefined;
+  },
+
+  seedTime: function({ fields = [] }) {
+    return fields.find((field) => field.name === 'torrentBaseSettings.seedTime')?.value ?? undefined;
+  },
+
+  packSeedTime: function({ fields = [] }) {
+    return fields.find((field) => field.name === 'torrentBaseSettings.packSeedTime')?.value ?? undefined;
+  },
+
+  preferMagnetUrl: function({ fields = [] }) {
+    return fields.find((field) => field.name === 'torrentBaseSettings.preferMagnetUrl')?.value ?? undefined;
   }
 };
 
