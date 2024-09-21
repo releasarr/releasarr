@@ -25,7 +25,13 @@ namespace Prowlarr.Api.V1.History
         public PagingResource<HistoryResource> GetHistory([FromQuery] PagingRequestResource paging, [FromQuery(Name = "eventType")] int[] eventTypes, bool? successful, string downloadId, [FromQuery] int[] indexerIds = null)
         {
             var pagingResource = new PagingResource<HistoryResource>(paging);
-            var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, NzbDrone.Core.History.History>("date", SortDirection.Descending);
+            var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, NzbDrone.Core.History.History>(
+                new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    "date"
+                },
+                "date",
+                SortDirection.Descending);
 
             if (eventTypes != null && eventTypes.Any())
             {
