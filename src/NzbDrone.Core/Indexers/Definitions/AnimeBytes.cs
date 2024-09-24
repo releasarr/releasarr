@@ -227,7 +227,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
 
-            var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
+            var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Distinct().ToList();
+
+            if (queryCats.Any() && searchCriteria is TvSearchCriteria { Season: > 0 })
+            {
+                // Avoid searching for specials if it's a non-zero season search
+                queryCats.RemoveAll(cat => cat is "anime[tv_special]" or "anime[ova]" or "anime[ona]" or "anime[dvd_special]" or "anime[bd_special]");
+            }
 
             if (queryCats.Any())
             {
@@ -246,9 +252,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             searchUrl += "?" + parameters.GetQueryString();
 
-            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
-
-            yield return request;
+            yield return new IndexerRequest(searchUrl, HttpAccept.Json);
         }
 
         private static string CleanSearchTerm(string term)
