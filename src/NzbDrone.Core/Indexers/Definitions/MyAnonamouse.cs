@@ -22,6 +22,7 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -51,7 +52,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new MyAnonamouseParser(Settings, Capabilities.Categories, _httpClient, _cacheManager, _logger);
+            return new MyAnonamouseParser(Definition, Settings, Capabilities.Categories, _httpClient, _cacheManager, _logger);
         }
 
         public override async Task<IndexerDownloadResponse> Download(Uri link)
@@ -374,6 +375,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class MyAnonamouseParser : IParseIndexerResponse
     {
+        private readonly ProviderDefinition _definition;
         private readonly MyAnonamouseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
         private readonly IIndexerHttpClient _httpClient;
@@ -386,12 +388,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             "Elite VIP"
         };
 
-        public MyAnonamouseParser(MyAnonamouseSettings settings,
+        public MyAnonamouseParser(ProviderDefinition definition,
+            MyAnonamouseSettings settings,
             IndexerCapabilitiesCategories categories,
             IIndexerHttpClient httpClient,
             ICacheManager cacheManager,
             Logger logger)
         {
+            _definition = definition;
             _settings = settings;
             _categories = categories;
             _httpClient = httpClient;
@@ -543,7 +547,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     _logger.Debug("Fetching user data: {0}", request.Url.FullUri);
 
-                    var response = _httpClient.Get(request);
+                    var response = _httpClient.ExecuteProxied(request, _definition);
                     var jsonResponse = JsonConvert.DeserializeObject<MyAnonamouseUserDataResponse>(response.Content);
 
                     return jsonResponse.UserClass?.Trim();
