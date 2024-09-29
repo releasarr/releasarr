@@ -27,6 +27,9 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
         [FieldDefinition(4, Label = "IndexerSettingsFreeleechOnly", HelpText = "IndexerPassThePopcornSettingsFreeleechOnlyHelpText", Type = FieldType.Checkbox)]
         public bool FreeleechOnly { get; set; }
 
+        [FieldDefinition(5, Label = "IndexerPassThePopcornSettingsGoldenPopcornOnly", HelpText = "IndexerPassThePopcornSettingsGoldenPopcornOnlyHelpText", Type = FieldType.Checkbox, Advanced = true)]
+        public bool GoldenPopcornOnly { get; set; }
+
         public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

@@ -380,6 +380,8 @@
   "IndexerPassThePopcornSettingsApiKeyHelpText": "Site API Key",
   "IndexerPassThePopcornSettingsApiUserHelpText": "These settings are found in your PassThePopcorn security settings (Edit Profile > Security).",
   "IndexerPassThePopcornSettingsFreeleechOnlyHelpText": "Search freeleech releases only",
+  "IndexerPassThePopcornSettingsGoldenPopcornOnly": "Golden Popcorn only",
+  "IndexerPassThePopcornSettingsGoldenPopcornOnlyHelpText": "Search Golden Popcorn releases only",
   "IndexerPriority": "Indexer Priority",
   "IndexerPriorityHelpText": "Indexer Priority from 1 (Highest) to 50 (Lowest). Default: 25.",
   "IndexerProxies": "Indexer Proxies",

@@ -86,6 +86,11 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                 parameters.Set("freetorrent", "1");
             }
 
+            if (_settings.GoldenPopcornOnly)
+            {
+                parameters.Set("scene", "2");
+            }
+
             var queryCats = _capabilities.Categories
                 .MapTorznabCapsToTrackers(searchCriteria.Categories)
                 .Select(int.Parse)
