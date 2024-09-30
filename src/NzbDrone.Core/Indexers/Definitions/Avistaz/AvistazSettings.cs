@@ -27,16 +27,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public string Token { get; set; }
 
-        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(2, Label = "Username", HelpText = "IndexerAvistazSettingsUsernameHelpText", HelpTextWarning = "IndexerAvistazSettingsUsernameHelpTextWarning", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
+        [FieldDefinition(3, Label = "Password", HelpText = "IndexerAvistazSettingsPasswordHelpText", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(4, Label = "PID", HelpText = "PID from My Account or My Profile page", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
+        [FieldDefinition(4, Label = "PID", HelpText = "IndexerAvistazSettingsPidHelpText", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Pid { get; set; }
 
-        [FieldDefinition(5, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech only")]
+        [FieldDefinition(5, Label = "IndexerSettingsFreeleechOnly", Type = FieldType.Checkbox, HelpText = "IndexerAvistazSettingsFreeleechOnlyHelpText")]
         public bool FreeleechOnly { get; set; }
 
         public override NzbDroneValidationResult Validate()
