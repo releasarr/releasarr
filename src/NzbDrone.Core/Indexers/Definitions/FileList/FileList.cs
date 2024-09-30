@@ -103,6 +103,8 @@ public class FileList : TorrentIndexerBase<FileListSettings>
         caps.Categories.AddCategoryMapping(25, NewznabStandardCategory.Movies3D, "Filme 3D");
         caps.Categories.AddCategoryMapping(26, NewznabStandardCategory.MoviesBluRay, "Filme 4K Blu-Ray");
         caps.Categories.AddCategoryMapping(27, NewznabStandardCategory.TVUHD, "Seriale 4K");
+        caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.MoviesForeign, "RO Dubbed");
+        caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.TVForeign, "RO Dubbed");
 
         return caps;
     }

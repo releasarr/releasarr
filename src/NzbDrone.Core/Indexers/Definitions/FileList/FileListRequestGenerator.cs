@@ -151,7 +151,7 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
 
         if (searchCriteria.Categories != null && searchCriteria.Categories.Any())
         {
-            parameters.Set("category", string.Join(",", Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories)));
+            parameters.Set("category", string.Join(",", Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Distinct().ToList()));
         }
 
         if (Settings.FreeleechOnly)
