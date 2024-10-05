@@ -255,20 +255,25 @@ namespace NzbDrone.Api.V1.Indexers
             var source = Request.GetSource();
             var host = Request.GetHostName();
 
-            var unprotectedlLink = _downloadMappingService.ConvertToNormalLink(link);
+            var unprotectedLink = _downloadMappingService.ConvertToNormalLink(link);
+
+            if (unprotectedLink.IsNullOrWhiteSpace())
+            {
+                throw new BadRequestException("Failed to normalize provided link");
+            }
 
             // If Indexer is set to download via Redirect then just redirect to the link
             if (indexer.SupportsRedirect && indexerDef.Redirect)
             {
-                _downloadService.RecordRedirect(unprotectedlLink, id, source, host, file);
-                return RedirectPermanent(unprotectedlLink);
+                _downloadService.RecordRedirect(unprotectedLink, id, source, host, file);
+                return RedirectPermanent(unprotectedLink);
             }
 
             byte[] downloadBytes;
 
             try
             {
-                downloadBytes = await _downloadService.DownloadReport(unprotectedlLink, id, source, host, file);
+                downloadBytes = await _downloadService.DownloadReport(unprotectedLink, id, source, host, file);
             }
             catch (ReleaseUnavailableException ex)
             {
