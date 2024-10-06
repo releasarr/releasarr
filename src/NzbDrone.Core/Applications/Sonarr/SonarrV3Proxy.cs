@@ -166,6 +166,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                         _logger.Error(ex, "Invalid Request");
                         break;
                     case HttpStatusCode.SeeOther:
+                    case HttpStatusCode.TemporaryRedirect:
                         _logger.Warn(ex, "App returned redirect and is invalid. Check App URL");
                         break;
                     case HttpStatusCode.NotFound:

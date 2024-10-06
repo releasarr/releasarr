@@ -64,6 +64,7 @@ namespace NzbDrone.Core.Applications.Readarr
                         failures.AddIfNotNull(new ValidationFailure("ProwlarrUrl", "Prowlarr URL is invalid, Readarr cannot connect to Prowlarr"));
                         break;
                     case HttpStatusCode.SeeOther:
+                    case HttpStatusCode.TemporaryRedirect:
                         _logger.Warn(ex, "Readarr returned redirect and is invalid");
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Readarr URL is invalid, Prowlarr cannot connect to Readarr - are you missing a URL base?"));
                         break;

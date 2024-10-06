@@ -64,6 +64,7 @@ namespace NzbDrone.Core.Applications.Lidarr
                         failures.AddIfNotNull(new ValidationFailure("ProwlarrUrl", "Prowlarr URL is invalid, Lidarr cannot connect to Prowlarr"));
                         break;
                     case HttpStatusCode.SeeOther:
+                    case HttpStatusCode.TemporaryRedirect:
                         _logger.Warn(ex, "Lidarr returned redirect and is invalid");
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Lidarr URL is invalid, Prowlarr cannot connect to Lidarr - are you missing a URL base?"));
                         break;

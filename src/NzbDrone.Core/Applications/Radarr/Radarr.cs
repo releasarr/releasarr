@@ -64,6 +64,7 @@ namespace NzbDrone.Core.Applications.Radarr
                         failures.AddIfNotNull(new ValidationFailure("ProwlarrUrl", "Prowlarr URL is invalid, Radarr cannot connect to Prowlarr"));
                         break;
                     case HttpStatusCode.SeeOther:
+                    case HttpStatusCode.TemporaryRedirect:
                         _logger.Warn(ex, "Radarr returned redirect and is invalid");
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Radarr URL is invalid, Prowlarr cannot connect to Radarr - are you missing a URL base?"));
                         break;
