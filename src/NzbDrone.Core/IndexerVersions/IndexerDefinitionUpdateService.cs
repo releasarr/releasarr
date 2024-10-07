@@ -94,8 +94,10 @@ namespace NzbDrone.Core.IndexerVersions
                     var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
                     indexerList = response.Resource.Where(i => !_definitionBlocklist.Contains(i.File)).ToList();
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _logger.Warn(ex, "Error while getting indexer definitions, fallback to reading from disk.");
+
                     var definitionFolder = Path.Combine(_appFolderInfo.AppDataFolder, "Definitions");
 
                     indexerList = ReadDefinitionsFromDisk(indexerList, definitionFolder);
@@ -106,9 +108,9 @@ namespace NzbDrone.Core.IndexerVersions
 
                 indexerList = ReadDefinitionsFromDisk(indexerList, customDefinitionFolder);
             }
-            catch
+            catch (Exception ex)
             {
-                _logger.Error("Failed to Connect to Indexer Definition Server for Indexer listing");
+                _logger.Error(ex, "Failed to Connect to Indexer Definition Server for Indexer listing");
             }
 
             return indexerList;
