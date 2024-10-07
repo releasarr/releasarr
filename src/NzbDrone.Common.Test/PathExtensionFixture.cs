@@ -393,6 +393,27 @@ namespace NzbDrone.Common.Test
             path.AsOsAgnostic().IsPathValid(PathValidationType.CurrentOs).Should().BeFalse();
         }
 
+        [TestCase(@"C:\", @"C:\")]
+        [TestCase(@"C:\\", @"C:\")]
+        [TestCase(@"C:\Test", @"C:\Test")]
+        [TestCase(@"C:\Test\", @"C:\Test")]
+        [TestCase(@"\\server\share", @"\\server\share")]
+        [TestCase(@"\\server\share\", @"\\server\share")]
+        public void windows_path_should_return_clean_path(string path, string cleanPath)
+        {
+            path.GetCleanPath().Should().Be(cleanPath);
+        }
+
+        [TestCase("/", "/")]
+        [TestCase("//", "/")]
+        [TestCase("/test", "/test")]
+        [TestCase("/test/", "/test")]
+        [TestCase("/test//", "/test")]
+        public void unix_path_should_return_clean_path(string path, string cleanPath)
+        {
+            path.GetCleanPath().Should().Be(cleanPath);
+        }
+
         [TestCase(@"C:\Test\", @"C:\Test\Series Title", "Series Title")]
         [TestCase(@"C:\Test\", @"C:\Test\Collection\Series Title", @"Collection\Series Title")]
         [TestCase(@"C:\Test\mydir\", @"C:\Test\mydir\Collection\Series Title", @"Collection\Series Title")]
