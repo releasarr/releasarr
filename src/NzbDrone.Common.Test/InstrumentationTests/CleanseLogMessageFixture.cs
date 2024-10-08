@@ -29,6 +29,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"https://beyond-hd.me/torrent/download/the-next-365-days-2022-2160p-nf-web-dl-dual-ddp-51-dovi-hdr-hevc-apex.225146.2b51db35e1912ffc138825a12b9933d2")]
         [TestCase(@"https://anthelion.me/api.php?api_key=2b51db35e1910123321025a12b9933d2&o=json&t=movie&q=&tmdb=&imdb=&cat=&limit=100&offset=0")]
         [TestCase(@"https://avistaz.to/api/v1/jackett/auth: username=mySecret&password=mySecret&pid=mySecret")]
+        [TestCase(@"https://www.sharewood.tv/api/2b51db35e1910123321025a12b9933d2/last-torrents")]
 
         // Indexer and Download Client Responses
 

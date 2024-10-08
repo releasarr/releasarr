@@ -21,6 +21,7 @@ namespace NzbDrone.Common.Instrumentation
             new (@"(?<=authkey = "")(?<secret>[^&=]+?)(?="")", RegexOptions.Compiled | RegexOptions.IgnoreCase),
             new (@"(?<=beyond-hd\.[a-z]+/api/torrents/)(?<secret>[^&=][a-z0-9]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
             new (@"(?<=beyond-hd\.[a-z]+/torrent/download/[\w\d-]+[.]\d+[.])(?<secret>[a-z0-9]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+            new (@"(?:sharewood)\.[a-z]{2,3}/api/(?<secret>[a-z0-9]{16,})/", RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
             // UNIT3D
             new (@"(?<=[a-z0-9-]+\.[a-z]+/torrent/download/\d+\.)(?<secret>[^&=][a-z0-9]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
