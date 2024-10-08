@@ -212,7 +212,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     }
                 }
 
-                var loginUrl = ResolvePath(login.Path).ToString();
+                var loginUrl = ResolvePath(ApplyGoTemplateText(login.Path, variables)).ToString();
 
                 CookiesUpdater(null, null);
 
@@ -253,7 +253,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             }
             else if (login.Method == "form")
             {
-                var loginUrl = ResolvePath(login.Path).ToString();
+                var loginUrl = ResolvePath(ApplyGoTemplateText(login.Path, variables)).ToString();
 
                 var queryCollection = new NameValueCollection();
                 var pairs = new Dictionary<string, string>();
@@ -534,7 +534,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     }
                 }
 
-                var loginUrl = ResolvePath(login.Path + "?" + queryCollection.GetQueryString()).ToString();
+                var loginUrl = ResolvePath(ApplyGoTemplateText(login.Path, variables) + "?" + queryCollection.GetQueryString()).ToString();
 
                 CookiesUpdater(null, null);
 
@@ -563,7 +563,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             else if (login.Method == "oneurl")
             {
                 var oneUrl = ApplyGoTemplateText(login.Inputs["oneurl"]);
-                var loginUrl = ResolvePath(login.Path + oneUrl).ToString();
+                var loginUrl = ResolvePath(ApplyGoTemplateText(login.Path, variables) + oneUrl).ToString();
 
                 CookiesUpdater(null, null);
 
@@ -639,7 +639,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             var variables = GetBaseTemplateVariables();
             var headers = ParseCustomHeaders(_definition.Login?.Headers ?? _definition.Search?.Headers, variables);
 
-            var loginUrl = ResolvePath(login.Path);
+            var loginUrl = ResolvePath(ApplyGoTemplateText(login.Path, variables));
 
             var requestBuilder = new HttpRequestBuilder(loginUrl.AbsoluteUri)
             {
@@ -700,7 +700,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 var captchaElement = landingResultDocument.QuerySelector(captcha.Selector);
                 if (captchaElement != null)
                 {
-                    var loginUrl = ResolvePath(login.Path);
+                    var loginUrl = ResolvePath(ApplyGoTemplateText(login.Path, variables));
                     var captchaUrl = ResolvePath(captchaElement.GetAttribute("src"), loginUrl);
 
                     var request = new HttpRequestBuilder(captchaUrl.ToString())
