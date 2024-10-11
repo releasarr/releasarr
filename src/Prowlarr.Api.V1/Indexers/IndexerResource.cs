@@ -119,20 +119,29 @@ namespace Prowlarr.Api.V1.Indexers
 
                 var settings = (CardigannSettings)definition.Settings;
 
-                var cardigannDefinition = _definitionService.GetCachedDefinition(settings.DefinitionFile);
-
-                foreach (var field in resource.Fields)
+                if (settings.DefinitionFile.IsNotNullOrWhiteSpace())
                 {
-                    if (!standardFields.Contains(field.Name))
+                    var cardigannDefinition = _definitionService.GetCachedDefinition(settings.DefinitionFile);
+
+                    foreach (var field in resource.Fields)
                     {
-                        if (field.Name == "cardigannCaptcha")
+                        if (!standardFields.Contains(field.Name))
                         {
-                            settings.ExtraFieldData["CAPTCHA"] = field.Value?.ToString() ?? string.Empty;
-                        }
-                        else
-                        {
-                            var cardigannSetting = cardigannDefinition.Settings.FirstOrDefault(x => x.Name == field.Name);
-                            settings.ExtraFieldData[field.Name] = MapValue(cardigannSetting, field.Value);
+                            if (field.Name == "cardigannCaptcha")
+                            {
+                                settings.ExtraFieldData["CAPTCHA"] = field.Value?.ToString() ?? string.Empty;
+                            }
+                            else
+                            {
+                                var cardigannSetting = cardigannDefinition.Settings.FirstOrDefault(x => x.Name == field.Name);
+
+                                if (cardigannSetting == null)
+                                {
+                                    throw new ArgumentOutOfRangeException(field.Name, "Unknown Cardigann setting.");
+                                }
+
+                                settings.ExtraFieldData[field.Name] = MapValue(cardigannSetting, field.Value);
+                            }
                         }
                     }
                 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
@@ -118,7 +119,7 @@ namespace NzbDrone.Core.IndexerVersions
 
         public CardigannDefinition GetCachedDefinition(string fileKey)
         {
-            if (string.IsNullOrEmpty(fileKey))
+            if (string.IsNullOrWhiteSpace(fileKey))
             {
                 throw new ArgumentNullException(nameof(fileKey));
             }
@@ -174,7 +175,7 @@ namespace NzbDrone.Core.IndexerVersions
 
         private CardigannDefinition GetUncachedDefinition(string fileKey)
         {
-            if (string.IsNullOrEmpty(fileKey))
+            if (string.IsNullOrWhiteSpace(fileKey))
             {
                 throw new ArgumentNullException(nameof(fileKey));
             }
@@ -222,9 +223,24 @@ namespace NzbDrone.Core.IndexerVersions
 
         private CardigannDefinition GetHttpDefinition(string id)
         {
-            var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/{id}");
-            var response = _httpClient.Get(request);
-            var definition = _deserializer.Deserialize<CardigannDefinition>(response.Content);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            CardigannDefinition definition;
+
+            try
+            {
+                var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/{id}");
+                var response = _httpClient.Get(request);
+
+                definition = _deserializer.Deserialize<CardigannDefinition>(response.Content);
+            }
+            catch (HttpException ex) when (ex.Response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new Exception($"Indexer definition for '{id}' does not exist.", ex);
+            }
 
             return CleanIndexerDefinition(definition);
         }
