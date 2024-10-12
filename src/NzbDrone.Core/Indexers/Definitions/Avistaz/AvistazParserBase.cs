@@ -33,6 +33,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 throw new RequestLimitReachedException(indexerResponse, "API Request Limit Reached");
             }
 
+            if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                STJson.TryDeserialize<AvistazErrorResponse>(indexerResponse.HttpResponse.Content, out var errorResponse);
+                throw new IndexerAuthException(errorResponse?.Message ?? "Unauthorized request to indexer");
+            }
+
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
