@@ -1,8 +1,6 @@
 import { uniqBy } from 'lodash';
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import { createSelector } from 'reselect';
 import Alert from 'Components/Alert';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
@@ -26,23 +24,12 @@ import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import PrivacyLabel from 'Indexer/Index/Table/PrivacyLabel';
 import Indexer, { IndexerCapabilities } from 'Indexer/Indexer';
-import { createIndexerSelectorForHook } from 'Store/Selectors/createIndexerSelector';
+import useIndexer from 'Indexer/useIndexer';
 import translate from 'Utilities/String/translate';
 import IndexerHistory from './History/IndexerHistory';
 import styles from './IndexerInfoModalContent.css';
 
-function createIndexerInfoItemSelector(indexerId: number) {
-  return createSelector(
-    createIndexerSelectorForHook(indexerId),
-    (indexer?: Indexer) => {
-      return {
-        indexer,
-      };
-    }
-  );
-}
-
-const tabs = ['details', 'categories', 'history', 'stats'];
+const TABS = ['details', 'categories', 'history', 'stats'];
 
 interface IndexerInfoModalContentProps {
   indexerId: number;
@@ -51,9 +38,7 @@ interface IndexerInfoModalContentProps {
 }
 
 function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
-  const { indexerId, onCloneIndexerPress } = props;
-
-  const { indexer } = useSelector(createIndexerInfoItemSelector(indexerId));
+  const { indexerId, onModalClose, onCloneIndexerPress } = props;
 
   const {
     id,
@@ -67,52 +52,52 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
     protocol,
     privacy,
     capabilities = {} as IndexerCapabilities,
-  } = indexer as Indexer;
+  } = useIndexer(indexerId) as Indexer;
 
-  const { onModalClose } = props;
-
-  const baseUrl =
-    fields.find((field) => field.name === 'baseUrl')?.value ??
-    (Array.isArray(indexerUrls) ? indexerUrls[0] : undefined);
-
-  const vipExpiration =
-    fields.find((field) => field.name === 'vipExpiration')?.value ?? undefined;
-
-  const [selectedTab, setSelectedTab] = useState(tabs[0]);
+  const [selectedTab, setSelectedTab] = useState(TABS[0]);
   const [isEditIndexerModalOpen, setIsEditIndexerModalOpen] = useState(false);
   const [isDeleteIndexerModalOpen, setIsDeleteIndexerModalOpen] =
     useState(false);
 
-  const onTabSelect = useCallback(
-    (index: number) => {
-      const selectedTab = tabs[index];
+  const handleTabSelect = useCallback(
+    (selectedIndex: number) => {
+      const selectedTab = TABS[selectedIndex];
       setSelectedTab(selectedTab);
     },
     [setSelectedTab]
   );
 
-  const onEditIndexerPress = useCallback(() => {
+  const handleEditIndexerPress = useCallback(() => {
     setIsEditIndexerModalOpen(true);
   }, [setIsEditIndexerModalOpen]);
 
-  const onEditIndexerModalClose = useCallback(() => {
+  const handleEditIndexerModalClose = useCallback(() => {
     setIsEditIndexerModalOpen(false);
   }, [setIsEditIndexerModalOpen]);
 
-  const onDeleteIndexerPress = useCallback(() => {
+  const handleDeleteIndexerPress = useCallback(() => {
     setIsEditIndexerModalOpen(false);
     setIsDeleteIndexerModalOpen(true);
   }, [setIsDeleteIndexerModalOpen]);
 
-  const onDeleteIndexerModalClose = useCallback(() => {
+  const handleDeleteIndexerModalClose = useCallback(() => {
     setIsDeleteIndexerModalOpen(false);
     onModalClose();
   }, [setIsDeleteIndexerModalOpen, onModalClose]);
 
-  const onCloneIndexerPressWrapper = useCallback(() => {
+  const handleCloneIndexerPressWrapper = useCallback(() => {
     onCloneIndexerPress(id);
     onModalClose();
   }, [id, onCloneIndexerPress, onModalClose]);
+
+  const baseUrl =
+    fields.find((field) => field.name === 'baseUrl')?.value ??
+    (Array.isArray(indexerUrls) ? indexerUrls[0] : undefined);
+
+  const indexerUrl = baseUrl?.replace(/(:\/\/)api\./, '$1');
+
+  const vipExpiration =
+    fields.find((field) => field.name === 'vipExpiration')?.value ?? undefined;
 
   return (
     <ModalContent onModalClose={onModalClose}>
@@ -121,8 +106,8 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
       <ModalBody>
         <Tabs
           className={styles.tabs}
-          selectedIndex={tabs.indexOf(selectedTab)}
-          onSelect={onTabSelect}
+          selectedIndex={TABS.indexOf(selectedTab)}
+          onSelect={handleTabSelect}
         >
           <TabList className={styles.tabList}>
             <Tab className={styles.tab} selectedClassName={styles.selectedTab}>
@@ -178,10 +163,8 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                       {translate('IndexerSite')}
                     </DescriptionListItemTitle>
                     <DescriptionListItemDescription>
-                      {baseUrl ? (
-                        <Link to={baseUrl}>
-                          {baseUrl.replace(/(:\/\/)api\./, '$1')}
-                        </Link>
+                      {indexerUrl ? (
+                        <Link to={indexerUrl}>{indexerUrl}</Link>
                       ) : (
                         '-'
                       )}
@@ -365,16 +348,16 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
           <Button
             className={styles.deleteButton}
             kind={kinds.DANGER}
-            onPress={onDeleteIndexerPress}
+            onPress={handleDeleteIndexerPress}
           >
             {translate('Delete')}
           </Button>
-          <Button onPress={onCloneIndexerPressWrapper}>
+          <Button onPress={handleCloneIndexerPressWrapper}>
             {translate('Clone')}
           </Button>
         </div>
         <div>
-          <Button onPress={onEditIndexerPress}>{translate('Edit')}</Button>
+          <Button onPress={handleEditIndexerPress}>{translate('Edit')}</Button>
           <Button onPress={onModalClose}>{translate('Close')}</Button>
         </div>
       </ModalFooter>
@@ -382,14 +365,14 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
       <EditIndexerModalConnector
         isOpen={isEditIndexerModalOpen}
         id={id}
-        onModalClose={onEditIndexerModalClose}
-        onDeleteIndexerPress={onDeleteIndexerPress}
+        onModalClose={handleEditIndexerModalClose}
+        onDeleteIndexerPress={handleDeleteIndexerPress}
       />
 
       <DeleteIndexerModal
         isOpen={isDeleteIndexerModalOpen}
         indexerId={id}
-        onModalClose={onDeleteIndexerModalClose}
+        onModalClose={handleDeleteIndexerModalClose}
       />
     </ModalContent>
   );
