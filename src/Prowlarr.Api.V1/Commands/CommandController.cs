@@ -61,9 +61,8 @@ namespace Prowlarr.Api.V1.Commands
             using var reader = new StreamReader(Request.Body);
             var body = reader.ReadToEnd();
 
-            dynamic command = STJson.Deserialize(body, commandType);
+            var command = STJson.Deserialize(body, commandType) as Command;
 
-            command.Trigger = CommandTrigger.Manual;
             command.SuppressMessages = !command.SendUpdatesToClient;
             command.SendUpdatesToClient = true;
             command.ClientUserAgent = Request.Headers["User-Agent"];
