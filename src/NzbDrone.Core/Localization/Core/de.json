@@ -179,7 +179,7 @@
     "IndexerLongTermStatusAllUnavailableHealthCheckMessage": "Alle Indexer sind wegen über 6 Stunden langen bestehender Fehler nicht verfügbar",
     "IndexerLongTermStatusUnavailableHealthCheckMessage": "Indexer wegen über 6 Stunden langen bestehenden Fehlern nicht verfügbar: {indexerNames}",
     "IndexerName": "Indexer-Name",
-    "IndexerNoDefinitionCheckHealthCheckMessage": "Indexer haben keine Definition und werden nicht funktionieren: {0}. Bitte entferne und (oder) füge diese neu zu {appName} hinzu",
+    "IndexerNoDefinitionCheckHealthCheckMessage": "Indexer haben keine Definition und werden nicht funktionieren: {indexerNames}. Bitte entferne und (oder) füge diese neu zu {appName} hinzu",
     "IndexerObsoleteCheckMessage": "Indexer sind nicht mehr verfügbar oder wurden aktualiiert: {0}. Bitte enfernen und (oder) neu zu {appName} hinzufügen",
     "IndexerPriority": "Priorität",
     "IndexerPriorityHelpText": "Indexer Priorität von 1 (höchste) bis 50 (niedrigste). Standard: 25.",

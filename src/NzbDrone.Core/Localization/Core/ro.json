@@ -329,7 +329,7 @@
     "IndexerHealthCheckNoIndexers": "Niciun indexator nu este activat, {appName} nu va returna rezultate la căutare.",
     "IndexerProxy": "Proxy indexator",
     "IndexerVipExpiredHealthCheckMessage": "Beneficiile VIP pentru indexator au expirat: {indexerNames}",
-    "IndexerNoDefinitionCheckHealthCheckMessage": "Indexatorii nu au definiție și nu vor funcționa: {0}. Vă rugăm să-i ștergeți și (sau) să-i adăugați din nou în {appName}",
+    "IndexerNoDefinitionCheckHealthCheckMessage": "Indexatorii nu au definiție și nu vor funcționa: {indexerNames}. Vă rugăm să-i ștergeți și (sau) să-i adăugați din nou în {appName}",
     "IndexerRss": "RSS indexator",
     "EnabledRedirected": "Activat, Redirecționat",
     "Ended": "Încheiat",

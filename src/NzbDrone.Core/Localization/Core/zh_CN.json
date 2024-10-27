@@ -200,7 +200,7 @@
     "IndexerLongTermStatusAllUnavailableHealthCheckMessage": "由于故障超过6小时，所有搜刮器均不可用",
     "IndexerLongTermStatusUnavailableHealthCheckMessage": "由于故障6小时，下列搜刮器都已不可用：{indexerNames}",
     "IndexerName": "‎索引‎‎名字‎",
-    "IndexerNoDefinitionCheckHealthCheckMessage": "索引器没有定义，将无法工作: {0}. 请删除或重新添加到{appName}",
+    "IndexerNoDefinitionCheckHealthCheckMessage": "索引器没有定义，将无法工作: {indexerNames}. 请删除或重新添加到{appName}",
     "IndexerObsoleteCheckMessage": "搜刮器已过弃用或已更新：{0}。请将其删除和（或）重新添加到 {appName}",
     "IndexerPriority": "搜刮器优先级",
     "IndexerPriorityHelpText": "索引器优先级从1(最高)到50(最低)，默认25。",

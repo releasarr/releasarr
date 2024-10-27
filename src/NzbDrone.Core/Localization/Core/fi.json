@@ -405,7 +405,7 @@
     "ApplicationsLoadError": "Sovelluslistausta ei voitu ladata",
     "Url": "URL",
     "Website": "Verkkosivusto",
-    "IndexerNoDefinitionCheckHealthCheckMessage": "Tietolähteillä ei ole määritystä, eivätkä ne toimi: {0}. Poista ja/tai lisää {appName}iin uudelleen",
+    "IndexerNoDefinitionCheckHealthCheckMessage": "Tietolähteillä ei ole määritystä, eivätkä ne toimi: {indexerNames}. Poista ja/tai lisää {appName}iin uudelleen",
     "Private": "Yksityinen",
     "QueryResults": "Kyselyn tulokset",
     "Application": "Sovellus",
