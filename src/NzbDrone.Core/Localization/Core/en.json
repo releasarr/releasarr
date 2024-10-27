@@ -281,6 +281,7 @@
   "External": "External",
   "ExternalUpdater": "{appName} is configured to use an external update mechanism",
   "Failed": "Failed",
+  "FailedToFetchSettings": "Failed to fetch settings",
   "FailedToFetchUpdates": "Failed to fetch updates",
   "FeatureRequests": "Feature Requests",
   "Filename": "Filename",
