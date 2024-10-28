@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using MonoTorrent;
 using NLog;
@@ -22,10 +23,10 @@ namespace NzbDrone.Core.Indexers
             {
                 Torrent.Load(fileData);
             }
-            catch
+            catch (Exception ex)
             {
                 _logger.Debug("Invalid torrent file contents: {0}", Encoding.ASCII.GetString(fileData));
-                throw;
+                throw new NotSupportedException($"Invalid torrent file contents. Reason: {ex.Message}", ex);
             }
         }
     }
