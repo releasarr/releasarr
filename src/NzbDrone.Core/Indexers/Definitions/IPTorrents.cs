@@ -189,7 +189,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var qc = new NameValueCollection();
 
-            foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories))
+            foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Distinct())
             {
                 qc.Add(cat, string.Empty);
             }
@@ -203,10 +203,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 // ipt uses sphinx, which supports boolean operators and grouping
                 qc.Add("q", "+(" + imdbId + ")");
+
+                // search in description
+                qc.Add("qf", "all");
             }
 
-            // changed from else if to if to support searching imdbid + season/episode in the same query
-            if (!string.IsNullOrWhiteSpace(term))
+            // changed from "else if" to "if" to support searching imdbid + season/episode in the same query
+            if (term.IsNotNullOrWhiteSpace())
             {
                 // similar to above
                 qc.Add("q", "+(" + term + ")");
