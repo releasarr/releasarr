@@ -326,8 +326,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public BeyondHDSettingsValidator()
         {
-            RuleFor(c => c.ApiKey).NotEmpty();
-            RuleFor(c => c.RssKey).NotEmpty();
+            RuleFor(c => c.ApiKey).NotEmpty().Length(32);
+            RuleFor(c => c.RssKey).NotEmpty().Length(32);
         }
     }
 
