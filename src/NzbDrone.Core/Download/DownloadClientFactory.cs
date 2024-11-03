@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Download
 
             foreach (var client in clients)
             {
-                if (blockedClients.TryGetValue(client.Definition.Id, out var downloadClientStatus))
+                if (blockedClients.TryGetValue(client.Definition.Id, out var downloadClientStatus) && downloadClientStatus.DisabledTill.HasValue)
                 {
                     _logger.Debug("Temporarily ignoring download client {0} till {1} due to recent failures.", client.Definition.Name, downloadClientStatus.DisabledTill.Value.ToLocalTime());
                     continue;

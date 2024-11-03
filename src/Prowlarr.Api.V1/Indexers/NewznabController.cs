@@ -341,7 +341,7 @@ namespace NzbDrone.Api.V1.Indexers
         {
             var blockedIndexers = _indexerStatusService.GetBlockedProviders().ToDictionary(v => v.ProviderId, v => v);
 
-            return blockedIndexers.TryGetValue(indexer.Definition.Id, out var blockedIndexerStatus) ? blockedIndexerStatus : null;
+            return blockedIndexers.GetValueOrDefault(indexer.Definition.Id);
         }
 
         private void AddRetryAfterHeader(int retryAfterSeconds)

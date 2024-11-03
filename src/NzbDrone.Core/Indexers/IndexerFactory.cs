@@ -242,7 +242,7 @@ namespace NzbDrone.Core.Indexers
 
             foreach (var indexer in indexers)
             {
-                if (blockedIndexers.TryGetValue(indexer.Definition.Id, out var blockedIndexerStatus))
+                if (blockedIndexers.TryGetValue(indexer.Definition.Id, out var blockedIndexerStatus) && blockedIndexerStatus.DisabledTill.HasValue)
                 {
                     _logger.Debug("Temporarily ignoring indexer {0} till {1} due to recent failures.", indexer.Definition.Name, blockedIndexerStatus.DisabledTill.Value.ToLocalTime());
                     continue;

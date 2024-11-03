@@ -79,7 +79,7 @@ namespace NzbDrone.Core.Notifications
 
             foreach (var notification in notifications)
             {
-                if (blockedNotifications.TryGetValue(notification.Definition.Id, out var notificationStatus))
+                if (blockedNotifications.TryGetValue(notification.Definition.Id, out var notificationStatus) && notificationStatus.DisabledTill.HasValue)
                 {
                     _logger.Debug("Temporarily ignoring notification {0} till {1} due to recent failures.", notification.Definition.Name, notificationStatus.DisabledTill.Value.ToLocalTime());
                     continue;
