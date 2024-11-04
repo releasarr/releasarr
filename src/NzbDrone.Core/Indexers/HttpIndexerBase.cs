@@ -650,7 +650,7 @@ namespace NzbDrone.Core.Indexers
             {
                 foreach (var cookie in Cookies)
                 {
-                    request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
+                    request.HttpRequest.Cookies[cookie.Key] = cookie.Value;
                 }
             }
 

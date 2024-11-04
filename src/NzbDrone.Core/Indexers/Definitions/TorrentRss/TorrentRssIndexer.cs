@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FluentValidation.Results;
 using NLog;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
@@ -42,6 +44,13 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
                 yield return GetDefinition("showRSS", "showRSS is a service that allows you to keep track of your favorite TV shows", GetSettings("https://showrss.info/other/all.rss", allowZeroSize: true, defaultReleaseSize: 512));
                 yield return GetDefinition("Torrent RSS Feed", "Generic RSS Feed containing torrents", GetSettings(""));
             }
+        }
+
+        protected override Task<ValidationFailure> TestConnection()
+        {
+            UpdateCookies(null, null);
+
+            return base.TestConnection();
         }
 
         private IndexerDefinition GetDefinition(string name, string description, TorrentRssIndexerSettings settings)
