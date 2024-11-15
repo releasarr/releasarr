@@ -761,7 +761,7 @@ namespace NzbDrone.Core.Indexers
 
                 if (releases.Releases.Empty())
                 {
-                    return new ValidationFailure(string.Empty, "Query successful, but no results were returned from your indexer. This may be an issue with the indexer, your indexer category settings, or other indexer settings such as search freeleech only etc.");
+                    return new ValidationFailure(string.Empty, "Query successful, but no results were returned from your indexer. This may be an issue with the indexer, your indexer category settings, or other indexer settings such as search freeleech only etc. See the FAQ for details.");
                 }
             }
             catch (IndexerAuthException ex)
