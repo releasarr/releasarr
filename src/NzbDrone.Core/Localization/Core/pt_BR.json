@@ -414,7 +414,7 @@
     "SyncProfile": "Perfil de Sincronização",
     "SyncProfiles": "Perfis de Sincronização",
     "System": "Sistema",
-    "SystemTimeCheckMessage": "A hora do sistema está desligada por mais de 1 dia. Tarefas agendadas podem não ser executadas corretamente até que o horário seja corrigido",
+    "SystemTimeHealthCheckMessage": "A hora do sistema está desligada por mais de 1 dia. Tarefas agendadas podem não ser executadas corretamente até que o horário seja corrigido",
     "TVSearchTypes": "Tipos de Pesquisa de Seriados",
     "TableOptions": "Opções de Tabela",
     "TableOptionsColumnsMessage": "Escolha quais colunas são visíveis e em que ordem aparecem",

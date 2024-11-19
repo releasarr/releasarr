@@ -57,7 +57,7 @@
     "MIA": "MIA",
     "ResetAPIKey": "Nulstil API-nøgle",
     "SettingsTimeFormat": "Tidsformat",
-    "SystemTimeCheckMessage": "Systemtiden er slukket mere end 1 dag. Planlagte opgaver kører muligvis ikke korrekt, før tiden er rettet",
+    "SystemTimeHealthCheckMessage": "Systemtiden er slukket mere end 1 dag. Planlagte opgaver kører muligvis ikke korrekt, før tiden er rettet",
     "UnsavedChanges": "Ugemte ændringer",
     "Updates": "Opdateringer",
     "MoreInfo": "Mere info",

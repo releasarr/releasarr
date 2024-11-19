@@ -114,7 +114,7 @@
     "Level": "Niveau",
     "KeyboardShortcuts": "Raccourcis clavier",
     "NoIssuesWithYourConfiguration": "Aucun problème avec votre configuration",
-    "SystemTimeCheckMessage": "L'heure du système est décalée de plus d'un jour. Les tâches planifiées peuvent ne pas s'exécuter correctement tant que l'heure ne sera pas corrigée",
+    "SystemTimeHealthCheckMessage": "L'heure du système est décalée de plus d'un jour. Les tâches planifiées peuvent ne pas s'exécuter correctement tant que l'heure ne sera pas corrigée",
     "SettingsShowRelativeDates": "Afficher les dates relatives",
     "UnsavedChanges": "Modifications non enregistrées",
     "ShowSearchHelpText": "Afficher le bouton de recherche au survol",

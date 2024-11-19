@@ -240,7 +240,7 @@
     "StartupDirectory": "Katalog Startowy",
     "Status": "Status",
     "SuggestTranslationChange": "Zaproponuj zmianę tłumaczenia",
-    "SystemTimeCheckMessage": "Czas systemowy jest wyłączony o więcej niż 1 dzień. Zaplanowane zadania mogą nie działać poprawnie, dopóki czas nie zostanie skorygowany",
+    "SystemTimeHealthCheckMessage": "Czas systemowy jest wyłączony o więcej niż 1 dzień. Zaplanowane zadania mogą nie działać poprawnie, dopóki czas nie zostanie skorygowany",
     "Tags": "Tagi",
     "TagsHelpText": "Dotyczy filmów z co najmniej jednym pasującym tagiem",
     "TagsSettingsSummary": "Zobacz wszystkie tagi i sposób ich używania. Nieużywane tagi można usunąć",

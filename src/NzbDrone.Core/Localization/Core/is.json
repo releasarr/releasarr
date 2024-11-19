@@ -48,7 +48,7 @@
     "Details": "Upplýsingar",
     "PortNumber": "Portnúmer",
     "Uptime": "Spenntur",
-    "SystemTimeCheckMessage": "Slökkt er á tíma kerfisins meira en 1 dag. Skipulögð verkefni ganga kannski ekki rétt fyrr en tíminn er leiðréttur",
+    "SystemTimeHealthCheckMessage": "Slökkt er á tíma kerfisins meira en 1 dag. Skipulögð verkefni ganga kannski ekki rétt fyrr en tíminn er leiðréttur",
     "TableOptions": "Borðvalkostir",
     "TableOptionsColumnsMessage": "Veldu hvaða dálkar eru sýnilegir og í hvaða röð þeir birtast",
     "TagCannotBeDeletedWhileInUse": "Ekki er hægt að eyða meðan hún er í notkun",

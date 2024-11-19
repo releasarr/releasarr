@@ -60,7 +60,7 @@
     "SSLPort": "Cổng SSL",
     "Style": "Phong cách",
     "SuggestTranslationChange": "Đề xuất thay đổi bản dịch",
-    "SystemTimeCheckMessage": "Thời gian hệ thống tắt hơn 1 ngày. Các tác vụ đã lên lịch có thể không chạy chính xác cho đến khi thời gian được sửa",
+    "SystemTimeHealthCheckMessage": "Thời gian hệ thống tắt hơn 1 ngày. Các tác vụ đã lên lịch có thể không chạy chính xác cho đến khi thời gian được sửa",
     "TableOptions": "Tùy chọn bảng",
     "TableOptionsColumnsMessage": "Chọn cột nào hiển thị và chúng xuất hiện theo thứ tự nào",
     "TagCannotBeDeletedWhileInUse": "Không thể bị xóa khi đang sử dụng",

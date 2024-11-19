@@ -114,7 +114,7 @@
     "Cancel": "Avbryt",
     "Apply": "TIllämpa",
     "Age": "Ålder",
-    "SystemTimeCheckMessage": "Systemklockan går fel med mer än en dag. Schemalagda uppgifter kan få problem att köras innan tiden är korrigerad",
+    "SystemTimeHealthCheckMessage": "Systemklockan går fel med mer än en dag. Schemalagda uppgifter kan få problem att köras innan tiden är korrigerad",
     "HomePage": "Hemsida",
     "IndexerPriority": "Indexerprioritet",
     "Reddit": "Reddit",

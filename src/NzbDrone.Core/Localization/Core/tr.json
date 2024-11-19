@@ -226,7 +226,7 @@
     "StartTypingOrSelectAPathBelow": "Yazmaya başlayın veya aşağıdan bir yol seçin",
     "StartupDirectory": "Başlangıç Dizini",
     "SuggestTranslationChange": "Çeviri değişikliği önerin",
-    "SystemTimeCheckMessage": "Sistem saati 1 günden fazla kapalı. Zamanlanan görevler, saat düzeltilene kadar doğru çalışmayabilir",
+    "SystemTimeHealthCheckMessage": "Sistem saati 1 günden fazla kapalı. Zamanlanan görevler, saat düzeltilene kadar doğru çalışmayabilir",
     "TableOptionsColumnsMessage": "Hangi sütunların görünür olduğunu ve hangi sırada görüneceklerini seçin",
     "Title": "Başlık",
     "Today": "Bugün",

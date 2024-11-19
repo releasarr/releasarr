@@ -350,7 +350,7 @@
     "SyncLevelAddRemove": "Alleen toevoegen en verwijderen: wanneer het wordt toegevoegd of verwijderd uit {appName}, wordt deze externe app bijgewerkt.",
     "SyncLevelFull": "Volledige synchronisatie: houdt deze app volledig gesynchroniseerd. Wijzigingen in {appName} worden vervolgens gesynchroniseerd met deze app. Elke wijziging die op afstand wordt aangebracht, wordt bij de volgende synchronisatie overschreven door {appName}.",
     "System": "Systeem",
-    "SystemTimeCheckMessage": "De systeemtijd loopt verkeerd met meer dan 1 dag. Geplande taken worden mogelijk niet goed uitgevoerd tot dit is opgelost",
+    "SystemTimeHealthCheckMessage": "De systeemtijd loopt verkeerd met meer dan 1 dag. Geplande taken worden mogelijk niet goed uitgevoerd tot dit is opgelost",
     "TableOptions": "Tabel Opties",
     "TableOptionsColumnsMessage": "Kies welke kolommen zichtbaar zijn en in welke volgorde",
     "TagCannotBeDeletedWhileInUse": "Kan niet verwijderd worden terwijl in gebruik",

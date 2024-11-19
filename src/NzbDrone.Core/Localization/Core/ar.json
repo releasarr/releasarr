@@ -59,7 +59,7 @@
     "SelectAll": "اختر الكل",
     "SendAnonymousUsageData": "إرسال بيانات الاستخدام المجهولة",
     "Style": "أسلوب",
-    "SystemTimeCheckMessage": "توقف وقت النظام بأكثر من يوم واحد. قد لا تعمل المهام المجدولة بشكل صحيح حتى يتم تصحيح الوقت",
+    "SystemTimeHealthCheckMessage": "توقف وقت النظام بأكثر من يوم واحد. قد لا تعمل المهام المجدولة بشكل صحيح حتى يتم تصحيح الوقت",
     "TableOptionsColumnsMessage": "اختر الأعمدة المرئية والترتيب الذي تظهر به",
     "TagCannotBeDeletedWhileInUse": "لا يمكن حذفه أثناء الاستخدام",
     "Tasks": "مهام",

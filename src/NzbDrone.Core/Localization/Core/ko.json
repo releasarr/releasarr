@@ -310,7 +310,7 @@
     "Seeders": "시더",
     "SelectAll": "모두 선택",
     "ShowAdvanced": "고급보기",
-    "SystemTimeCheckMessage": "시스템 시간이 1 일 이상 꺼져 있습니다. 예약 된 작업은 시간이 수정 될 때까지 올바르게 실행되지 않을 수 있습니다.",
+    "SystemTimeHealthCheckMessage": "시스템 시간이 1 일 이상 꺼져 있습니다. 예약 된 작업은 시간이 수정 될 때까지 올바르게 실행되지 않을 수 있습니다.",
     "TableOptions": "테이블 옵션",
     "TableOptionsColumnsMessage": "표시되는 열과 표시되는 순서 선택",
     "TagsHelpText": "일치하는 태그가 하나 이상있는 영화에 적용됩니다.",

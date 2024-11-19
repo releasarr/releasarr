@@ -122,7 +122,7 @@
     "SettingsShowRelativeDates": "הצג תאריכים יחסית",
     "SuggestTranslationChange": "הצע שינוי בתרגום",
     "System": "מערכת",
-    "SystemTimeCheckMessage": "זמן המערכת אינו פעיל יותר מיום אחד. משימות מתוזמנות עשויות שלא לפעול כראוי עד לתיקון הזמן",
+    "SystemTimeHealthCheckMessage": "זמן המערכת אינו פעיל יותר מיום אחד. משימות מתוזמנות עשויות שלא לפעול כראוי עד לתיקון הזמן",
     "TableOptionsColumnsMessage": "בחר אילו עמודות גלויות ובאיזה סדר הן יופיעו",
     "TagCannotBeDeletedWhileInUse": "לא ניתן למחוק בזמן השימוש",
     "TagIsNotUsedAndCanBeDeleted": "לא משתמשים בתג וניתן למחוק אותו",

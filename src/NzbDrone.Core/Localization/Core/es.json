@@ -114,7 +114,7 @@
     "Cancel": "Cancelar",
     "Apply": "Aplicar",
     "Age": "Antigüedad",
-    "SystemTimeCheckMessage": "El reloj del sistema está retrasado más de un día. Las tareas de mantenimiento no se ejecutarán correctamente hasta que se haya corregido",
+    "SystemTimeHealthCheckMessage": "El reloj del sistema está retrasado más de un día. Las tareas de mantenimiento no se ejecutarán correctamente hasta que se haya corregido",
     "UnsavedChanges": "Cambios sin guardar",
     "ShowSearchHelpText": "Muestra el botón de búsqueda al pasar por encima",
     "ShowSearch": "Mostrar búsqueda",

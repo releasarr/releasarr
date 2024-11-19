@@ -136,7 +136,7 @@
     "Priority": "Prioritat",
     "SendAnonymousUsageData": "Envia dades d'ús anònimes",
     "SetTags": "Estableix etiquetes",
-    "SystemTimeCheckMessage": "L'hora del sistema està apagada durant més d'1 dia. És possible que les tasques programades no s'executin correctament fins que no es corregeixi l'hora",
+    "SystemTimeHealthCheckMessage": "L'hora del sistema està apagada durant més d'1 dia. És possible que les tasques programades no s'executin correctament fins que no es corregeixi l'hora",
     "TableOptions": "Opcions de taula",
     "TableOptionsColumnsMessage": "Trieu quines columnes són visibles i en quin ordre apareixen",
     "Columns": "Columnes",

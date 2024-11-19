@@ -99,7 +99,7 @@
     "ScriptPath": "เส้นทางสคริปต์",
     "Seeders": "Seeders",
     "SelectAll": "เลือกทั้งหมด",
-    "SystemTimeCheckMessage": "เวลาของระบบปิดมากกว่า 1 วัน งานที่ตั้งเวลาไว้อาจทำงานไม่ถูกต้องจนกว่าจะมีการแก้ไขเวลา",
+    "SystemTimeHealthCheckMessage": "เวลาของระบบปิดมากกว่า 1 วัน งานที่ตั้งเวลาไว้อาจทำงานไม่ถูกต้องจนกว่าจะมีการแก้ไขเวลา",
     "UnableToAddANewNotificationPleaseTryAgain": "ไม่สามารถเพิ่มการแจ้งเตือนใหม่โปรดลองอีกครั้ง",
     "BackupsLoadError": "ไม่สามารถโหลดข้อมูลสำรอง",
     "UnableToLoadNotifications": "ไม่สามารถโหลดการแจ้งเตือน",

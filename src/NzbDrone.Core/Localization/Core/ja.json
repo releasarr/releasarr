@@ -195,7 +195,7 @@
     "Size": "サイズ",
     "Sort": "ソート",
     "SSLCertPath": "SSL証明書パス",
-    "SystemTimeCheckMessage": "システム時刻が1日以上ずれています。スケジュールされたタスクは、時間が修正されるまで正しく実行されない場合があります",
+    "SystemTimeHealthCheckMessage": "システム時刻が1日以上ずれています。スケジュールされたタスクは、時間が修正されるまで正しく実行されない場合があります",
     "Tags": "タグ",
     "TestAllClients": "すべてのクライアントをテストする",
     "Torrents": "トレント",

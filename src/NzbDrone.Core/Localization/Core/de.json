@@ -379,7 +379,7 @@
     "SyncProfile": "Sync-Profile",
     "SyncProfiles": "Sync-Profile",
     "System": "System",
-    "SystemTimeCheckMessage": "Die Systemzeit ist um einen Tag versetzt. Bis die Zeit korrigiert wurde, könnten die geplanten Aufgaben nicht korrekt ausgeführt werden",
+    "SystemTimeHealthCheckMessage": "Die Systemzeit ist um einen Tag versetzt. Bis die Zeit korrigiert wurde, könnten die geplanten Aufgaben nicht korrekt ausgeführt werden",
     "TVSearchTypes": "Suchtyp",
     "TableOptions": "Tabellen Optionen",
     "TableOptionsColumnsMessage": "Wähle aus welche Spalten angezeigt werden und in welcher Reihenfolge",

@@ -116,7 +116,7 @@
     "Security": "Suojaus",
     "SuggestTranslationChange": "Ehdota käännösmuutosta",
     "System": "Järjestelmä",
-    "SystemTimeCheckMessage": "Järjestelmän ajassa on ainakin vuorokauden heitto eivätkä ajoitetut tehtävät tämän vuoksi toimi oikein ennen kuin se on korjattu.",
+    "SystemTimeHealthCheckMessage": "Järjestelmän ajassa on ainakin vuorokauden heitto eivätkä ajoitetut tehtävät tämän vuoksi toimi oikein ennen kuin se on korjattu.",
     "TagCannotBeDeletedWhileInUse": "Tunnistetta ei voi poistaa, koska se on käytössä",
     "TagIsNotUsedAndCanBeDeleted": "Tunnistetta ei ole määritetty millekään kohteelle, joten sen voi poistaa.",
     "TagsSettingsSummary": "Täältä näet kaikki tunnisteet käyttökohteineen ja voit poistaa käyttämättömät tunnisteet.",

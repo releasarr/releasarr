@@ -221,7 +221,7 @@
     "Restore": "Obnovit",
     "SettingsShowRelativeDates": "Zobrazit relativní data",
     "SettingsShowRelativeDatesHelpText": "Zobrazit relativní (dnes / včera / atd.) Nebo absolutní data",
-    "SystemTimeCheckMessage": "Systémový čas je vypnutý o více než 1 den. Naplánované úlohy nemusí fungovat správně, dokud nebude čas opraven",
+    "SystemTimeHealthCheckMessage": "Systémový čas je vypnutý o více než 1 den. Naplánované úlohy nemusí fungovat správně, dokud nebude čas opraven",
     "AddingTag": "Přidání značky",
     "Age": "Stáří",
     "All": "Vše",
