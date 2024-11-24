@@ -80,7 +80,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            return httpResponse.Content.Contains("You do not have permission to access this page.");
+            return !httpResponse.Content.Contains("logout.php");
         }
 
         private IndexerCapabilities SetCapabilities()
