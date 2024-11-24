@@ -24,7 +24,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Redacted : TorrentIndexerBase<RedactedSettings>
     {
         public override string Name => "Redacted";
-        public override string[] IndexerUrls => new[] { "https://redacted.ch/" };
+        public override string[] IndexerUrls => new[] { "https://redacted.sh/" };
+        public override string[] LegacyUrls => new[] { "https://redacted.ch/" };
         public override string Description => "REDActed (Aka.PassTheHeadPhones) is one of the most well-known music trackers.";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
