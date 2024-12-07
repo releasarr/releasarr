@@ -68,6 +68,7 @@ function IndexerHistoryRow(props: IndexerHistoryRowProps) {
                 key={parameter.key}
                 title={parameter.title}
                 value={data[parameter.key as keyof HistoryData].toString()}
+                queryType={data.queryType}
               />
             );
           })}

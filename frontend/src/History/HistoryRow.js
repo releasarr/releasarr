@@ -257,6 +257,7 @@ class HistoryRow extends Component {
                           key={parameter.key}
                           title={parameter.title}
                           value={data[parameter.key]}
+                          queryType={data.queryType}
                         />
                       );
                     }

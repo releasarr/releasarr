@@ -1,14 +1,16 @@
 import React from 'react';
 import Link from 'Components/Link/Link';
+import { HistoryQueryType } from 'typings/History';
 import styles from './HistoryRowParameter.css';
 
 interface HistoryRowParameterProps {
   title: string;
   value: string;
+  queryType: HistoryQueryType;
 }
 
 function HistoryRowParameter(props: HistoryRowParameterProps) {
-  const { title, value } = props;
+  const { title, value, queryType } = props;
 
   const type = title.toLowerCase();
 
@@ -18,7 +20,13 @@ function HistoryRowParameter(props: HistoryRowParameterProps) {
     link = <Link to={`https://imdb.com/title/${value}/`}>{value}</Link>;
   } else if (type === 'tmdb') {
     link = (
-      <Link to={`https://www.themoviedb.org/movie/${value}`}>{value}</Link>
+      <Link
+        to={`https://www.themoviedb.org/${
+          queryType === 'tvsearch' ? 'tv' : 'movie'
+        }/${value}`}
+      >
+        {value}
+      </Link>
     );
   } else if (type === 'tvdb') {
     link = (

@@ -1,5 +1,12 @@
 import ModelBase from 'App/ModelBase';
 
+export type HistoryQueryType =
+  | 'search'
+  | 'tvsearch'
+  | 'movie'
+  | 'book'
+  | 'music';
+
 export interface HistoryData {
   source: string;
   host: string;
@@ -7,7 +14,7 @@ export interface HistoryData {
   offset: number;
   elapsedTime: number;
   query: string;
-  queryType: string;
+  queryType: HistoryQueryType;
 }
 
 interface History extends ModelBase {
