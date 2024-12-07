@@ -19,7 +19,6 @@ using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -384,11 +383,6 @@ public class MTeamTpParser : IParseIndexerResponse
                 MinimumRatio = 1,
                 MinimumSeedTime = 172800 // 2 days
             };
-
-            if (torrent.Imdb.IsNotNullOrWhiteSpace())
-            {
-                release.ImdbId = ParseUtil.GetImdbId(torrent.Imdb.TrimEnd('/').Split('/').LastOrDefault()).GetValueOrDefault();
-            }
 
             if (torrent.Status?.CreatedDate != null &&
                 DateTime.TryParseExact($"{torrent.Status.CreatedDate} +08:00", "yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var publishDate))
