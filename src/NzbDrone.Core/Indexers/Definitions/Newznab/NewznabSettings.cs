@@ -42,7 +42,8 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             RuleFor(c => c.VipExpiration).Must(c => c.IsFutureDate())
                                          .When(c => c.VipExpiration.IsNotNullOrWhiteSpace())
-                                         .WithMessage("Must be a future date");
+                                         .WithMessage("Must be a future date")
+                                         .AsWarning();
         }
     }
 
