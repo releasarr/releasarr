@@ -253,7 +253,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                STJson.TryDeserialize<RedactedErrorResponse>(indexerResponse.Content, out var errorResponse);
+                STJson.TryDeserialize<GazelleErrorResponse>(indexerResponse.Content, out var errorResponse);
 
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request: {errorResponse?.Error ?? "Check the logs for more information."}");
             }
@@ -489,10 +489,5 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldOption(Label = "Required", Hint = "Abort download if unable to use token")]
         Required = 2,
-    }
-
-    public class RedactedErrorResponse
-    {
-        public string Error { get; init; }
     }
 }

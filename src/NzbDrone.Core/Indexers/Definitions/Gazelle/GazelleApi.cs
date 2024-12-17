@@ -95,3 +95,8 @@ public class GazelleIndexResponse
     public string Authkey { get; set; }
     public string Passkey { get; set; }
 }
+
+public class GazelleErrorResponse
+{
+    public string Error { get; init; }
+}
