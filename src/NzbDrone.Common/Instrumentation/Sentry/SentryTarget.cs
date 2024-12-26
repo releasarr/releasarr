@@ -119,7 +119,7 @@ namespace NzbDrone.Common.Instrumentation.Sentry
                                       o.Environment = BuildInfo.Branch;
 
                                       // Crash free run statistics (sends a ping for healthy and for crashes sessions)
-                                      o.AutoSessionTracking = true;
+                                      o.AutoSessionTracking = false;
 
                                       // Caches files in the event device is offline
                                       // Sentry creates a 'sentry' sub directory, no need to concat here
@@ -148,7 +148,7 @@ namespace NzbDrone.Common.Instrumentation.Sentry
             _debounce = new SentryDebounce();
 
             // initialize to true and reconfigure later
-            // Otherwise it will default to false and any errors occuring
+            // Otherwise it will default to false and any errors occurring
             // before config file gets read will not be filtered
             FilterEvents = true;
             SentryEnabled = true;
@@ -207,9 +207,7 @@ namespace NzbDrone.Common.Instrumentation.Sentry
 
         private void OnError(Exception ex)
         {
-            var webException = ex as WebException;
-
-            if (webException != null)
+            if (ex is WebException webException)
             {
                 var response = webException.Response as HttpWebResponse;
                 var statusCode = response?.StatusCode;
