@@ -23,7 +23,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Knaben : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "Knaben";
-        public override string[] IndexerUrls => new[] { "https://knaben.eu/" };
+        public override string[] IndexerUrls => new[] { "https://knaben.org/" };
+        public override string[] LegacyUrls => new[] { "https://knaben.eu/" };
         public override string Description => "Knaben is a Public torrent meta-search engine";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -145,7 +146,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class KnabenRequestGenerator : IIndexerRequestGenerator
     {
-        private const string API_SEARCH_ENDPOINT = "https://api.knaben.eu/v1";
+        private const string ApiSearchEndpoint = "https://api.knaben.org/v1";
 
         private readonly IndexerCapabilities _capabilities;
 
@@ -226,7 +227,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 body.Add("categories", categories.Select(int.Parse).Distinct().ToArray());
             }
 
-            var request = new HttpRequest(API_SEARCH_ENDPOINT, HttpAccept.Json)
+            var request = new HttpRequest(ApiSearchEndpoint, HttpAccept.Json)
             {
                 Headers =
                 {
