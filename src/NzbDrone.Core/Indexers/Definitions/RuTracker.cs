@@ -1292,7 +1292,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(650, NewznabStandardCategory.PCMobileOther, "Игры для мобильных устройств");
             caps.Categories.AddCategoryMapping(2149, NewznabStandardCategory.PCMobileAndroid, "|- Игры для Android");
             caps.Categories.AddCategoryMapping(2420, NewznabStandardCategory.ConsoleOther, "|- Игры для Oculus Quest");
-            caps.Categories.AddCategoryMapping(1001, NewznabStandardCategory.PC, "|- Игры для Java");
             caps.Categories.AddCategoryMapping(1004, NewznabStandardCategory.PCMobileOther, "|- Игры для Symbian");
             caps.Categories.AddCategoryMapping(1002, NewznabStandardCategory.PCMobileOther, "|- Игры для Windows Mobile");
             caps.Categories.AddCategoryMapping(240, NewznabStandardCategory.OtherMisc, "Игровое видео");
@@ -1308,7 +1307,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1379, NewznabStandardCategory.PC, "|- Операционные системы (Linux, Unix)");
             caps.Categories.AddCategoryMapping(1381, NewznabStandardCategory.PC, "|- Программное обеспечение (Linux, Unix)");
             caps.Categories.AddCategoryMapping(1473, NewznabStandardCategory.PC, "|- Другие ОС и ПО под них");
-            caps.Categories.AddCategoryMapping(1195, NewznabStandardCategory.PC, "Тестовые диски для настройки аудио/видео аппаратуры");
             caps.Categories.AddCategoryMapping(1013, NewznabStandardCategory.PC, "Системные программы");
             caps.Categories.AddCategoryMapping(1028, NewznabStandardCategory.PC, "|- Работа с жёстким диском");
             caps.Categories.AddCategoryMapping(1029, NewznabStandardCategory.PC, "|- Резервное копирование");
@@ -1350,6 +1348,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1018, NewznabStandardCategory.PC, "|- Шаблоны для сайтов и CMS");
             caps.Categories.AddCategoryMapping(1058, NewznabStandardCategory.PC, "|- Разное (Веб-разработка и программирование)");
             caps.Categories.AddCategoryMapping(1016, NewznabStandardCategory.PC, "Программы для работы с мультимедиа и 3D");
+            caps.Categories.AddCategoryMapping(1195, NewznabStandardCategory.PC, "|- Тестовые диски для настройки аудио/видео аппаратуры");
             caps.Categories.AddCategoryMapping(1079, NewznabStandardCategory.PC, "|- Программные комплекты");
             caps.Categories.AddCategoryMapping(1080, NewznabStandardCategory.PC, "|- Плагины для программ компании Adobe");
             caps.Categories.AddCategoryMapping(1081, NewznabStandardCategory.PC, "|- Графические редакторы");
