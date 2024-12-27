@@ -213,10 +213,12 @@ namespace Prowlarr.Api.V1.Indexers
                     case "info_flaresolverr":
                         field.Label = "FlareSolverr Info";
                         field.Value = "This site may use Cloudflare DDoS Protection, therefore Prowlarr requires <a href=\"https://wiki.servarr.com/prowlarr/faq#can-i-use-flaresolverr-indexers\" target=\"_blank\" rel=\"noreferrer\">FlareSolverr</a> to access it.";
+                        field.HelpLink = "https://wiki.servarr.com/prowlarr/faq#can-i-use-flaresolverr-indexers";
                         break;
                     case "info_category_8000":
                         field.Label = $"About {definition.Name} Categories";
                         field.Value = $"{definition.Name} does not return categories in its search results. To sync to your apps, include 8000(Other) in your Apps' Sync Categories.";
+                        field.HelpLink = "https://wiki.servarr.com/prowlarr/faq#prowlarr-will-not-sync-x-indexer-to-app";
                         break;
                 }
             }
