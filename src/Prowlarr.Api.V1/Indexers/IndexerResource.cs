@@ -202,15 +202,17 @@ namespace Prowlarr.Api.V1.Indexers
                 {
                     case "info_cookie":
                         field.Label = "How to get the Cookie";
-                        field.Value = "<ol><li>Login to this tracker with your browser</li><li>Open the <b>DevTools</b> panel by pressing <b>F12</b></li><li>Select the <b>Network</b> tab</li><li>Click on the <b>Doc</b> button (Chrome Browser) or <b>HTML</b> button (FireFox)</li><li>Refresh the page by pressing <b>F5</b></li><li>Click on the first row entry</li><li>Select the <b>Headers</b> tab on the Right panel</li><li>Find <b>'cookie:'</b> in the <b>Request Headers</b> section</li><li><b>Select</b> and <b>Copy</b> the whole cookie string <i>(everything after 'cookie: ')</i> and <b>Paste</b> here.</li></ol>";
-                        break;
-                    case "info_flaresolverr":
-                        field.Label = "FlareSolverr Info";
-                        field.Value = "This site may use Cloudflare DDoS Protection, therefore Prowlarr requires <a href=\"https://wiki.servarr.com/prowlarr/faq#can-i-use-flaresolverr-indexers\" target=\"_blank\" rel=\"noreferrer\">FlareSolverr</a> to access it.";
+                        field.Value = "<ol><li>Login to this tracker with your browser</li><li>If present in the login page, ensure you have the <b>Remember me</b> ticked and the <b>Log Me Out if IP Changes</b> unticked when you login</li><li>Navigate to the web site's torrent search page to view the list of available torrents for download</li><li>Open the <b>DevTools</b> panel by pressing <b>F12</b></li><li>Select the <b>Network</b> tab</li><li>Click on the <b>Doc</b> button (Chrome Browser) or <b>HTML</b> button (FireFox)</li><li>Refresh the page by pressing <b>F5</b></li><li>Click on the first row entry</li><li>Select the <b>Headers</b> tab on the Right panel</li><li>Find <b>'cookie:'</b> in the <b>Request Headers</b> section</li><li><b>Select</b> and <b>Copy</b> the whole cookie string <i>(everything after 'cookie: ')</i> and <b>Paste</b> here.</li></ol>";
+                        field.HelpLink = "https://wiki.servarr.com/useful-tools#finding-cookies";
                         break;
                     case "info_useragent":
                         field.Label = "How to get the User-Agent";
                         field.Value = "<ol><li>From the same place you fetched the cookie,</li><li>Find <b>'user-agent:'</b> in the <b>Request Headers</b> section</li><li><b>Select</b> and <b>Copy</b> the whole user-agent string <i>(everything after 'user-agent: ')</i> and <b>Paste</b> here.</li></ol>";
+                        field.HelpLink = "https://wiki.servarr.com/useful-tools#finding-cookies";
+                        break;
+                    case "info_flaresolverr":
+                        field.Label = "FlareSolverr Info";
+                        field.Value = "This site may use Cloudflare DDoS Protection, therefore Prowlarr requires <a href=\"https://wiki.servarr.com/prowlarr/faq#can-i-use-flaresolverr-indexers\" target=\"_blank\" rel=\"noreferrer\">FlareSolverr</a> to access it.";
                         break;
                     case "info_category_8000":
                         field.Label = $"About {definition.Name} Categories";
