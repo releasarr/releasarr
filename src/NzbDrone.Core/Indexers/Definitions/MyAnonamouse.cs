@@ -441,6 +441,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return releaseInfos.ToArray();
             }
 
+            if (jsonResponse.Data == null)
+            {
+                throw new IndexerException(indexerResponse, "Unexpected response content from indexer request: {0}", jsonResponse.Message ?? "Check the logs for more information.");
+            }
+
             var hasUserVip = HasUserVip(httpResponse.GetCookies());
 
             foreach (var item in jsonResponse.Data)
@@ -655,7 +660,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class MyAnonamouseResponse
     {
         public string Error { get; set; }
-        public List<MyAnonamouseTorrent> Data { get; set; }
+        public IReadOnlyCollection<MyAnonamouseTorrent> Data { get; set; }
+        public string Message { get; set; }
     }
 
     public class MyAnonamouseBuyPersonalFreeleechResponse
