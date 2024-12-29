@@ -322,7 +322,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             ApiKey = "";
         }
 
-        [FieldDefinition(4, Label = "ApiKey", HelpText = "IndexerNebulanceSettingsApiKeyHelpText")]
+        [FieldDefinition(2, Label = "ApiKey", HelpText = "IndexerNebulanceSettingsApiKeyHelpText", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
     }
 
