@@ -122,7 +122,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AnimeBytesTests
 
             var fifthTorrentInfo = releases.ElementAt(28) as TorrentInfo;
 
-            fifthTorrentInfo.Title.Should().Be("[-ZR-] Dr. STONE: STONE WARS S02 [Web][MKV][h264][1080p][AAC 2.0][Dual Audio][Softsubs (-ZR-)]");
+            fifthTorrentInfo.Title.Should().Be("[-ZR-] Dr. STONE: STONE WARS 2021 S02 [Web][MKV][h264][1080p][AAC 2.0][Dual Audio][Softsubs (-ZR-)]");
             fifthTorrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
             fifthTorrentInfo.DownloadUrl.Should().Be("https://animebytes.tv/torrent/944509/download/somepass");
             fifthTorrentInfo.InfoUrl.Should().Be("https://animebytes.tv/torrent/944509/group");

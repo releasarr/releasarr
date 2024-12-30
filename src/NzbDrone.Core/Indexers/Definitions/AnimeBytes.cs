@@ -569,7 +569,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     if (_settings.UseFilenameForSingleEpisodes)
                     {
-                        var files = torrent.Files;
+                        var files = torrent.Files.ToList();
 
                         if (files.Count > 1)
                         {
@@ -607,11 +607,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                         }
                     }
 
+                    var useYearInTitle = year is > 0 && torrent.Files.Any(f => f.FileName.Contains(year.Value.ToString()));
+
                     foreach (var title in synonyms)
                     {
                         var releaseTitle = groupName is "Movie" or "Live Action Movie" ?
                             $"{releaseGroup}{title} {year} {infoString}" :
-                            $"{releaseGroup}{title} {releaseInfo} {infoString}";
+                            $"{releaseGroup}{title}{(useYearInTitle ? $" {year}" : string.Empty)} {releaseInfo} {infoString}";
 
                         var guid = new Uri(details + "?nh=" + HashUtil.CalculateMd5(title));
 
@@ -650,7 +652,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var advancedSeasonRegex = new Regex(@"\b(?:(?<season>\d+)(?:st|nd|rd|th) Season|Season (?<season>\d+))\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var seasonCharactersRegex = new Regex(@"(I{2,})$", RegexOptions.Compiled);
-            var seasonNumberRegex = new Regex(@"\b(?<!Part[- ._])(?:S)?(?<season>[2-9])$", RegexOptions.Compiled);
+            var seasonNumberRegex = new Regex(@"(?<!Part[- ._])(?<!\d+[/])(?:S)?(?<season>[2-9])$", RegexOptions.Compiled);
 
             foreach (var title in titles)
             {
@@ -755,7 +757,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public int Matches { get; set; }
 
         [JsonPropertyName("Groups")]
-        public AnimeBytesGroup[] Groups { get; set; }
+        public IReadOnlyCollection<AnimeBytesGroup> Groups { get; set; }
     }
 
     public class AnimeBytesGroup
@@ -783,16 +785,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string Image { get; set; }
 
         [JsonPropertyName("SynonymnsV2")]
-        public Dictionary<string, string> Synonymns { get; set; }
+        public IReadOnlyDictionary<string, string> Synonymns { get; set; }
 
         [JsonPropertyName("Description")]
         public string Description { get; set; }
 
         [JsonPropertyName("Tags")]
-        public List<string> Tags { get; set; }
+        public IReadOnlyCollection<string> Tags { get; set; }
 
         [JsonPropertyName("Torrents")]
-        public List<AnimeBytesTorrent> Torrents { get; set; }
+        public IReadOnlyCollection<AnimeBytesTorrent> Torrents { get; set; }
     }
 
     public class AnimeBytesTorrent
@@ -831,7 +833,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public int FileCount { get; set; }
 
         [JsonPropertyName("FileList")]
-        public List<AnimeBytesFile> Files  { get; set; }
+        public IReadOnlyCollection<AnimeBytesFile> Files  { get; set; }
 
         [JsonPropertyName("UploadTime")]
         public string UploadTime { get; set; }
