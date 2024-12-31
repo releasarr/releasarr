@@ -324,6 +324,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var response = STJson.Deserialize<AnimeBytesResponse>(indexerResponse.Content);
 
+            if (response.Error.IsNotNullOrWhiteSpace())
+            {
+                throw new IndexerException(indexerResponse, "Unexpected response from indexer request: {0}", response.Error);
+            }
+
             if (response.Matches == 0)
             {
                 return releaseInfos.ToArray();
@@ -424,7 +429,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     int? episode = null;
 
                     var releaseInfo = _settings.EnableSonarrCompatibility && categoryName == "Anime" ? "S01" : "";
-                    var editionTitle = torrent.EditionData.EditionTitle;
+                    var editionTitle = torrent.EditionData?.EditionTitle;
 
                     if (editionTitle.IsNotNullOrWhiteSpace())
                     {
@@ -758,6 +763,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [JsonPropertyName("Groups")]
         public IReadOnlyCollection<AnimeBytesGroup> Groups { get; set; }
+
+        public string Error { get; set; }
     }
 
     public class AnimeBytesGroup
