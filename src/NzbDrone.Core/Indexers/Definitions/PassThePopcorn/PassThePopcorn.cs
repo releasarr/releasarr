@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NLog;
 using NzbDrone.Core.Configuration;
@@ -15,6 +16,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
         public override bool SupportsSearch => true;
         public override bool SupportsPagination => true;
         public override int PageSize => 50;
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(4);
 
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
