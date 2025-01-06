@@ -88,7 +88,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                     Guid = $"BTN-{torrent.TorrentID}",
                     InfoUrl = $"{protocol}//broadcasthe.net/torrents.php?id={torrent.GroupID}&torrentid={torrent.TorrentID}",
                     DownloadUrl = RegexProtocol.Replace(torrent.DownloadURL, protocol),
-                    Title = CleanReleaseName(torrent.ReleaseName),
+                    Title = GetTitle(torrent),
                     Categories = _categories.MapTrackerCatToNewznab(torrent.Resolution),
                     InfoHash = torrent.InfoHash,
                     Size = torrent.Size,
@@ -136,9 +136,17 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             return releaseInfos;
         }
 
-        private string CleanReleaseName(string releaseName)
+        private static string GetTitle(BroadcastheNetTorrent torrent)
         {
-            return releaseName.Replace("\\", "");
+            var releaseName = torrent.ReleaseName.Replace("\\", "");
+
+            if (torrent.Container.ToUpperInvariant() is "M2TS" or "ISO")
+            {
+                releaseName = Regex.Replace(releaseName, @"\b(H\.?265)\b", "HEVC", RegexOptions.Compiled);
+                releaseName = Regex.Replace(releaseName, @"\b(H\.?264)\b", "AVC", RegexOptions.Compiled);
+            }
+
+            return releaseName;
         }
     }
 }
