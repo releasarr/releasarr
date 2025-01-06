@@ -301,6 +301,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         };
         private static readonly HashSet<string> ExcludedFileExtensions = new (StringComparer.OrdinalIgnoreCase) { ".mka", ".mds", ".md5", ".nfo", ".sfv", ".ass", ".mks", ".srt", ".ssa", ".sup", ".jpeg", ".jpg", ".png", ".otf", ".ttf" };
 
+        private static readonly string[] PropertiesSeparator = { " | ", " / " };
+
         private readonly AnimeBytesSettings _settings;
 
         public AnimeBytesParser(AnimeBytesSettings settings)
@@ -398,32 +400,42 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var minimumSeedTime = 259200 + (int)(size / (int)Math.Pow(1024, 3) * 18000);
 
                     var propertyList = WebUtility.HtmlDecode(torrent.Property)
-                        .Split(new[] { " | ",  " / " }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        .Split(PropertiesSeparator, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
 
                     propertyList.RemoveAll(p => ExcludedProperties.Any(p.ContainsIgnoreCase));
                     var properties = propertyList.ToHashSet();
 
-                    if (torrent.Files.Any(f => f.FileName.ContainsIgnoreCase("Remux")))
-                    {
-                        var resolutionProperty = properties.FirstOrDefault(RemuxResolutions.ContainsIgnoreCase);
-
-                        if (resolutionProperty.IsNotNullOrWhiteSpace())
-                        {
-                            properties.Add($"{resolutionProperty} Remux");
-                        }
-                    }
-
-                    if (properties.Any(p => p.StartsWithIgnoreCase("M2TS")))
+                    if (properties.Any(p => p.ContainsIgnoreCase("M2TS")))
                     {
                         properties.Add("BR-DISK");
                     }
 
-                    if (_settings.ExcludeRaw &&
-                        properties.Any(p => p.StartsWithIgnoreCase("RAW") || p.Contains("BR-DISK")))
+                    var isBluRayDisk = properties.Any(p => p.ContainsIgnoreCase("RAW") || p.ContainsIgnoreCase("M2TS") || p.ContainsIgnoreCase("ISO"));
+
+                    if (_settings.ExcludeRaw && isBluRayDisk)
                     {
                         continue;
                     }
+
+                    properties = properties
+                        .Select(property =>
+                        {
+                            if (isBluRayDisk)
+                            {
+                                property = Regex.Replace(property, @"\b(H\.?265)\b", "HEVC", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                                property = Regex.Replace(property, @"\b(H\.?264)\b", "AVC", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                            }
+
+                            if (torrent.Files.Any(f => f.FileName.ContainsIgnoreCase("Remux"))
+                                && RemuxResolutions.ContainsIgnoreCase(property))
+                            {
+                                property += " Remux";
+                            }
+
+                            return property;
+                        })
+                        .ToHashSet();
 
                     int? season = null;
                     int? episode = null;
