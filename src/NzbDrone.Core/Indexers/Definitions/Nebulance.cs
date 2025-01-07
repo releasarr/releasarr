@@ -240,14 +240,19 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var torrentInfos = new List<ReleaseInfo>();
-
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
                 STJson.TryDeserialize<JsonRpcResponse<NebulanceErrorResponse>>(indexerResponse.HttpResponse.Content, out var errorResponse);
 
                 throw new IndexerException(indexerResponse, "Unexpected response status '{0}' code from indexer request: {1}", indexerResponse.HttpResponse.StatusCode, errorResponse?.Result?.Error?.Message ?? "Check the logs for more information.");
             }
+
+            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
+            {
+                throw new IndexerException(indexerResponse, "Unexpected response header {0} from indexer request, expected {1}", indexerResponse.HttpResponse.Headers.ContentType, HttpAccept.Json.Value);
+            }
+
+            var torrentInfos = new List<ReleaseInfo>();
 
             JsonRpcResponse<NebulanceResponse> jsonResponse;
 
