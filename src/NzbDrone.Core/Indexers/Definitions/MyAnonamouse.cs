@@ -294,14 +294,21 @@ namespace NzbDrone.Core.Indexers.Definitions
                 parameters.Set("tor[srchIn][filenames]", "true");
             }
 
-            var catList = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
+            if (_settings.SearchLanguages.Any())
+            {
+                foreach (var (language, index) in _settings.SearchLanguages.Select((value, index) => (value, index)))
+                {
+                    parameters.Set($"tor[browse_lang][{index}]", language.ToString());
+                }
+            }
+
+            var catList = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Distinct().ToList();
+
             if (catList.Any())
             {
-                var index = 0;
-                foreach (var cat in catList)
+                foreach (var (category, index) in catList.Select((value, index) => (value, index)))
                 {
-                    parameters.Set("tor[cat][" + index + "]", cat);
-                    index++;
+                    parameters.Set($"tor[cat][{index}]", category);
                 }
             }
             else
@@ -584,6 +591,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             SearchInDescription = false;
             SearchInSeries = false;
             SearchInFilenames = false;
+            SearchLanguages = Array.Empty<int>();
         }
 
         [FieldDefinition(2, Type = FieldType.Textbox, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Preferences -> Security)")]
@@ -603,6 +611,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(7, Type = FieldType.Checkbox, Label = "Search in filenames", HelpText = "Search text in the filenames")]
         public bool SearchInFilenames { get; set; }
+
+        [FieldDefinition(8, Type = FieldType.Select, Label = "Search Languages", SelectOptions = typeof(MyAnonamouseSearchLanguages), HelpText = "Specify the desired languages. If unspecified, all options are used.")]
+        public IEnumerable<int> SearchLanguages { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {
@@ -629,6 +640,198 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldOption(Label="Not VIP", Hint = "Torrents not VIP")]
         NotVip = 5,
+    }
+
+    public enum MyAnonamouseSearchLanguages
+    {
+        [FieldOption(Label="English")]
+        English = 1,
+
+        [FieldOption(Label="Afrikaans")]
+        Afrikaans = 17,
+
+        [FieldOption(Label="Arabic")]
+        Arabic = 32,
+
+        [FieldOption(Label="Bengali")]
+        Bengali = 35,
+
+        [FieldOption(Label="Bosnian")]
+        Bosnian = 51,
+
+        [FieldOption(Label="Bulgarian")]
+        Bulgarian = 18,
+
+        [FieldOption(Label="Burmese")]
+        Burmese = 6,
+
+        [FieldOption(Label="Cantonese")]
+        Cantonese = 44,
+
+        [FieldOption(Label="Catalan")]
+        Catalan = 19,
+
+        [FieldOption(Label="Chinese")]
+        Chinese = 2,
+
+        [FieldOption(Label="Croatian")]
+        Croatian = 49,
+
+        [FieldOption(Label="Czech")]
+        Czech = 20,
+
+        [FieldOption(Label="Danish")]
+        Danish = 21,
+
+        [FieldOption(Label="Dutch")]
+        Dutch = 22,
+
+        [FieldOption(Label="Estonian")]
+        Estonian = 61,
+
+        [FieldOption(Label="Farsi")]
+        Farsi = 39,
+
+        [FieldOption(Label="Finnish")]
+        Finnish = 23,
+
+        [FieldOption(Label="French")]
+        French = 36,
+
+        [FieldOption(Label="German")]
+        German = 37,
+
+        [FieldOption(Label="Greek")]
+        Greek = 26,
+
+        [FieldOption(Label="Greek, Ancient")]
+        GreekAncient = 59,
+
+        [FieldOption(Label="Gujarati")]
+        Gujarati = 3,
+
+        [FieldOption(Label="Hebrew")]
+        Hebrew = 27,
+
+        [FieldOption(Label="Hindi")]
+        Hindi = 8,
+
+        [FieldOption(Label="Hungarian")]
+        Hungarian = 28,
+
+        [FieldOption(Label="Icelandic")]
+        Icelandic = 63,
+
+        [FieldOption(Label="Indonesian")]
+        Indonesian = 53,
+
+        [FieldOption(Label="Irish")]
+        Irish = 56,
+
+        [FieldOption(Label="Italian")]
+        Italian = 43,
+
+        [FieldOption(Label="Japanese")]
+        Japanese = 38,
+
+        [FieldOption(Label="Javanese")]
+        Javanese = 12,
+
+        [FieldOption(Label="Kannada")]
+        Kannada = 5,
+
+        [FieldOption(Label="Korean")]
+        Korean = 41,
+
+        [FieldOption(Label="Lithuanian")]
+        Lithuanian = 50,
+
+        [FieldOption(Label="Latin")]
+        Latin = 46,
+
+        [FieldOption(Label="Latvian")]
+        Latvian = 62,
+
+        [FieldOption(Label="Malay")]
+        Malay = 33,
+
+        [FieldOption(Label="Malayalam")]
+        Malayalam = 58,
+
+        [FieldOption(Label="Manx")]
+        Manx = 57,
+
+        [FieldOption(Label="Marathi")]
+        Marathi = 9,
+
+        [FieldOption(Label="Norwegian")]
+        Norwegian = 48,
+
+        [FieldOption(Label="Polish")]
+        Polish = 45,
+
+        [FieldOption(Label="Portuguese")]
+        Portuguese = 34,
+
+        [FieldOption(Label="Brazilian Portuguese (BP)")]
+        BrazilianPortuguese = 52,
+
+        [FieldOption(Label="Punjabi")]
+        Punjabi = 14,
+
+        [FieldOption(Label="Romanian")]
+        Romanian = 30,
+
+        [FieldOption(Label="Russian")]
+        Russian = 16,
+
+        [FieldOption(Label="Scottish Gaelic")]
+        ScottishGaelic = 24,
+
+        [FieldOption(Label="Sanskrit")]
+        Sanskrit = 60,
+
+        [FieldOption(Label="Serbian")]
+        Serbian = 31,
+
+        [FieldOption(Label="Slovenian")]
+        Slovenian = 54,
+
+        [FieldOption(Label="Spanish")]
+        Spanish = 4,
+
+        [FieldOption(Label="Castilian Spanish")]
+        CastilianSpanish = 55,
+
+        [FieldOption(Label="Swedish")]
+        Swedish = 40,
+
+        [FieldOption(Label="Tagalog")]
+        Tagalog = 29,
+
+        [FieldOption(Label="Tamil")]
+        Tamil = 11,
+
+        [FieldOption(Label="Telugu")]
+        Telugu = 10,
+
+        [FieldOption(Label="Thai")]
+        Thai = 7,
+
+        [FieldOption(Label="Turkish")]
+        Turkish = 42,
+
+        [FieldOption(Label="Ukrainian")]
+        Ukrainian = 25,
+
+        [FieldOption(Label="Urdu")]
+        Urdu = 15,
+
+        [FieldOption(Label="Vietnamese")]
+        Vietnamese = 13,
+
+        [FieldOption(Label="Other")]
+        Other = 47,
     }
 
     public class MyAnonamouseTorrent
