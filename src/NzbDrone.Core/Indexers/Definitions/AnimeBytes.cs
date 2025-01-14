@@ -406,12 +406,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                     propertyList.RemoveAll(p => ExcludedProperties.Any(p.ContainsIgnoreCase));
                     var properties = propertyList.ToHashSet();
 
-                    if (properties.Any(p => p.ContainsIgnoreCase("M2TS")))
+                    if (properties.Any(p => p.StartsWith("M2TS", StringComparison.Ordinal)))
                     {
                         properties.Add("BR-DISK");
                     }
 
-                    var isBluRayDisk = properties.Any(p => p.ContainsIgnoreCase("RAW") || p.ContainsIgnoreCase("M2TS") || p.ContainsIgnoreCase("ISO"));
+                    var isBluRayDisk = properties.Any(p => p.Equals("RAW", StringComparison.Ordinal) || p.StartsWith("M2TS", StringComparison.Ordinal) || p.StartsWith("ISO", StringComparison.Ordinal));
 
                     if (_settings.ExcludeRaw && isBluRayDisk)
                     {
