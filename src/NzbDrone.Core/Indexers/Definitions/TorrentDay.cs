@@ -7,6 +7,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
@@ -52,7 +53,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new TorrentDayParser(Settings, Capabilities.Categories);
+            return new TorrentDayParser(Settings, Capabilities.Categories, _logger);
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -228,15 +229,29 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly TorrentDaySettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
+        private readonly Logger _logger;
 
-        public TorrentDayParser(TorrentDaySettings settings, IndexerCapabilitiesCategories categories)
+        public TorrentDayParser(TorrentDaySettings settings, IndexerCapabilitiesCategories categories, Logger logger)
         {
             _settings = settings;
             _categories = categories;
+            _logger = logger;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
+            if (indexerResponse.HttpResponse.HasHttpRedirect)
+            {
+                _logger.Warn("Redirected to {0} from indexer request", indexerResponse.HttpResponse.RedirectUrl);
+
+                if (indexerResponse.HttpResponse.RedirectUrl.ContainsIgnoreCase("/login.php"))
+                {
+                    throw new IndexerException(indexerResponse, "We are being redirected to the login page. Most likely your session expired or was killed. Recheck your cookie and try testing the indexer.");
+                }
+
+                throw new IndexerException(indexerResponse, "Redirected to {0} from indexer request", indexerResponse.HttpResponse.RedirectUrl);
+            }
+
             var torrentInfos = new List<TorrentInfo>();
 
             var rows = JsonConvert.DeserializeObject<dynamic>(indexerResponse.Content);
