@@ -933,6 +933,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1224, NewznabStandardCategory.AudioLossless, "|- Авторская песня (lossless)");
             caps.Categories.AddCategoryMapping(1225, NewznabStandardCategory.AudioMP3, "|- Авторская песня (lossy)");
             caps.Categories.AddCategoryMapping(1226, NewznabStandardCategory.Audio, "|- Менестрели и ролевики (lossy и lossless)");
+            caps.Categories.AddCategoryMapping(782, NewznabStandardCategory.Audio, "Лейбл- и сцен-паки. Неофициальные сборники и ремастеринги. AI-музыка");
+            caps.Categories.AddCategoryMapping(577, NewznabStandardCategory.Audio, "|- AI-Music - музыка ИИ, нейросетей (lossy и lossless)");
             caps.Categories.AddCategoryMapping(1842, NewznabStandardCategory.AudioLossless, "Label Packs (lossless)");
             caps.Categories.AddCategoryMapping(1648, NewznabStandardCategory.AudioMP3, "Label packs, Scene packs (lossy)");
             caps.Categories.AddCategoryMapping(134, NewznabStandardCategory.AudioLossless, "|- Неофициальные сборники и ремастеринги (lossless)");
