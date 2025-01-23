@@ -121,8 +121,15 @@ public class XSpeeds : TorrentIndexerBase<XSpeedsSettings>
         caps.Categories.AddCategoryMapping(112, NewznabStandardCategory.MoviesOther, "Anime Movies");
         caps.Categories.AddCategoryMapping(111, NewznabStandardCategory.MoviesOther, "Anime TV");
         caps.Categories.AddCategoryMapping(150, NewznabStandardCategory.PC, "Apps");
-        caps.Categories.AddCategoryMapping(80, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
-        caps.Categories.AddCategoryMapping(48, NewznabStandardCategory.Books, "Books Magazines");
+        caps.Categories.AddCategoryMapping(156, NewznabStandardCategory.TV, "AV1");
+        caps.Categories.AddCategoryMapping(156, NewznabStandardCategory.Movies, "AV1");
+        caps.Categories.AddCategoryMapping(159, NewznabStandardCategory.Movies, "Movie Boxsets AV1");
+        caps.Categories.AddCategoryMapping(158, NewznabStandardCategory.Movies, "Movies AV1");
+        caps.Categories.AddCategoryMapping(157, NewznabStandardCategory.TV, "TV AV1");
+        caps.Categories.AddCategoryMapping(160, NewznabStandardCategory.TV, "TV Boxsets AV1");
+        caps.Categories.AddCategoryMapping(153, NewznabStandardCategory.Books, "Books");
+        caps.Categories.AddCategoryMapping(154, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
+        caps.Categories.AddCategoryMapping(155, NewznabStandardCategory.Books, "Books & Magazines");
         caps.Categories.AddCategoryMapping(68, NewznabStandardCategory.MoviesOther, "Cams/TS");
         caps.Categories.AddCategoryMapping(140, NewznabStandardCategory.TVDocumentary, "Documentary");
         caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.MoviesDVD, "DVDR");
@@ -154,6 +161,7 @@ public class XSpeeds : TorrentIndexerBase<XSpeedsSettings>
         caps.Categories.AddCategoryMapping(146, NewznabStandardCategory.MoviesSD, "Movies SD");
         caps.Categories.AddCategoryMapping(13, NewznabStandardCategory.Audio, "Music");
         caps.Categories.AddCategoryMapping(135, NewznabStandardCategory.AudioLossless, "Music/FLAC");
+        caps.Categories.AddCategoryMapping(151, NewznabStandardCategory.Audio, "Karaoke");
         caps.Categories.AddCategoryMapping(136, NewznabStandardCategory.Audio, "Music Boxset");
         caps.Categories.AddCategoryMapping(148, NewznabStandardCategory.AudioVideo, "Music Videos");
         caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.Other, "Other");
