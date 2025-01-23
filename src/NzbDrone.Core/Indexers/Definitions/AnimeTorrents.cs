@@ -119,6 +119,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.BooksComics, "Doujinshi");
             caps.Categories.AddCategoryMapping(18, NewznabStandardCategory.BooksComics, "Doujinshi 18+");
             caps.Categories.AddCategoryMapping(19, NewznabStandardCategory.Audio, "OST");
+            caps.Categories.AddCategoryMapping(20, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
 
             return caps;
         }
