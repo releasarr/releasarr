@@ -30,6 +30,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"https://anthelion.me/api.php?api_key=2b51db35e1910123321025a12b9933d2&o=json&t=movie&q=&tmdb=&imdb=&cat=&limit=100&offset=0")]
         [TestCase(@"https://avistaz.to/api/v1/jackett/auth: username=mySecret&password=mySecret&pid=mySecret")]
         [TestCase(@"https://www.sharewood.tv/api/2b51db35e1910123321025a12b9933d2/last-torrents")]
+        [TestCase(@"https://example.org/rss/torrents?rsskey=2b51db35e1910123321025a12b9933d2&search=")]
 
         // Indexer and Download Client Responses
 
