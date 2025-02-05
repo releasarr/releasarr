@@ -82,7 +82,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     if (cookies != null && cookies.Any())
                     {
-                        freeleechRequestBuilder.SetCookies(Cookies);
+                        freeleechRequestBuilder.SetCookies(cookies);
                     }
 
                     var freeleechRequest = freeleechRequestBuilder.Build();
