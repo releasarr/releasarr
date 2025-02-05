@@ -95,6 +95,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                     {
                         _logger.Debug("Successfully used freeleech wedge for torrentid {0}.", torrentId);
                     }
+                    else if (resource.Error.IsNotNullOrWhiteSpace() && resource.Error.ContainsIgnoreCase("This Torrent is VIP"))
+                    {
+                        _logger.Debug("{0} is already VIP, continuing downloading: {1}", torrentId, resource.Error);
+                    }
                     else if (resource.Error.IsNotNullOrWhiteSpace() && resource.Error.ContainsIgnoreCase("This is already a personal freeleech"))
                     {
                         _logger.Debug("{0} is already a personal freeleech, continuing downloading: {1}", torrentId, resource.Error);
