@@ -584,7 +584,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                     _logger.Debug("Fetching user data: {0}", request.Url.FullUri);
 
                     var response = _httpClient.ExecuteProxied(request, _definition);
+
                     var jsonResponse = JsonConvert.DeserializeObject<MyAnonamouseUserDataResponse>(response.Content);
+
+                    _logger.Trace("Current user class: '{0}'", jsonResponse.UserClass);
 
                     return jsonResponse.UserClass?.Trim();
                 },
@@ -912,7 +915,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class MyAnonamouseUserDataResponse
     {
-        [JsonProperty(PropertyName = "class")]
+        [JsonProperty(PropertyName = "classname")]
         public string UserClass { get; set; }
     }
 }
