@@ -3,15 +3,16 @@ set -e
 
 FRAMEWORK="net6.0"
 PLATFORM=$1
+ARCHITECTURE="${2:-x64}"
 
 if [ "$PLATFORM" = "Windows" ]; then
-  RUNTIME="win-x64"
+  RUNTIME="win-$ARCHITECTURE"
 elif [ "$PLATFORM" = "Linux" ]; then
-  RUNTIME="linux-x64"
+  RUNTIME="linux-$ARCHITECTURE"
 elif [ "$PLATFORM" = "Mac" ]; then
-  RUNTIME="osx-x64"
+  RUNTIME="osx-$ARCHITECTURE"
 else
-  echo "Platform must be provided as first arguement: Windows, Linux or Mac"
+  echo "Platform must be provided as first argument: Windows, Linux or Mac"
   exit 1
 fi
 
