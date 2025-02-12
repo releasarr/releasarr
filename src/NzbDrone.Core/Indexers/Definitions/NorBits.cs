@@ -130,29 +130,13 @@ public class NorBits : TorrentIndexerBase<NorBitsSettings>
         };
 
         caps.Categories.AddCategoryMapping("main_cat[]=1", NewznabStandardCategory.Movies, "Filmer");
-        caps.Categories.AddCategoryMapping("main_cat[]=1&sub2_cat[]=49", NewznabStandardCategory.MoviesUHD, "Filmer - UHD-2160p");
-        caps.Categories.AddCategoryMapping("main_cat[]=1&sub2_cat[]=19", NewznabStandardCategory.MoviesHD, "Filmer - HD-1080p/i");
-        caps.Categories.AddCategoryMapping("main_cat[]=1&sub2_cat[]=20", NewznabStandardCategory.MoviesHD, "Filmer - HD-720p");
-        caps.Categories.AddCategoryMapping("main_cat[]=1&sub2_cat[]=22", NewznabStandardCategory.MoviesSD, "Filmer - SD");
         caps.Categories.AddCategoryMapping("main_cat[]=2", NewznabStandardCategory.TV, "TV");
-        caps.Categories.AddCategoryMapping("main_cat[]=2&sub2_cat[]=49", NewznabStandardCategory.TVUHD, "TV - UHD-2160p");
-        caps.Categories.AddCategoryMapping("main_cat[]=2&sub2_cat[]=19", NewznabStandardCategory.TVHD, "TV - HD-1080p/i");
-        caps.Categories.AddCategoryMapping("main_cat[]=2&sub2_cat[]=20", NewznabStandardCategory.TVHD, "TV - HD-720p");
-        caps.Categories.AddCategoryMapping("main_cat[]=2&sub2_cat[]=22", NewznabStandardCategory.TVSD, "TV - SD");
         caps.Categories.AddCategoryMapping("main_cat[]=3", NewznabStandardCategory.PC, "Programmer");
         caps.Categories.AddCategoryMapping("main_cat[]=4", NewznabStandardCategory.Console, "Spill");
         caps.Categories.AddCategoryMapping("main_cat[]=5", NewznabStandardCategory.Audio, "Musikk");
-        caps.Categories.AddCategoryMapping("main_cat[]=5&sub2_cat[]=42", NewznabStandardCategory.AudioMP3, "Musikk - 192");
-        caps.Categories.AddCategoryMapping("main_cat[]=5&sub2_cat[]=43", NewznabStandardCategory.AudioMP3, "Musikk - 256");
-        caps.Categories.AddCategoryMapping("main_cat[]=5&sub2_cat[]=44", NewznabStandardCategory.AudioMP3, "Musikk - 320");
-        caps.Categories.AddCategoryMapping("main_cat[]=5&sub2_cat[]=45", NewznabStandardCategory.AudioMP3, "Musikk - VBR");
-        caps.Categories.AddCategoryMapping("main_cat[]=5&sub2_cat[]=46", NewznabStandardCategory.AudioLossless, "Musikk - Lossless");
         caps.Categories.AddCategoryMapping("main_cat[]=6", NewznabStandardCategory.Books, "Tidsskrift");
         caps.Categories.AddCategoryMapping("main_cat[]=7", NewznabStandardCategory.AudioAudiobook, "Lydbøker");
         caps.Categories.AddCategoryMapping("main_cat[]=8", NewznabStandardCategory.AudioVideo, "Musikkvideoer");
-        caps.Categories.AddCategoryMapping("main_cat[]=8&sub2_cat[]=19", NewznabStandardCategory.AudioVideo, "Musikkvideoer - HD-1080p/i");
-        caps.Categories.AddCategoryMapping("main_cat[]=8&sub2_cat[]=20", NewznabStandardCategory.AudioVideo, "Musikkvideoer - HD-720p");
-        caps.Categories.AddCategoryMapping("main_cat[]=8&sub2_cat[]=22", NewznabStandardCategory.AudioVideo, "Musikkvideoer - SD");
         caps.Categories.AddCategoryMapping("main_cat[]=40", NewznabStandardCategory.AudioOther, "Podcasts");
 
         return caps;
@@ -281,20 +265,17 @@ public class NorBitsParser : IParseIndexerResponse
 
         foreach (var row in rows)
         {
-            var link = _settings.BaseUrl + row.QuerySelector("td:nth-of-type(2) > a[href*=\"download.php?id=\"]")?.GetAttribute("href").TrimStart('/');
+            var link = _settings.BaseUrl + row.QuerySelector("td:nth-of-type(2) > a[href*=\"download.php?id=\"]")?.GetAttribute("href")?.TrimStart('/');
             var qDetails = row.QuerySelector("td:nth-of-type(2) > a[href*=\"details.php?id=\"]");
 
-            var title = qDetails?.GetAttribute("title").Trim();
-            var details = _settings.BaseUrl + qDetails?.GetAttribute("href").TrimStart('/');
+            var title = qDetails?.GetAttribute("title")?.Trim();
+            var details = _settings.BaseUrl + qDetails?.GetAttribute("href")?.TrimStart('/');
 
-            var mainCategory = row.QuerySelector("td:nth-of-type(1) a[href*=\"main_cat[]\"]")?.GetAttribute("href")?.Split('?').Last();
-            var secondCategory = row.QuerySelector("td:nth-of-type(1) a[href*=\"sub2_cat[]\"]")?.GetAttribute("href")?.Split('?').Last();
+            var catQuery = row.QuerySelector("td:nth-of-type(1) a[href*=\"main_cat[]\"]")?.GetAttribute("href")?.Split('?').Last().Split('&', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var category = catQuery?.FirstOrDefault(x => x.StartsWith("main_cat[]=", StringComparison.OrdinalIgnoreCase));
 
-            var categoryList = new[] { mainCategory, secondCategory };
-            var cat = string.Join("&", categoryList.Where(c => !string.IsNullOrWhiteSpace(c)));
-
-            var seeders = ParseUtil.CoerceInt(row.QuerySelector("td:nth-of-type(9)").TextContent);
-            var leechers = ParseUtil.CoerceInt(row.QuerySelector("td:nth-of-type(10)").TextContent);
+            var seeders = ParseUtil.CoerceInt(row.QuerySelector("td:nth-of-type(9)")?.TextContent);
+            var leechers = ParseUtil.CoerceInt(row.QuerySelector("td:nth-of-type(10)")?.TextContent);
 
             var release = new TorrentInfo
             {
@@ -302,7 +283,7 @@ public class NorBitsParser : IParseIndexerResponse
                 InfoUrl = details,
                 DownloadUrl = link,
                 Title = title,
-                Categories = _categories.MapTrackerCatToNewznab(cat),
+                Categories = _categories.MapTrackerCatToNewznab(category),
                 Size = ParseUtil.GetBytes(row.QuerySelector("td:nth-of-type(7)")?.TextContent),
                 Files = ParseUtil.CoerceInt(row.QuerySelector("td:nth-of-type(3) > a")?.TextContent.Trim()),
                 Grabs = ParseUtil.CoerceInt(row.QuerySelector("td:nth-of-type(8)")?.FirstChild?.TextContent.Trim()),
