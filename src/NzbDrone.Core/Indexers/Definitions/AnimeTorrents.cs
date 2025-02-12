@@ -292,7 +292,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var qTitleLink = row.QuerySelector("td:nth-of-type(2) a:nth-of-type(1)");
                 var title = qTitleLink?.TextContent.Trim();
 
-                // If we search an get no results, we still get a table just with no info.
+                // If we search and get no results, we still get a table just with no info.
                 if (title.IsNullOrWhiteSpace())
                 {
                     break;
@@ -307,6 +307,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 var connections = row.QuerySelector("td:nth-of-type(8)").TextContent.Trim().Split('/', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
                 var seeders = ParseUtil.CoerceInt(connections[0]);
+                var leechers = ParseUtil.CoerceInt(connections[1]);
+                var grabs = ParseUtil.CoerceInt(connections[2]);
 
                 var categoryLink = row.QuerySelector("td:nth-of-type(1) a")?.GetAttribute("href") ?? string.Empty;
                 var categoryId = ParseUtil.GetArgumentFromQueryString(categoryLink, "cat");
@@ -328,17 +330,17 @@ namespace NzbDrone.Core.Indexers.Definitions
                     PublishDate = publishedDate,
                     Size = ParseUtil.GetBytes(row.QuerySelector("td:nth-of-type(6)").TextContent.Trim()),
                     Seeders = seeders,
-                    Peers = ParseUtil.CoerceInt(connections[1]) + seeders,
-                    Grabs = ParseUtil.CoerceInt(connections[2]),
+                    Peers = leechers + seeders,
+                    Grabs = grabs,
                     DownloadVolumeFactor = downloadVolumeFactor,
                     UploadVolumeFactor = 1,
                     Genres = row.QuerySelectorAll("td:nth-of-type(2) a.tortags").Select(t => t.TextContent.Trim()).ToList()
                 };
 
-                var uLFactorImg = row.QuerySelector("img[alt*=\"x Multiplier Torrent\"]");
-                if (uLFactorImg != null)
+                var uploadFactor = row.QuerySelector("img[alt*=\"x Multiplier Torrent\"]")?.GetAttribute("alt");
+                if (uploadFactor != null)
                 {
-                    release.UploadVolumeFactor = ParseUtil.CoerceDouble(uLFactorImg.GetAttribute("alt").Split('x')[0]);
+                    release.UploadVolumeFactor = ParseUtil.CoerceDouble(uploadFactor.Split('x')[0]);
                 }
 
                 releaseInfos.Add(release);
@@ -361,7 +363,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Show freeleech torrents only")]
         public bool FreeleechOnly { get; set; }
 
-        [FieldDefinition(5, Label = "Downloadable Only", Type = FieldType.Checkbox, HelpText = "Search downloadable torrents only (enable this only if your account class is Newbie)")]
+        [FieldDefinition(5, Label = "Downloadable Only", Type = FieldType.Checkbox, HelpText = "Search downloadable torrents only (enable this only if your account class is Newbie)", Advanced = true)]
         public bool DownloadableOnly { get; set; }
     }
 }
