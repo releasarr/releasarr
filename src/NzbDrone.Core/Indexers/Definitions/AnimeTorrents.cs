@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -44,46 +43,19 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new AnimeTorrentsParser(Settings, Capabilities.Categories);
         }
 
-        protected override async Task DoLogin()
-        {
-            UpdateCookies(null, null);
-
-            var loginUrl = Settings.BaseUrl + "login.php";
-
-            var loginPage = await ExecuteAuth(new HttpRequest(loginUrl));
-
-            var requestBuilder = new HttpRequestBuilder(loginUrl)
-            {
-                LogResponseContent = true,
-                AllowAutoRedirect = true
-            };
-
-            var authLoginRequest = requestBuilder
-                .Post()
-                .SetCookies(loginPage.GetCookies())
-                .AddFormParameter("username", Settings.Username)
-                .AddFormParameter("password", Settings.Password)
-                .AddFormParameter("form", "login")
-                .AddFormParameter("rememberme[]", "1")
-                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
-                .SetHeader("Referer", loginUrl)
-                .Build();
-
-            var response = await ExecuteAuth(authLoginRequest);
-
-            if (response.Content == null || !response.Content.Contains("logout.php"))
-            {
-                throw new IndexerAuthException("AnimeTorrents authentication failed");
-            }
-
-            UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
-
-            _logger.Debug("AnimeTorrents authentication succeeded");
-        }
-
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            return httpResponse.Content.Contains("Access Denied!") || httpResponse.Content.Contains("login.php");
+            if (httpResponse.Content.Contains("Access Denied!") || httpResponse.Content.Contains("login.php"))
+            {
+                throw new IndexerAuthException("AnimeTorrents authentication with cookies failed.");
+            }
+
+            return false;
+        }
+
+        protected override IDictionary<string, string> GetCookies()
+        {
+            return CookieUtil.CookieHeaderToDictionary(Settings.Cookie);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -352,7 +324,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class AnimeTorrentsSettings : UserPassTorrentBaseSettings
+    public class AnimeTorrentsSettings : CookieTorrentBaseSettings
     {
         public AnimeTorrentsSettings()
         {
