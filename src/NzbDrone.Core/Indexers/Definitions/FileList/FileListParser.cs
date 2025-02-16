@@ -101,7 +101,7 @@ public class FileListParser : IParseIndexerResponse
         var url = new HttpUri(_settings.BaseUrl)
             .CombinePath("/download.php")
             .AddQueryParam("id", torrentId.ToString())
-            .AddQueryParam("passkey", _settings.Passkey);
+            .AddQueryParam("passkey", _settings.Passkey.Trim());
 
         return url.FullUri;
     }
