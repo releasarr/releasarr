@@ -262,7 +262,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             return jsonResponse.Resource.Select(torrent => new TorrentInfo
             {
-                Guid = torrent.Id.ToString(),
+                Guid = torrent.Url,
                 Title = CleanTitle(torrent.Name),
                 Description = torrent.ShortDescription,
                 Size = torrent.Size,
