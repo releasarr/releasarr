@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Notifications.Discord.Payloads;
 using NzbDrone.Core.Validation;
 
@@ -10,10 +11,12 @@ namespace NzbDrone.Core.Notifications.Discord
     public class Discord : NotificationBase<DiscordSettings>
     {
         private readonly IDiscordProxy _proxy;
+        private readonly IConfigFileProvider _configFileProvider;
 
-        public Discord(IDiscordProxy proxy)
+        public Discord(IDiscordProxy proxy, IConfigFileProvider configFileProvider)
         {
             _proxy = proxy;
+            _configFileProvider = configFileProvider;
         }
 
         public override string Name => "Discord";
@@ -22,18 +25,18 @@ namespace NzbDrone.Core.Notifications.Discord
         public override void OnGrab(GrabMessage message)
         {
             var embed = new Embed
-                        {
-                            Author = new DiscordAuthor
-                            {
-                                Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
-                                IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
-                            },
-                            Title = RELEASE_GRABBED_TITLE,
-                            Description = message.Message,
-                            Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
-                            Color = message.Successful ? (int)DiscordColors.Success : (int)DiscordColors.Danger,
-                            Fields = new List<DiscordField>()
-                        };
+            {
+                Author = new DiscordAuthor
+                {
+                    Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
+                    IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
+                },
+                Title = RELEASE_GRABBED_TITLE,
+                Description = message.Message,
+                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                Color = message.Successful ? (int)DiscordColors.Success : (int)DiscordColors.Danger,
+                Fields = new List<DiscordField>()
+            };
 
             foreach (var field in Settings.GrabFields)
             {
@@ -80,81 +83,72 @@ namespace NzbDrone.Core.Notifications.Discord
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
-            var attachments = new List<Embed>
-                              {
-                                  new Embed
-                                  {
-                                      Author = new DiscordAuthor
-                                      {
-                                          Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
-                                          IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
-                                      },
-                                      Title = healthCheck.Source.Name,
-                                      Description = healthCheck.Message,
-                                      Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
-                                      Color = healthCheck.Type == HealthCheck.HealthCheckResult.Warning ? (int)DiscordColors.Warning : (int)DiscordColors.Danger
-                                  }
-                              };
+            var embed = new Embed
+            {
+                Author = new DiscordAuthor
+                {
+                    Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
+                    IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
+                },
+                Title = healthCheck.Source.Name,
+                Description = healthCheck.Message,
+                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                Color = healthCheck.Type == HealthCheck.HealthCheckResult.Warning ? (int)DiscordColors.Warning : (int)DiscordColors.Danger
+            };
 
-            var payload = CreatePayload(null, attachments);
+            var payload = CreatePayload(null, new List<Embed> { embed });
 
             _proxy.SendPayload(payload, Settings);
         }
 
         public override void OnHealthRestored(HealthCheck.HealthCheck previousCheck)
         {
-            var attachments = new List<Embed>
-                              {
-                                  new Embed
-                                  {
-                                      Author = new DiscordAuthor
-                                      {
-                                          Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
-                                          IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
-                                      },
-                                      Title = "Health Issue Resolved: " + previousCheck.Source.Name,
-                                      Description = $"The following issue is now resolved: {previousCheck.Message}",
-                                      Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
-                                      Color = (int)DiscordColors.Success
-                                  }
-                              };
+            var embed = new Embed
+            {
+                Author = new DiscordAuthor
+                {
+                    Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
+                    IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
+                },
+                Title = "Health Issue Resolved: " + previousCheck.Source.Name,
+                Description = $"The following issue is now resolved: {previousCheck.Message}",
+                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                Color = (int)DiscordColors.Success
+            };
 
-            var payload = CreatePayload(null, attachments);
+            var payload = CreatePayload(null, new List<Embed> { embed });
 
             _proxy.SendPayload(payload, Settings);
         }
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            var attachments = new List<Embed>
-                              {
-                                  new Embed
-                                  {
-                                      Author = new DiscordAuthor
-                                      {
-                                          Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
-                                          IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
-                                      },
-                                      Title = APPLICATION_UPDATE_TITLE,
-                                      Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
-                                      Color = (int)DiscordColors.Standard,
-                                      Fields = new List<DiscordField>()
-                                      {
-                                          new DiscordField()
-                                          {
-                                              Name = "Previous Version",
-                                              Value = updateMessage.PreviousVersion.ToString()
-                                          },
-                                          new DiscordField()
-                                          {
-                                              Name = "New Version",
-                                              Value = updateMessage.NewVersion.ToString()
-                                          }
-                                      },
-                                  }
-                              };
+            var embed = new Embed
+            {
+                Author = new DiscordAuthor
+                {
+                    Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
+                    IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
+                },
+                Title = APPLICATION_UPDATE_TITLE,
+                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                Color = (int)DiscordColors.Standard,
+                Fields = new List<DiscordField>
+                {
+                    new ()
+                    {
+                        Name = "Previous Version",
+                        Value = updateMessage.PreviousVersion.ToString()
+                    },
+                    new ()
+                    {
+                        Name = "New Version",
+                        Value = updateMessage.NewVersion.ToString()
+                    }
+                },
+            };
 
-            var payload = CreatePayload(null, attachments);
+            var payload = CreatePayload(null, new List<Embed> { embed });
 
             _proxy.SendPayload(payload, Settings);
         }
@@ -207,20 +201,6 @@ namespace NzbDrone.Core.Notifications.Discord
             }
 
             return payload;
-        }
-
-        private static string BytesToString(long byteCount)
-        {
-            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
-            if (byteCount == 0)
-            {
-                return "0 " + suf[0];
-            }
-
-            var bytes = Math.Abs(byteCount);
-            var place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
-            var num = Math.Round(bytes / Math.Pow(1024, place), 1);
-            return string.Format("{0} {1}", (Math.Sign(byteCount) * num).ToString(), suf[place]);
         }
     }
 }
