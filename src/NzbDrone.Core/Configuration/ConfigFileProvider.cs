@@ -274,7 +274,7 @@ namespace NzbDrone.Core.Configuration
             {
                 var instanceName = _appOptions.InstanceName ?? GetValue("InstanceName", BuildInfo.AppName);
 
-                if (instanceName.ContainsIgnoreCase(BuildInfo.AppName))
+                if (instanceName.Contains(BuildInfo.AppName, StringComparison.OrdinalIgnoreCase))
                 {
                     return instanceName;
                 }
