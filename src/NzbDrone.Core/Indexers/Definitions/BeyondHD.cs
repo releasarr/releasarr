@@ -92,7 +92,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             _capabilities = capabilities;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, string term, string imdbId = null, int tmdbId = 0)
+        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, string searchTerm, string imdbId = null, int tmdbId = 0)
         {
             var body = new Dictionary<string, object>
             {
@@ -129,9 +129,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 body.Add("tmdb_id", tmdbId);
             }
 
-            if (term.IsNotNullOrWhiteSpace())
+            if (searchTerm.IsNotNullOrWhiteSpace())
             {
-                body.Add("search", term);
+                body.Add("search", searchTerm.Trim());
             }
 
             var cats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
@@ -199,7 +199,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, searchCriteria.SanitizedTvSearchString, searchCriteria.FullImdbId));
+            var searchTerm = searchCriteria.SanitizedTvSearchString;
+
+            if (searchCriteria.Season is > 0 &&
+                searchCriteria.Episode.IsNotNullOrWhiteSpace() &&
+                DateTime.TryParseExact($"{searchCriteria.Season} {searchCriteria.Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
+            {
+                searchTerm = $"{searchCriteria.SanitizedSearchTerm} {showDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}";
+            }
+
+            pageableRequests.Add(GetPagedRequests(searchCriteria, searchTerm, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
