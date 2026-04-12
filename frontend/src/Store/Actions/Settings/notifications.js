@@ -107,6 +107,7 @@ export default {
         selectedSchema.name = selectedSchema.implementationName;
         selectedSchema.onGrab = selectedSchema.supportsOnGrab;
         selectedSchema.onApplicationUpdate = selectedSchema.supportsOnApplicationUpdate;
+        selectedSchema.onContentAvailable = selectedSchema.supportsOnContentAvailable;
 
         return selectedSchema;
       });

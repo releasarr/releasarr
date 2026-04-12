@@ -160,6 +160,26 @@ class SignalRConnector extends Component {
     this.props.dispatchFetchHealth();
   };
 
+  handleMediaserver = ({ action, resource }) => {
+    const section = 'settings.mediaServers';
+
+    if (action === 'created' || action === 'updated') {
+      this.props.dispatchUpdateItem({ section, ...resource });
+    } else if (action === 'deleted') {
+      this.props.dispatchRemoveItem({ section, id: resource.id });
+    }
+  };
+
+  handleArrclient = ({ action, resource }) => {
+    const section = 'settings.arrClients';
+
+    if (action === 'created' || action === 'updated') {
+      this.props.dispatchUpdateItem({ section, ...resource });
+    } else if (action === 'deleted') {
+      this.props.dispatchRemoveItem({ section, id: resource.id });
+    }
+  };
+
   handleNotification = ({ action, resource }) => {
     const section = 'settings.notifications';
 

@@ -2,9 +2,12 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
+import DashboardConnector from 'Dashboard/DashboardConnector';
 import HistoryConnector from 'History/HistoryConnector';
+import ArrClientSettings from 'Settings/ArrClients/ArrClientSettings';
 import DevelopmentSettingsConnector from 'Settings/Development/DevelopmentSettingsConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
+import MediaServerSettings from 'Settings/MediaServers/MediaServerSettings';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
 import Settings from 'Settings/Settings';
 import TagSettings from 'Settings/Tags/TagSettings';
@@ -15,6 +18,7 @@ import Logs from 'System/Logs/Logs';
 import Status from 'System/Status/Status';
 import Tasks from 'System/Tasks/Tasks';
 import Updates from 'System/Updates/Updates';
+import TrackedContentConnector from 'TrackedContent/TrackedContentConnector';
 import getPathWithUrlBase from 'Utilities/getPathWithUrlBase';
 
 function RedirectWithUrlBase() {
@@ -25,10 +29,10 @@ function AppRoutes() {
   return (
     <Switch>
       {/*
-        Home
+        Dashboard
       */}
 
-      <Route exact={true} path="/" component={HistoryConnector} />
+      <Route exact={true} path="/" component={DashboardConnector} />
 
       {window.Releasarr.urlBase && (
         <Route
@@ -42,6 +46,12 @@ function AppRoutes() {
       )}
 
       {/*
+        Tracked Content
+      */}
+
+      <Route path="/trackedcontent" component={TrackedContentConnector} />
+
+      {/*
         Activity
       */}
 
@@ -52,6 +62,10 @@ function AppRoutes() {
       */}
 
       <Route exact={true} path="/settings" component={Settings} />
+
+      <Route path="/settings/mediaservers" component={MediaServerSettings} />
+
+      <Route path="/settings/arrclients" component={ArrClientSettings} />
 
       <Route path="/settings/connect" component={NotificationSettings} />
 

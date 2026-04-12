@@ -176,6 +176,7 @@ export const GROUP = farObjectGroup;
 export const HEALTH = fasMedkit;
 export const HEART = fasHeart;
 export const HISTORY = fasHistory;
+export const HOME = fasHome;
 export const HOUSEKEEPING = fasHome;
 export const IGNORE = fasTimesCircle;
 export const IN_CINEMAS = fasTicketAlt;

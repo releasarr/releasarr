@@ -1,0 +1,27 @@
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.card {
+  composes: card from '~Components/Card.css';
+  flex: 1 0 150px;
+  max-width: 200px;
+  padding: 20px;
+  text-align: center;
+}
+
+.cardValue {
+  font-size: 36px;
+  font-weight: bold;
+  color: var(--textColor);
+}
+
+.cardLabel {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--dimColor);
+  text-transform: uppercase;
+}
