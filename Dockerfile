@@ -1,7 +1,7 @@
 # Stage 1: Build frontend
 FROM node:20-alpine AS frontend-build
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock tsconfig.json ./
 RUN yarn install --frozen-lockfile
 COPY frontend/ ./frontend/
 RUN yarn build --env production
