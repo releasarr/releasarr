@@ -19,12 +19,14 @@ function NotificationEventItems(props) {
     onHealthIssue,
     onHealthRestored,
     onApplicationUpdate,
+    onContentAvailable,
     supportsOnGrab,
     includeManualGrabs,
     supportsOnHealthIssue,
     supportsOnHealthRestored,
     includeHealthWarnings,
-    supportsOnApplicationUpdate
+    supportsOnApplicationUpdate,
+    supportsOnContentAvailable
   } = item;
 
   return (
@@ -104,6 +106,17 @@ function NotificationEventItems(props) {
               helpText={translate('OnApplicationUpdateHelpText')}
               isDisabled={!supportsOnApplicationUpdate.value}
               {...onApplicationUpdate}
+              onChange={onInputChange}
+            />
+          </div>
+
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="onContentAvailable"
+              helpText="Notify when tracked content becomes available"
+              isDisabled={!supportsOnContentAvailable.value}
+              {...onContentAvailable}
               onChange={onInputChange}
             />
           </div>

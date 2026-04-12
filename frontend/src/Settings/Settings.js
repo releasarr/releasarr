@@ -16,6 +16,28 @@ function Settings() {
       <PageContentBody>
         <Link
           className={styles.link}
+          to="/settings/mediaservers"
+        >
+          Media Servers
+        </Link>
+
+        <div className={styles.summary}>
+          Configure media servers to monitor for watchlist and playlist content.
+        </div>
+
+        <Link
+          className={styles.link}
+          to="/settings/arrclients"
+        >
+          Arr Clients
+        </Link>
+
+        <div className={styles.summary}>
+          Configure Sonarr and Radarr instances to track download status.
+        </div>
+
+        <Link
+          className={styles.link}
           to="/settings/connect"
         >
           {translate('Notifications')}

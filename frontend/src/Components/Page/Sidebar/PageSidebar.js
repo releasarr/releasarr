@@ -19,10 +19,21 @@ const SIDEBAR_WIDTH = parseInt(dimensions.sidebarWidth);
 
 const links = [
   {
+    iconName: icons.HOME,
+    title: () => translate('Dashboard'),
+    to: '/'
+  },
+
+  {
+    iconName: icons.MONITORED,
+    title: () => 'Tracked Content',
+    to: '/trackedcontent'
+  },
+
+  {
     iconName: icons.ACTIVITY,
     title: () => translate('History'),
-    to: '/',
-    alias: '/history'
+    to: '/history'
   },
 
   {
@@ -30,6 +41,14 @@ const links = [
     title: () => translate('Settings'),
     to: '/settings',
     children: [
+      {
+        title: () => 'Media Servers',
+        to: '/settings/mediaservers'
+      },
+      {
+        title: () => 'Arr Clients',
+        to: '/settings/arrclients'
+      },
       {
         title: () => translate('Connect'),
         to: '/settings/connect'

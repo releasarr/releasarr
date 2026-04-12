@@ -2,6 +2,7 @@ import * as app from './appActions';
 import * as captcha from './captchaActions';
 import * as commands from './commandActions';
 import * as customFilters from './customFilterActions';
+import * as dashboard from './dashboardActions';
 import * as history from './historyActions';
 import * as localization from './localizationActions';
 import * as oAuth from './oAuthActions';
@@ -10,12 +11,14 @@ import * as providerOptions from './providerOptionActions';
 import * as settings from './settingsActions';
 import * as system from './systemActions';
 import * as tags from './tagActions';
+import * as trackedContent from './trackedContentActions';
 
 export default [
   app,
   captcha,
   commands,
   customFilters,
+  dashboard,
   history,
   oAuth,
   paths,
@@ -23,5 +26,6 @@ export default [
   localization,
   settings,
   system,
-  tags
+  tags,
+  trackedContent
 ];
