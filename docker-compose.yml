@@ -1,0 +1,11 @@
+services:
+  releasarr:
+    build: .
+    container_name: releasarr
+    ports:
+      - "9898:9898"
+    volumes:
+      - ./config:/config
+    environment:
+      - TZ=America/New_York
+    restart: unless-stopped
