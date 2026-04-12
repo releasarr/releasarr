@@ -5,7 +5,6 @@ using System.Net;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.MediaServers.Plex
 {
@@ -30,7 +29,7 @@ namespace NzbDrone.Core.MediaServers.Plex
         public List<PlexWatchlistItem> GetWatchlist(PlexSettings settings)
         {
             var request = BuildWatchlistRequest(settings);
-            var response = _httpClient.Get<PlexResponse<PlexMediaContainer>>(request);
+            var response = _httpClient.Get<PlexMediaContainer>(request);
 
             if (response?.Resource?.MediaContainer?.Metadata == null)
             {
@@ -46,7 +45,7 @@ namespace NzbDrone.Core.MediaServers.Plex
         {
             // First get all playlists
             var playlistRequest = BuildServerRequest(settings, "/playlists");
-            var playlistResponse = _httpClient.Get<PlexResponse<PlexMediaContainer>>(playlistRequest);
+            var playlistResponse = _httpClient.Get<PlexMediaContainer>(playlistRequest);
 
             if (playlistResponse?.Resource?.MediaContainer?.Metadata == null)
             {
@@ -64,7 +63,7 @@ namespace NzbDrone.Core.MediaServers.Plex
 
             // Get items from the playlist
             var itemsRequest = BuildServerRequest(settings, playlist.Key);
-            var itemsResponse = _httpClient.Get<PlexResponse<PlexMediaContainer>>(itemsRequest);
+            var itemsResponse = _httpClient.Get<PlexMediaContainer>(itemsRequest);
 
             if (itemsResponse?.Resource?.MediaContainer?.Metadata == null)
             {
@@ -134,17 +133,17 @@ namespace NzbDrone.Core.MediaServers.Plex
                 {
                     if (guid.Id != null)
                     {
-                        if (guid.Id.StartsWith("tmdb://") && int.TryParse(guid.Id.Substring(7), out var tmdbId))
+                        if (guid.Id.StartsWith("tmdb://") && int.TryParse(guid.Id.AsSpan(7), out var tmdbId))
                         {
                             item.TmdbId = tmdbId;
                         }
-                        else if (guid.Id.StartsWith("tvdb://") && int.TryParse(guid.Id.Substring(7), out var tvdbId))
+                        else if (guid.Id.StartsWith("tvdb://") && int.TryParse(guid.Id.AsSpan(7), out var tvdbId))
                         {
                             item.TvdbId = tvdbId;
                         }
                         else if (guid.Id.StartsWith("imdb://"))
                         {
-                            item.ImdbId = guid.Id.Substring(7);
+                            item.ImdbId = guid.Id[7..];
                         }
                     }
                 }
@@ -155,11 +154,6 @@ namespace NzbDrone.Core.MediaServers.Plex
     }
 
     // Plex API response DTOs
-    public class PlexResponse<T>
-    {
-        public T Resource { get; set; }
-    }
-
     public class PlexMediaContainer
     {
         public PlexMediaContainerInner MediaContainer { get; set; }

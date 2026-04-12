@@ -1,5 +1,5 @@
-using System;
 using NLog;
+using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider.Status;
 
@@ -11,8 +11,8 @@ namespace NzbDrone.Core.MediaServers
 
     public class MediaServerStatusService : ProviderStatusServiceBase<IMediaServer, MediaServerStatus>, IMediaServerStatusService
     {
-        public MediaServerStatusService(IMediaServerStatusRepository providerStatusRepository, IEventAggregator eventAggregator, Logger logger)
-            : base(providerStatusRepository, eventAggregator, logger)
+        public MediaServerStatusService(IMediaServerStatusRepository providerStatusRepository, IEventAggregator eventAggregator, IRuntimeInfo runtimeInfo, Logger logger)
+            : base(providerStatusRepository, eventAggregator, runtimeInfo, logger)
         {
         }
     }

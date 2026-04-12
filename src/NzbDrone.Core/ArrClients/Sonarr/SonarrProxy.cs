@@ -4,7 +4,6 @@ using System.Net;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.ArrClients.Sonarr
 {
