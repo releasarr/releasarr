@@ -1,36 +1,90 @@
-# Releasarr
+<p align="center">
+  <img src="Logo/256.png" alt="Releasarr" width="128" />
+</p>
 
-[![Build Status](https://dev.azure.com/Releasarr/Releasarr/_apis/build/status/Releasarr.Releasarr?branchName=develop)](https://dev.azure.com/Releasarr/Releasarr/_build/latest?definitionId=1&branchName=develop)
-[![Translation status](https://translate.servarr.com/widget/servarr/releasarr/svg-badge.svg)](https://translate.servarr.com/engage/servarr/?utm_source=widget)
-[![Docker Pulls](https://img.shields.io/docker/pulls/hotio/releasarr.svg)](https://wiki.servarr.com/releasarr/installation/docker)
-![Github Downloads](https://img.shields.io/github/downloads/Releasarr/Releasarr/total.svg)
-[![Backers on Open Collective](https://opencollective.com/Releasarr/backers/badge.svg)](#backers)
-[![Sponsors on Open Collective](https://opencollective.com/Releasarr/sponsors/badge.svg)](#sponsors)
-[![Mega Sponsors on Open Collective](https://opencollective.com/Releasarr/megasponsors/badge.svg)](#mega-sponsors)
+<h1 align="center">Releasarr</h1>
 
-Releasarr is an indexer manager/proxy built on the popular \*arr .net/reactjs base stack to integrate with your various PVR apps. Releasarr supports management of both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Lidarr, Mylar3, Radarr, Readarr, and Sonarr offering complete management of your indexers with no per app Indexer setup required (we do it all).
+<p align="center">
+  Monitor your Plex watchlist. Track downloads via Sonarr & Radarr. Get notified when content is ready.
+</p>
 
-## Major Features Include
+---
 
-- Usenet support for 24 indexers natively, including Headphones VIP
-- Usenet support for any Newznab compatible indexer via "Generic Newznab"
-- Torrent support for over 500 trackers with more added all the time
-- Torrent support for any Torznab compatible tracker via "Generic Torznab"
-- Support for custom YML definitions via Cardigann that includes JSON and XML parsing
-- Indexer Sync to Lidarr/Mylar3/Radarr/Readarr/Sonarr, so no manual configuration of the other applications are required
-- Indexer history and statistics
-- Manual searching of Trackers & Indexers at a category level
-- Parameter based manual searching
-- Support for pushing multiple releases at once directly to your download clients from Releasarr
-- Indexer health and status notifications
-- Per Indexer proxy support (SOCKS4, SOCKS5, HTTP, Flaresolverr)
+Releasarr is an *arr-style application that bridges the gap between your Plex watchlist and your media automation stack. It monitors what you want to watch, tracks download progress through Sonarr and Radarr, and sends rich push notifications the moment content becomes available.
 
-## Support
+## Features
 
-[![Wiki](https://img.shields.io/badge/servarr-wiki-181717.svg?maxAge=60)](https://wiki.servarr.com/releasarr)
-[![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60)](https://releasarr.com/discord)
+- **Plex Watchlist & Playlist Sync** -- Automatically imports items from your Plex watchlist and named playlists, parsing TMDB/TVDB/IMDB IDs for accurate matching
+- **Sonarr & Radarr Integration** -- Matches tracked items to your existing Sonarr series and Radarr movies, monitors download queues and availability status
+- **Rich Notifications** -- Episode-specific details (S01E01 - Episode Title), show overview, runtime, poster image, and direct links to IMDb/TMDb/TVDB
+- **20 Notification Providers** -- Pushover (with image attachments), ntfy (with image + click URL), Discord (rich embeds with poster thumbnail), Telegram (HTML links), plus 16 more
+- **Dashboard** -- At-a-glance summary of watchlisted, downloading, available, and notified content
+- **Tracked Content View** -- Filterable table with poster art, title, content type, status badges, and timestamps
 
-### License
+## How It Works
 
-- [GNU GPL v3](http://www.gnu.org/licenses/gpl.html)
-- Copyright 2010-2025
+```
+Plex Watchlist/Playlist
+        |
+        v
+   Releasarr  <---->  Sonarr / Radarr
+        |
+        v
+  Push Notification
+  (with poster, episode info, links)
+```
+
+1. **Watchlist Sync** (every 15 min) -- Pulls items from Plex, creates tracked entries, matches to Sonarr/Radarr
+2. **Status Check** (every 5 min) -- Polls Sonarr/Radarr APIs for download queue and file availability
+3. **Notification** -- When content transitions to available, fires a rich notification with episode details, metadata, and external links
+
+## Quick Start
+
+### Docker
+
+```yaml
+services:
+  releasarr:
+    image: releasarr/releasarr:latest
+    ports:
+      - "9898:9898"
+    volumes:
+      - ./config:/config
+    environment:
+      - TZ=America/New_York
+```
+
+### Manual
+
+```bash
+dotnet run --project src/NzbDrone.Console/Releasarr.Console.csproj \
+  --framework net8.0 -- --nobrowser --data=./config
+```
+
+Then open `http://localhost:9898` and configure:
+
+1. **Settings > Media Servers** -- Add your Plex server (URL + auth token)
+2. **Settings > Arr Clients** -- Add Sonarr and/or Radarr instances (URL + API key)
+3. **Settings > Notifications** -- Configure notification providers and enable "On Content Available"
+
+## Notification Providers
+
+All providers support the Content Available event with rich metadata:
+
+Apprise, CustomScript, Discord, Email, Gotify, Join, Notifiarr, ntfy, Prowl, PushBullet, Pushcut, Pushover, SendGrid, Signal, Simplepush, Telegram, Twitter, Webhook
+
+## Configuration
+
+| Setting | Default | Description |
+|---|---|---|
+| Port | 9898 | Web UI and API port |
+| Watchlist Sync | 15 min | How often to poll Plex for new watchlist items |
+| Download Status Check | 5 min | How often to check Sonarr/Radarr for availability |
+
+## Built On
+
+Forked from [Prowlarr](https://github.com/Prowlarr/Prowlarr)'s NzbDrone framework -- .NET 8, SQLite, React/Redux frontend.
+
+## License
+
+[GNU GPL v3](http://www.gnu.org/licenses/gpl.html)
