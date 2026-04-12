@@ -15,6 +15,8 @@ namespace Releasarr.Api.V1.Notifications
         public bool SupportsOnHealthRestored { get; set; }
         public bool IncludeHealthWarnings { get; set; }
         public bool SupportsOnApplicationUpdate { get; set; }
+        public bool OnContentAvailable { get; set; }
+        public bool SupportsOnContentAvailable { get; set; }
         public string TestCommand { get; set; }
     }
 
@@ -39,6 +41,8 @@ namespace Releasarr.Api.V1.Notifications
             resource.IncludeHealthWarnings = definition.IncludeHealthWarnings;
             resource.OnApplicationUpdate = definition.OnApplicationUpdate;
             resource.SupportsOnApplicationUpdate = definition.SupportsOnApplicationUpdate;
+            resource.OnContentAvailable = definition.OnContentAvailable;
+            resource.SupportsOnContentAvailable = definition.SupportsOnContentAvailable;
 
             return resource;
         }
@@ -62,6 +66,8 @@ namespace Releasarr.Api.V1.Notifications
             definition.IncludeHealthWarnings = resource.IncludeHealthWarnings;
             definition.OnApplicationUpdate = resource.OnApplicationUpdate;
             definition.SupportsOnApplicationUpdate = resource.SupportsOnApplicationUpdate;
+            definition.OnContentAvailable = resource.OnContentAvailable;
+            definition.SupportsOnContentAvailable = resource.SupportsOnContentAvailable;
 
             return definition;
         }
