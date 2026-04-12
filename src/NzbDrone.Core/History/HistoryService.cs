@@ -5,7 +5,6 @@ using NLog;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Commands;
-using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.History
 {

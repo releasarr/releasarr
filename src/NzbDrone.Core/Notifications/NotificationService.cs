@@ -1,10 +1,7 @@
 using System;
-using System.Linq;
 using NLog;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Update.History.Events;
 
 namespace NzbDrone.Core.Notifications

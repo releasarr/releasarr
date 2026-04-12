@@ -106,7 +106,8 @@ App_Data/*.ldf
 _NCrunch_*
 _TeamCity*
 
-# Prowlarr
+# Releasarr
+config/
 config.xml
 nzbdrone.log*txt
 UpdateLogs/

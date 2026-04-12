@@ -1,5 +1,5 @@
-using System;
 using NLog;
+using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider.Status;
 
@@ -11,8 +11,8 @@ namespace NzbDrone.Core.ArrClients
 
     public class ArrClientStatusService : ProviderStatusServiceBase<IArrClient, ArrClientStatus>, IArrClientStatusService
     {
-        public ArrClientStatusService(IArrClientStatusRepository providerStatusRepository, IEventAggregator eventAggregator, Logger logger)
-            : base(providerStatusRepository, eventAggregator, logger)
+        public ArrClientStatusService(IArrClientStatusRepository providerStatusRepository, IEventAggregator eventAggregator, IRuntimeInfo runtimeInfo, Logger logger)
+            : base(providerStatusRepository, eventAggregator, runtimeInfo, logger)
         {
         }
     }

@@ -27,7 +27,10 @@ namespace Releasarr.Api.V1.TrackedContent
     {
         public static TrackedItemResource ToResource(this TrackedItem model)
         {
-            if (model == null) return null;
+            if (model == null)
+            {
+                return null;
+            }
 
             return new TrackedItemResource
             {
@@ -52,7 +55,10 @@ namespace Releasarr.Api.V1.TrackedContent
 
         public static TrackedItem ToModel(this TrackedItemResource resource)
         {
-            if (resource == null) return null;
+            if (resource == null)
+            {
+                return null;
+            }
 
             return new TrackedItem
             {
