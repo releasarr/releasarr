@@ -25,6 +25,12 @@ const links = [
   },
 
   {
+    iconName: icons.SEARCH,
+    title: () => 'Search',
+    to: '/search'
+  },
+
+  {
     iconName: icons.MONITORED,
     title: () => 'Tracked Content',
     to: '/trackedcontent'

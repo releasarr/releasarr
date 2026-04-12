@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NLog;
 using NzbDrone.Core.ArrClients;
 using NzbDrone.Core.ArrClients.Radarr;
@@ -46,6 +48,9 @@ namespace NzbDrone.Core.Monitoring
                     }
                 }
             }
+
+            // Tag-based sync from Sonarr/Radarr
+            SyncFromArrTags();
         }
 
         private void SyncPlexWatchlist(PlexServer plexServer)
@@ -145,9 +150,137 @@ namespace NzbDrone.Core.Monitoring
             }
         }
 
-        // Helper to get the proxy from the DI-injected client
-        // The proxy is injected into the client via constructor, we access it via reflection or a new interface method
-        // For simplicity, we create new proxy instances - the NzbDrone pattern uses field access
+        private void SyncFromArrTags()
+        {
+            var arrClients = _arrClientFactory.Enabled();
+
+            foreach (var client in arrClients)
+            {
+                try
+                {
+                    if (client is SonarrClient sonarr)
+                    {
+                        var settings = (SonarrSettings)sonarr.Definition.Settings;
+
+                        if (!settings.SyncTagId.HasValue)
+                        {
+                            continue;
+                        }
+
+                        var proxy = GetSonarrProxy(sonarr);
+                        if (proxy == null)
+                        {
+                            continue;
+                        }
+
+                        SyncSonarrTag(sonarr, proxy, settings);
+                    }
+                    else if (client is RadarrClient radarr)
+                    {
+                        var settings = (RadarrSettings)radarr.Definition.Settings;
+
+                        if (!settings.SyncTagId.HasValue)
+                        {
+                            continue;
+                        }
+
+                        var proxy = GetRadarrProxy(radarr);
+                        if (proxy == null)
+                        {
+                            continue;
+                        }
+
+                        SyncRadarrTag(radarr, proxy, settings);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "Failed to sync tags from arr client: {0}", client.Definition.Name);
+                }
+            }
+        }
+
+        private void SyncSonarrTag(SonarrClient client, ISonarrProxy proxy, SonarrSettings settings)
+        {
+            var tagId = settings.SyncTagId.Value;
+            var allSeries = proxy.GetAllSeries(settings);
+            var taggedSeries = allSeries.Where(s => s.Tags != null && s.Tags.Contains(tagId)).ToList();
+
+            _logger.Debug("Found {0} series with sync tag in Sonarr ({1})", taggedSeries.Count, client.Definition.Name);
+
+            foreach (var series in taggedSeries)
+            {
+                try
+                {
+                    var existing = _trackedItemService.FindByTvdbId(series.TvdbId);
+                    if (existing != null)
+                    {
+                        continue;
+                    }
+
+                    var item = new TrackedItem
+                    {
+                        Title = series.Title,
+                        ContentType = ContentType.Series,
+                        TvdbId = series.TvdbId,
+                        TmdbId = series.TmdbId,
+                        ImdbId = series.ImdbId,
+                        ArrClientId = client.Definition.Id,
+                        ArrItemId = series.Id,
+                        Status = TrackedItemStatus.Monitored,
+                        Year = series.Year
+                    };
+
+                    _trackedItemService.Add(item);
+                    _logger.Info("Added tracked item from Sonarr tag: {0}", series.Title);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Failed to add tagged series: {0}", series.Title);
+                }
+            }
+        }
+
+        private void SyncRadarrTag(RadarrClient client, IRadarrProxy proxy, RadarrSettings settings)
+        {
+            var tagId = settings.SyncTagId.Value;
+            var allMovies = proxy.GetAllMovies(settings);
+            var taggedMovies = allMovies.Where(m => m.Tags != null && m.Tags.Contains(tagId)).ToList();
+
+            _logger.Debug("Found {0} movies with sync tag in Radarr ({1})", taggedMovies.Count, client.Definition.Name);
+
+            foreach (var movie in taggedMovies)
+            {
+                try
+                {
+                    var existing = _trackedItemService.FindByTmdbId(movie.TmdbId);
+                    if (existing != null)
+                    {
+                        continue;
+                    }
+
+                    var item = new TrackedItem
+                    {
+                        Title = movie.Title,
+                        ContentType = ContentType.Movie,
+                        TmdbId = movie.TmdbId,
+                        ImdbId = movie.ImdbId,
+                        ArrClientId = client.Definition.Id,
+                        ArrItemId = movie.Id,
+                        Status = movie.HasFile ? TrackedItemStatus.Available : TrackedItemStatus.Monitored,
+                        Year = movie.Year
+                    };
+
+                    _trackedItemService.Add(item);
+                    _logger.Info("Added tracked item from Radarr tag: {0}", movie.Title);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Failed to add tagged movie: {0}", movie.Title);
+                }
+            }
+        }
+
         private ISonarrProxy GetSonarrProxy(SonarrClient client)
         {
             var field = typeof(SonarrClient).GetField("_proxy", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);

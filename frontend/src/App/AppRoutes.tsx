@@ -18,6 +18,7 @@ import Logs from 'System/Logs/Logs';
 import Status from 'System/Status/Status';
 import Tasks from 'System/Tasks/Tasks';
 import Updates from 'System/Updates/Updates';
+import SearchConnector from 'Search/SearchConnector';
 import TrackedContentConnector from 'TrackedContent/TrackedContentConnector';
 import getPathWithUrlBase from 'Utilities/getPathWithUrlBase';
 
@@ -44,6 +45,12 @@ function AppRoutes() {
           render={RedirectWithUrlBase}
         />
       )}
+
+      {/*
+        Search
+      */}
+
+      <Route path="/search" component={SearchConnector} />
 
       {/*
         Tracked Content

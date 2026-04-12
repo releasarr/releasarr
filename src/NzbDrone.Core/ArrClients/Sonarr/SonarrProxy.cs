@@ -14,6 +14,8 @@ namespace NzbDrone.Core.ArrClients.Sonarr
         List<SonarrQueueItem> GetQueue(SonarrSettings settings);
         List<SonarrHistoryItem> GetHistory(int seriesId, SonarrSettings settings);
         List<SonarrEpisode> GetEpisodes(int seriesId, SonarrSettings settings);
+        List<ArrTag> GetTags(SonarrSettings settings);
+        List<SonarrSeries> LookupSeries(string term, SonarrSettings settings);
         ValidationFailure Test(SonarrSettings settings);
     }
 
@@ -59,6 +61,20 @@ namespace NzbDrone.Core.ArrClients.Sonarr
             var request = BuildRequest(settings, $"/api/v3/episode?seriesId={seriesId}");
             var response = _httpClient.Get<List<SonarrEpisode>>(request);
             return response?.Resource ?? new List<SonarrEpisode>();
+        }
+
+        public List<ArrTag> GetTags(SonarrSettings settings)
+        {
+            var request = BuildRequest(settings, "/api/v3/tag");
+            var response = _httpClient.Get<List<ArrTag>>(request);
+            return response?.Resource ?? new List<ArrTag>();
+        }
+
+        public List<SonarrSeries> LookupSeries(string term, SonarrSettings settings)
+        {
+            var request = BuildRequest(settings, $"/api/v3/series/lookup?term={Uri.EscapeDataString(term)}");
+            var response = _httpClient.Get<List<SonarrSeries>>(request);
+            return response?.Resource ?? new List<SonarrSeries>();
         }
 
         public ValidationFailure Test(SonarrSettings settings)
@@ -107,6 +123,9 @@ namespace NzbDrone.Core.ArrClients.Sonarr
         public string Overview { get; set; }
         public int? Year { get; set; }
         public int? Runtime { get; set; }
+        public string Network { get; set; }
+        public List<int> Tags { get; set; } = new();
+        public List<ArrImage> Images { get; set; } = new();
     }
 
     public class SonarrSeriesStatistics

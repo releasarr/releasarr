@@ -18,6 +18,9 @@ namespace Releasarr.Api.V1.Config
         public bool EnableColorImpairedMode { get; set; }
         public string UILanguage { get; set; }
         public string Theme { get; set; }
+
+        // Releasarr
+        public string EpisodeNotificationMode { get; set; }
     }
 
     public static class UiConfigResourceMapper
@@ -36,7 +39,9 @@ namespace Releasarr.Api.V1.Config
 
                 EnableColorImpairedMode = model.EnableColorImpairedMode,
                 UILanguage = model.UILanguage,
-                Theme = config.Theme
+                Theme = config.Theme,
+
+                EpisodeNotificationMode = model.EpisodeNotificationMode.ToString()
             };
         }
     }

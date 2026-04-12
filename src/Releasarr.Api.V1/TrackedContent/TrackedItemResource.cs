@@ -21,6 +21,17 @@ namespace Releasarr.Api.V1.TrackedContent
         public DateTime? NotifiedAt { get; set; }
         public int? Year { get; set; }
         public string PosterUrl { get; set; }
+
+        // Enrichment from metadata
+        public int? EpisodeFileCount { get; set; }
+        public int? TotalEpisodeCount { get; set; }
+        public string NextEpisodeAirDateUtc { get; set; }
+        public string LastEpisodeAirDateUtc { get; set; }
+        public string SeriesStatus { get; set; }
+        public string Network { get; set; }
+        public string Studio { get; set; }
+        public string QueueStatus { get; set; }
+        public string QueueTimeleft { get; set; }
     }
 
     public static class TrackedItemResourceMapper
@@ -31,6 +42,8 @@ namespace Releasarr.Api.V1.TrackedContent
             {
                 return null;
             }
+
+            var metadata = model.GetMetadata();
 
             return new TrackedItemResource
             {
@@ -49,7 +62,16 @@ namespace Releasarr.Api.V1.TrackedContent
                 AvailableAt = model.AvailableAt,
                 NotifiedAt = model.NotifiedAt,
                 Year = model.Year,
-                PosterUrl = model.PosterUrl
+                PosterUrl = model.PosterUrl,
+                EpisodeFileCount = metadata.EpisodeFileCount,
+                TotalEpisodeCount = metadata.TotalEpisodeCount,
+                NextEpisodeAirDateUtc = metadata.NextEpisodeAirDateUtc,
+                LastEpisodeAirDateUtc = metadata.LastEpisodeAirDateUtc,
+                SeriesStatus = metadata.SeriesStatus,
+                Network = metadata.Network,
+                Studio = metadata.Studio,
+                QueueStatus = metadata.QueueStatus,
+                QueueTimeleft = metadata.QueueTimeleft
             };
         }
 

@@ -2,6 +2,19 @@
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 }
 
+.titleContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.poster {
+  width: 30px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
 .contentType {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
@@ -12,6 +25,30 @@
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
   width: 130px;
+}
+
+.progress {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 150px;
+}
+
+.network {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 130px;
+}
+
+.seriesStatus {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 120px;
+}
+
+.queue {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 150px;
 }
 
 .date {

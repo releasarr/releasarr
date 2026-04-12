@@ -8,6 +8,7 @@ using NzbDrone.Common.Http.Proxy;
 using NzbDrone.Core.Configuration.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Security;
+using NzbDrone.Core.TrackedContent;
 
 namespace NzbDrone.Core.Configuration
 {
@@ -182,6 +183,12 @@ namespace NzbDrone.Core.Configuration
             GetValueEnum("CertificateValidation", CertificateValidationType.Enabled);
 
         public string ApplicationUrl => GetValue("ApplicationUrl", string.Empty);
+
+        public EpisodeNotificationMode EpisodeNotificationMode
+        {
+            get { return GetValueEnum("EpisodeNotificationMode", EpisodeNotificationMode.NewEpisodesOnly); }
+            set { SetValue("EpisodeNotificationMode", value); }
+        }
 
         public bool TrustCgnatIpAddresses
         {
