@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using FluentValidation.Results;
+using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Http;
 
@@ -29,15 +30,18 @@ namespace NzbDrone.Core.MediaServers.Plex
         public List<PlexWatchlistItem> GetWatchlist(PlexSettings settings)
         {
             var request = BuildWatchlistRequest(settings);
-            var response = _httpClient.Get<PlexMediaContainer>(request);
+            var response = _httpClient.Execute(request);
 
-            if (response?.Resource?.MediaContainer?.Metadata == null)
+            var json = JObject.Parse(response.Content);
+            var metadata = json["MediaContainer"]?["Metadata"] as JArray;
+
+            if (metadata == null)
             {
                 return new List<PlexWatchlistItem>();
             }
 
-            return response.Resource.MediaContainer.Metadata
-                .Select(MapToWatchlistItem)
+            return metadata
+                .Select(ParseWatchlistItem)
                 .ToList();
         }
 
@@ -61,17 +65,19 @@ namespace NzbDrone.Core.MediaServers.Plex
                 return new List<PlexWatchlistItem>();
             }
 
-            // Get items from the playlist
+            // Get items from the playlist using JObject parsing (same guid/Guid case issue)
             var itemsRequest = BuildServerRequest(settings, playlist.Key);
-            var itemsResponse = _httpClient.Get<PlexMediaContainer>(itemsRequest);
+            var itemsResponse = _httpClient.Execute(itemsRequest);
+            var json = JObject.Parse(itemsResponse.Content);
+            var metadata = json["MediaContainer"]?["Metadata"] as JArray;
 
-            if (itemsResponse?.Resource?.MediaContainer?.Metadata == null)
+            if (metadata == null)
             {
                 return new List<PlexWatchlistItem>();
             }
 
-            return itemsResponse.Resource.MediaContainer.Metadata
-                .Select(MapToWatchlistItem)
+            return metadata
+                .Select(ParseWatchlistItem)
                 .ToList();
         }
 
@@ -98,9 +104,14 @@ namespace NzbDrone.Core.MediaServers.Plex
 
         private HttpRequest BuildWatchlistRequest(PlexSettings settings)
         {
-            var requestBuilder = new HttpRequestBuilder("https://metadata.provider.plex.tv/library/sections/watchlist/all")
+            var requestBuilder = new HttpRequestBuilder("https://discover.provider.plex.tv/library/sections/watchlist/all")
                 .AddQueryParam("X-Plex-Token", settings.AuthToken)
+                .AddQueryParam("includeGuids", "1")
+                .AddQueryParam("X-Plex-Container-Start", "0")
+                .AddQueryParam("X-Plex-Container-Size", "300")
                 .Accept(HttpAccept.Json);
+
+            requestBuilder.Headers.Add("X-Plex-Client-Identifier", "releasarr");
 
             return requestBuilder.Build();
         }
@@ -115,35 +126,37 @@ namespace NzbDrone.Core.MediaServers.Plex
             return requestBuilder.Build();
         }
 
-        private PlexWatchlistItem MapToWatchlistItem(PlexMetadata metadata)
+        private PlexWatchlistItem ParseWatchlistItem(JToken token)
         {
             var item = new PlexWatchlistItem
             {
-                Title = metadata.Title,
-                Type = metadata.Type,
-                Year = metadata.Year,
-                PlexGuid = metadata.Guid,
-                PosterUrl = metadata.Thumb
+                Title = token.Value<string>("title"),
+                Type = token.Value<string>("type"),
+                Year = token.Value<int?>("year"),
+                PlexGuid = token.Value<string>("guid"),
+                PosterUrl = token.Value<string>("thumb")
             };
 
-            // Parse external GUIDs (tmdb://, tvdb://, imdb://)
-            if (metadata.Guids != null)
+            // Parse external GUIDs from the "Guid" array (capital G, separate from "guid" string)
+            var guids = token["Guid"] as JArray;
+            if (guids != null)
             {
-                foreach (var guid in metadata.Guids)
+                foreach (var guid in guids)
                 {
-                    if (guid.Id != null)
+                    var id = guid.Value<string>("id");
+                    if (id != null)
                     {
-                        if (guid.Id.StartsWith("tmdb://") && int.TryParse(guid.Id.AsSpan(7), out var tmdbId))
+                        if (id.StartsWith("tmdb://") && int.TryParse(id.AsSpan(7), out var tmdbId))
                         {
                             item.TmdbId = tmdbId;
                         }
-                        else if (guid.Id.StartsWith("tvdb://") && int.TryParse(guid.Id.AsSpan(7), out var tvdbId))
+                        else if (id.StartsWith("tvdb://") && int.TryParse(id.AsSpan(7), out var tvdbId))
                         {
                             item.TvdbId = tvdbId;
                         }
-                        else if (guid.Id.StartsWith("imdb://"))
+                        else if (id.StartsWith("imdb://"))
                         {
-                            item.ImdbId = guid.Id[7..];
+                            item.ImdbId = id[7..];
                         }
                     }
                 }
@@ -153,7 +166,7 @@ namespace NzbDrone.Core.MediaServers.Plex
         }
     }
 
-    // Plex API response DTOs
+    // Plex API response DTOs (used for server-side endpoints like playlists)
     public class PlexMediaContainer
     {
         public PlexMediaContainerInner MediaContainer { get; set; }
@@ -168,15 +181,6 @@ namespace NzbDrone.Core.MediaServers.Plex
     {
         public string Title { get; set; }
         public string Type { get; set; }
-        public int? Year { get; set; }
-        public string Guid { get; set; }
         public string Key { get; set; }
-        public string Thumb { get; set; }
-        public List<PlexGuid> Guids { get; set; }
-    }
-
-    public class PlexGuid
-    {
-        public string Id { get; set; }
     }
 }

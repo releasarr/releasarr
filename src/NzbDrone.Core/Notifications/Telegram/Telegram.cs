@@ -44,6 +44,41 @@ namespace NzbDrone.Core.Notifications.Telegram
             _proxy.SendNotification(title, updateMessage.Message, Settings);
         }
 
+        public override void OnContentAvailable(ContentAvailableMessage message)
+        {
+            var title = Settings.IncludeAppNameInTitle ? CONTENT_AVAILABLE_TITLE_BRANDED : CONTENT_AVAILABLE_TITLE;
+
+            var body = message.Message;
+
+            if (message.Overview != null)
+            {
+                body += "\n\n" + message.Overview;
+            }
+
+            var links = new List<string>();
+            if (message.ImdbUrl != null)
+            {
+                links.Add($"<a href=\"{message.ImdbUrl}\">IMDb</a>");
+            }
+
+            if (message.TmdbUrl != null)
+            {
+                links.Add($"<a href=\"{message.TmdbUrl}\">TMDb</a>");
+            }
+
+            if (message.TvdbUrl != null)
+            {
+                links.Add($"<a href=\"{message.TvdbUrl}\">TVDB</a>");
+            }
+
+            if (links.Count > 0)
+            {
+                body += "\n\n" + string.Join(" | ", links);
+            }
+
+            _proxy.SendNotification(title, body, Settings);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

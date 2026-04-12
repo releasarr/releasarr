@@ -153,6 +153,72 @@ namespace NzbDrone.Core.Notifications.Discord
             _proxy.SendPayload(payload, Settings);
         }
 
+        public override void OnContentAvailable(ContentAvailableMessage message)
+        {
+            var fields = new List<DiscordField>();
+
+            if (message.SeasonNumber.HasValue && message.EpisodeNumber.HasValue)
+            {
+                fields.Add(new DiscordField { Name = "Episode", Value = $"S{message.SeasonNumber:D2}E{message.EpisodeNumber:D2} - {message.EpisodeTitle}", Inline = false });
+            }
+
+            if (message.Year.HasValue)
+            {
+                fields.Add(new DiscordField { Name = "Year", Value = message.Year.ToString(), Inline = true });
+            }
+
+            if (message.Runtime.HasValue)
+            {
+                fields.Add(new DiscordField { Name = "Runtime", Value = $"{message.Runtime}min", Inline = true });
+            }
+
+            if (message.Quality != null)
+            {
+                fields.Add(new DiscordField { Name = "Quality", Value = message.Quality, Inline = true });
+            }
+
+            var links = new List<string>();
+            if (message.ImdbUrl != null)
+            {
+                links.Add($"[IMDb]({message.ImdbUrl})");
+            }
+
+            if (message.TmdbUrl != null)
+            {
+                links.Add($"[TMDb]({message.TmdbUrl})");
+            }
+
+            if (message.TvdbUrl != null)
+            {
+                links.Add($"[TVDB]({message.TvdbUrl})");
+            }
+
+            if (links.Count > 0)
+            {
+                fields.Add(new DiscordField { Name = "Links", Value = string.Join(" | ", links), Inline = false });
+            }
+
+            var embed = new Embed
+            {
+                Author = new DiscordAuthor
+                {
+                    Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
+                    IconUrl = "https://raw.githubusercontent.com/Releasarr/Releasarr/develop/Logo/256.png"
+                },
+                Title = message.Message,
+                Description = message.Overview,
+                Url = message.ImdbUrl ?? message.TmdbUrl ?? message.TvdbUrl,
+                Thumbnail = message.PosterUrl != null ? new DiscordImage { Url = message.PosterUrl } : null,
+                Fields = fields.Count > 0 ? fields : null,
+                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                Color = (int)DiscordColors.Success
+            };
+
+            var payload = CreatePayload(null, new List<Embed> { embed });
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

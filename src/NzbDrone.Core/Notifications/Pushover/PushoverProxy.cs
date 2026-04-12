@@ -9,6 +9,7 @@ namespace NzbDrone.Core.Notifications.Pushover
     public interface IPushoverProxy
     {
         void SendNotification(string title, string message, PushoverSettings settings);
+        void SendNotification(string title, string message, string url, string urlTitle, string imageUrl, PushoverSettings settings);
         ValidationFailure Test(PushoverSettings settings);
     }
 
@@ -26,6 +27,11 @@ namespace NzbDrone.Core.Notifications.Pushover
 
         public void SendNotification(string title, string message, PushoverSettings settings)
         {
+            SendNotification(title, message, null, null, null, settings);
+        }
+
+        public void SendNotification(string title, string message, string url, string urlTitle, string imageUrl, PushoverSettings settings)
+        {
             var requestBuilder = new HttpRequestBuilder(URL).Post();
 
             requestBuilder.AddFormParameter("token", settings.ApiKey)
@@ -33,7 +39,18 @@ namespace NzbDrone.Core.Notifications.Pushover
                           .AddFormParameter("device", string.Join(",", settings.Devices))
                           .AddFormParameter("title", title)
                           .AddFormParameter("message", message)
-                          .AddFormParameter("priority", settings.Priority);
+                          .AddFormParameter("priority", settings.Priority)
+                          .AddFormParameter("html", "1");
+
+            if (!url.IsNullOrWhiteSpace())
+            {
+                requestBuilder.AddFormParameter("url", url);
+            }
+
+            if (!urlTitle.IsNullOrWhiteSpace())
+            {
+                requestBuilder.AddFormParameter("url_title", urlTitle);
+            }
 
             if ((PushoverPriority)settings.Priority == PushoverPriority.Emergency)
             {
@@ -44,6 +61,27 @@ namespace NzbDrone.Core.Notifications.Pushover
             if (!settings.Sound.IsNullOrWhiteSpace())
             {
                 requestBuilder.AddFormParameter("sound", settings.Sound);
+            }
+
+            // Attach poster image if available
+            if (!imageUrl.IsNullOrWhiteSpace())
+            {
+                try
+                {
+                    // Use w300 size for smaller download (Pushover limit is 2.5MB)
+                    var smallImageUrl = imageUrl.Replace("/original/", "/w300/");
+                    var imageRequest = new HttpRequestBuilder(smallImageUrl).Build();
+                    var imageResponse = _httpClient.Get(imageRequest);
+
+                    if (imageResponse.ResponseData != null && imageResponse.ResponseData.Length > 0)
+                    {
+                        requestBuilder.AddFormUpload("attachment", "poster.jpg", imageResponse.ResponseData, "image/jpeg");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Debug(ex, "Failed to download poster image for Pushover notification");
+                }
             }
 
             var request = requestBuilder.Build();

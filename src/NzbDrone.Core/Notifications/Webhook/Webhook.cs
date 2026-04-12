@@ -38,6 +38,11 @@ namespace NzbDrone.Core.Notifications.Webhook
             _proxy.SendWebhook(BuildApplicationUploadPayload(updateMessage), Settings);
         }
 
+        public override void OnContentAvailable(ContentAvailableMessage message)
+        {
+            _proxy.SendWebhook(BuildContentAvailablePayload(message), Settings);
+        }
+
         public override string Name => "Webhook";
 
         public override ValidationResult Test()

@@ -40,6 +40,11 @@ namespace NzbDrone.Core.Notifications.Notifiarr
             _proxy.SendNotification(BuildApplicationUploadPayload(updateMessage), Settings);
         }
 
+        public override void OnContentAvailable(ContentAvailableMessage message)
+        {
+            _proxy.SendNotification(BuildContentAvailablePayload(message), Settings);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

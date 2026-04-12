@@ -38,6 +38,11 @@ namespace NzbDrone.Core.Notifications.Twitter
             _twitterService.SendNotification($"Application Updated: {updateMessage.Message}", Settings);
         }
 
+        public override void OnContentAvailable(ContentAvailableMessage message)
+        {
+            _twitterService.SendNotification($"Content Available: {message.Message}", Settings);
+        }
+
         public override object RequestAction(string action, IDictionary<string, string> query)
         {
             if (action == "startOAuth")

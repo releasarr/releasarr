@@ -117,6 +117,8 @@ namespace NzbDrone.Core.Notifications
         {
             var enabled = _notificationFactory.OnContentAvailableEnabled();
 
+            _logger.Debug("ContentAvailable event for: {0}, enabled notifications: {1}", message.ContentMessage?.Title, enabled.Count);
+
             foreach (var notification in enabled)
             {
                 try

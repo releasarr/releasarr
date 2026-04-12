@@ -39,7 +39,21 @@ namespace NzbDrone.Core.Notifications.Ntfy
 
         public override void OnContentAvailable(ContentAvailableMessage message)
         {
-            _proxy.SendNotification(CONTENT_AVAILABLE_TITLE_BRANDED, message.Message, Settings);
+            var body = message.Message;
+
+            if (message.Overview != null)
+            {
+                body += "\n\n" + message.Overview;
+            }
+
+            if (message.Runtime.HasValue)
+            {
+                body += $"\nRuntime: {message.Runtime}min";
+            }
+
+            var clickUrl = message.ImdbUrl ?? message.TmdbUrl ?? message.TvdbUrl;
+
+            _proxy.SendNotification(CONTENT_AVAILABLE_TITLE_BRANDED, body, clickUrl, message.PosterUrl, Settings);
         }
 
         public override ValidationResult Test()

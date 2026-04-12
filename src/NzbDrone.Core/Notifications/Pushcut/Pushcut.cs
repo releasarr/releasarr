@@ -45,5 +45,10 @@ namespace NzbDrone.Core.Notifications.Pushcut
         {
             _proxy.SendNotification(APPLICATION_UPDATE_TITLE_BRANDED, updateMessage.Message, Settings);
         }
+
+        public override void OnContentAvailable(ContentAvailableMessage message)
+        {
+            _proxy.SendNotification(CONTENT_AVAILABLE_TITLE_BRANDED, message.Message, Settings);
+        }
     }
 }

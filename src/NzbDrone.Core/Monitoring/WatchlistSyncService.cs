@@ -36,7 +36,14 @@ namespace NzbDrone.Core.Monitoring
             {
                 if (server is PlexServer plexServer)
                 {
-                    SyncPlexWatchlist(plexServer);
+                    try
+                    {
+                        SyncPlexWatchlist(plexServer);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex, "Failed to sync watchlist from Plex server: {0}", plexServer.Definition.Name);
+                    }
                 }
             }
         }

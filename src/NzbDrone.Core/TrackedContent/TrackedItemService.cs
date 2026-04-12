@@ -63,7 +63,6 @@ namespace NzbDrone.Core.TrackedContent
         public TrackedItem Add(TrackedItem item)
         {
             item.AddedAt = DateTime.UtcNow;
-            item.Status = TrackedItemStatus.Watchlisted;
 
             _logger.Info("Adding tracked item: {0} ({1})", item.Title, item.ContentType);
             return _repository.Insert(item);
