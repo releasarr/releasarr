@@ -11,6 +11,7 @@ namespace NzbDrone.Core.Notifications.Ntfy
     public interface INtfyProxy
     {
         void SendNotification(string title, string message, NtfySettings settings);
+        void SendNotification(string title, string message, string clickUrl, string imageUrl, NtfySettings settings);
 
         ValidationFailure Test(NtfySettings settings);
     }
@@ -31,6 +32,11 @@ namespace NzbDrone.Core.Notifications.Ntfy
 
         public void SendNotification(string title, string message, NtfySettings settings)
         {
+            SendNotification(title, message, null, null, settings);
+        }
+
+        public void SendNotification(string title, string message, string clickUrl, string imageUrl, NtfySettings settings)
+        {
             var error = false;
 
             var serverUrl = settings.ServerUrl.IsNullOrWhiteSpace() ? DEFAULT_PUSH_URL : settings.ServerUrl;
@@ -41,7 +47,7 @@ namespace NzbDrone.Core.Notifications.Ntfy
 
                 try
                 {
-                    SendNotification(title, message, request, settings);
+                    SendNotification(title, message, clickUrl, imageUrl, request, settings);
                 }
                 catch (NtfyException ex)
                 {
@@ -107,7 +113,7 @@ namespace NzbDrone.Core.Notifications.Ntfy
             return null;
         }
 
-        private void SendNotification(string title, string message, HttpRequestBuilder requestBuilder, NtfySettings settings)
+        private void SendNotification(string title, string message, string clickUrl, string imageUrl, HttpRequestBuilder requestBuilder, NtfySettings settings)
         {
             try
             {
@@ -120,9 +126,16 @@ namespace NzbDrone.Core.Notifications.Ntfy
                     requestBuilder.AddQueryParam("tags", settings.Tags.Join(","));
                 }
 
-                if (!settings.ClickUrl.IsNullOrWhiteSpace())
+                // Per-message click URL takes priority over settings default
+                var effectiveClickUrl = clickUrl.IsNullOrWhiteSpace() ? settings.ClickUrl : clickUrl;
+                if (!effectiveClickUrl.IsNullOrWhiteSpace())
                 {
-                    requestBuilder.AddQueryParam("click", settings.ClickUrl);
+                    requestBuilder.AddQueryParam("click", effectiveClickUrl);
+                }
+
+                if (!imageUrl.IsNullOrWhiteSpace())
+                {
+                    requestBuilder.Headers.Set("Attach", imageUrl);
                 }
 
                 if (!settings.AccessToken.IsNullOrWhiteSpace())

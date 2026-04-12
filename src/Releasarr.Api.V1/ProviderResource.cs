@@ -9,6 +9,7 @@ namespace Releasarr.Api.V1
     public class ProviderResource<T> : RestResource
     {
         public string Name { get; set; }
+        public bool Enable { get; set; }
         public List<Field> Fields { get; set; }
         public string ImplementationName { get; set; }
         public string Implementation { get; set; }
@@ -31,6 +32,7 @@ namespace Releasarr.Api.V1
                 Id = definition.Id,
 
                 Name = definition.Name,
+                Enable = definition.Enable,
                 ImplementationName = definition.ImplementationName,
                 Implementation = definition.Implementation,
                 ConfigContract = definition.ConfigContract,
@@ -57,6 +59,7 @@ namespace Releasarr.Api.V1
                 Id = resource.Id,
 
                 Name = resource.Name,
+                Enable = resource.Enable,
                 ImplementationName = resource.ImplementationName,
                 Implementation = resource.Implementation,
                 ConfigContract = resource.ConfigContract,

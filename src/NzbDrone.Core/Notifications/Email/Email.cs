@@ -48,6 +48,11 @@ namespace NzbDrone.Core.Notifications.Email
             SendEmail(Settings, APPLICATION_UPDATE_TITLE_BRANDED, body);
         }
 
+        public override void OnContentAvailable(ContentAvailableMessage message)
+        {
+            SendEmail(Settings, CONTENT_AVAILABLE_TITLE_BRANDED, message.Message);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

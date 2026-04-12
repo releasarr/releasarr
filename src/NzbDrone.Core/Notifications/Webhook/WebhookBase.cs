@@ -72,6 +72,18 @@ namespace NzbDrone.Core.Notifications.Webhook
             };
         }
 
+        protected WebhookContentAvailablePayload BuildContentAvailablePayload(ContentAvailableMessage message)
+        {
+            return new WebhookContentAvailablePayload
+            {
+                EventType = WebhookEventType.ContentAvailable,
+                InstanceName = _configFileProvider.InstanceName,
+                ApplicationUrl = _configService.ApplicationUrl,
+                Title = message.Title,
+                Message = message.Message
+            };
+        }
+
         protected WebhookPayload BuildTestPayload()
         {
             return new WebhookPayload

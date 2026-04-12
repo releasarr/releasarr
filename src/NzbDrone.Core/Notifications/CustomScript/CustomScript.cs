@@ -109,6 +109,19 @@ namespace NzbDrone.Core.Notifications.CustomScript
             ExecuteScript(environmentVariables);
         }
 
+        public override void OnContentAvailable(ContentAvailableMessage message)
+        {
+            var environmentVariables = new StringDictionary();
+
+            environmentVariables.Add("Releasarr_EventType", "ContentAvailable");
+            environmentVariables.Add("Releasarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Releasarr_ApplicationUrl", _configService.ApplicationUrl);
+            environmentVariables.Add("Releasarr_ContentAvailable_Title", message.Title ?? string.Empty);
+            environmentVariables.Add("Releasarr_ContentAvailable_Message", message.Message ?? string.Empty);
+
+            ExecuteScript(environmentVariables);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();

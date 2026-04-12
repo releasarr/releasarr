@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Notifications
 
         protected override List<NotificationDefinition> Active()
         {
-            return base.Active().Where(c => c.Enable).ToList();
+            return base.Active();
         }
 
         public List<INotification> OnGrabEnabled(bool filterBlockedNotifications = true)

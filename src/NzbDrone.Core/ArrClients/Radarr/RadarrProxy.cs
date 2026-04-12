@@ -88,6 +88,8 @@ namespace NzbDrone.Core.ArrClients.Radarr
         public bool HasFile { get; set; }
         public bool Monitored { get; set; }
         public string Status { get; set; }
+        public string Overview { get; set; }
+        public int Runtime { get; set; }
     }
 
     public class RadarrQueueResponse

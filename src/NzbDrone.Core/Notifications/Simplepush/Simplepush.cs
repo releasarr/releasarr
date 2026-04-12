@@ -36,6 +36,11 @@ namespace NzbDrone.Core.Notifications.Simplepush
             _proxy.SendNotification(APPLICATION_UPDATE_TITLE, updateMessage.Message, Settings);
         }
 
+        public override void OnContentAvailable(ContentAvailableMessage message)
+        {
+            _proxy.SendNotification(CONTENT_AVAILABLE_TITLE, message.Message, Settings);
+        }
+
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();
