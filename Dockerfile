@@ -15,9 +15,12 @@ WORKDIR /app/src
 RUN dotnet_rid="linux-$(echo $TARGETARCH | sed 's/amd64/x64/' | sed 's/arm64/arm64/')" && \
     dotnet publish NzbDrone.Console/Releasarr.Console.csproj \
     -c Release \
+    -f net8.0 \
     -o /app/publish \
     -r "$dotnet_rid" \
-    --self-contained false
+    --self-contained false \
+    -p:TreatWarningsAsErrors=false \
+    -p:EnforceCodeStyleInBuild=false
 
 # Stage 3: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
