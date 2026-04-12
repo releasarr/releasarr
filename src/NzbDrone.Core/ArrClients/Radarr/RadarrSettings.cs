@@ -29,6 +29,9 @@ namespace NzbDrone.Core.ArrClients.Radarr
         [FieldDefinition(1, Label = "API Key", Type = FieldType.Password, Privacy = PrivacyLevel.ApiKey, HelpText = "Radarr API key (found in Settings > General)")]
         public string ApiKey { get; set; }
 
+        [FieldDefinition(2, Label = "Sync Tag", Type = FieldType.Select, SelectOptionsProviderAction = "getTags", HelpText = "Movies with this tag in Radarr will be auto-tracked in Releasarr (optional)")]
+        public int? SyncTagId { get; set; }
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

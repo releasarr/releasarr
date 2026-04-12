@@ -1,0 +1,68 @@
+.result {
+  display: flex;
+  padding: 15px;
+  border: 1px solid var(--borderColor);
+  border-radius: 4px;
+  background-color: var(--cardBackgroundColor);
+}
+
+.posterContainer {
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.poster {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.posterPlaceholder {
+  width: 80px;
+  height: 120px;
+  background-color: var(--disabledInputBackgroundColor);
+  border-radius: 2px;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.titleRow {
+  margin-bottom: 5px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.year {
+  margin-left: 5px;
+  color: var(--dimColor);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.network {
+  color: var(--dimColor);
+  font-size: 13px;
+}
+
+.overview {
+  font-size: 13px;
+  color: var(--dimColor);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.actions {
+  margin-top: auto;
+}

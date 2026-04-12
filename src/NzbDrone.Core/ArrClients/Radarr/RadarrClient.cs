@@ -37,6 +37,19 @@ namespace NzbDrone.Core.ArrClients.Radarr
 
         public object RequestAction(string stage, IDictionary<string, string> query)
         {
+            if (stage == "getTags")
+            {
+                var tags = _proxy.GetTags(Settings);
+                return new
+                {
+                    options = tags.ConvertAll(t => new
+                    {
+                        value = t.Id,
+                        name = t.Label
+                    })
+                };
+            }
+
             return null;
         }
     }

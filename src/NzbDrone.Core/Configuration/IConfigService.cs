@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NzbDrone.Common.Http.Proxy;
 using NzbDrone.Core.Security;
+using NzbDrone.Core.TrackedContent;
 
 namespace NzbDrone.Core.Configuration
 {
@@ -56,5 +57,8 @@ namespace NzbDrone.Core.Configuration
 
         CertificateValidationType CertificateValidation { get; }
         string ApplicationUrl { get; }
+
+        // Releasarr
+        EpisodeNotificationMode EpisodeNotificationMode { get; set; }
     }
 }

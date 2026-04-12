@@ -11,6 +11,8 @@ namespace NzbDrone.Core.TrackedContent
         List<TrackedItem> GetAll();
         TrackedItem Get(int id);
         TrackedItem FindByPlexGuid(string plexGuid);
+        TrackedItem FindByTvdbId(int tvdbId);
+        TrackedItem FindByTmdbId(int tmdbId);
         List<TrackedItem> GetByStatus(TrackedItemStatus status);
         List<TrackedItem> GetByStatuses(params TrackedItemStatus[] statuses);
         TrackedItem Add(TrackedItem item);
@@ -48,6 +50,16 @@ namespace NzbDrone.Core.TrackedContent
         public TrackedItem FindByPlexGuid(string plexGuid)
         {
             return _repository.FindByPlexGuid(plexGuid);
+        }
+
+        public TrackedItem FindByTvdbId(int tvdbId)
+        {
+            return _repository.FindByTvdbId(tvdbId);
+        }
+
+        public TrackedItem FindByTmdbId(int tmdbId)
+        {
+            return _repository.FindByTmdbId(tmdbId);
         }
 
         public List<TrackedItem> GetByStatus(TrackedItemStatus status)

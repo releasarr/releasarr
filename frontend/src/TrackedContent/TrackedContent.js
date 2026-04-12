@@ -30,13 +30,33 @@ const columns = [
     isVisible: true
   },
   {
-    name: 'addedAt',
-    label: () => translate('Added'),
+    name: 'progress',
+    label: () => 'Progress',
     isVisible: true
   },
   {
-    name: 'availableAt',
-    label: () => translate('Available'),
+    name: 'network',
+    label: () => 'Network',
+    isVisible: true
+  },
+  {
+    name: 'seriesStatus',
+    label: () => 'Series Status',
+    isVisible: true
+  },
+  {
+    name: 'nextAiring',
+    label: () => 'Next Airing',
+    isVisible: true
+  },
+  {
+    name: 'queue',
+    label: () => 'Queue',
+    isVisible: true
+  },
+  {
+    name: 'addedAt',
+    label: () => translate('Added'),
     isVisible: true
   },
   {

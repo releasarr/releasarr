@@ -8,6 +8,8 @@ namespace NzbDrone.Core.TrackedContent
     public interface ITrackedItemRepository : IBasicRepository<TrackedItem>
     {
         TrackedItem FindByPlexGuid(string plexGuid);
+        TrackedItem FindByTvdbId(int tvdbId);
+        TrackedItem FindByTmdbId(int tmdbId);
         List<TrackedItem> GetByStatus(TrackedItemStatus status);
         List<TrackedItem> GetByStatuses(params TrackedItemStatus[] statuses);
         List<TrackedItem> GetByMediaServerId(int mediaServerId);
@@ -23,6 +25,16 @@ namespace NzbDrone.Core.TrackedContent
         public TrackedItem FindByPlexGuid(string plexGuid)
         {
             return Query(x => x.PlexGuid == plexGuid).SingleOrDefault();
+        }
+
+        public TrackedItem FindByTvdbId(int tvdbId)
+        {
+            return Query(x => x.TvdbId == tvdbId).FirstOrDefault();
+        }
+
+        public TrackedItem FindByTmdbId(int tmdbId)
+        {
+            return Query(x => x.TmdbId == tmdbId).FirstOrDefault();
         }
 
         public List<TrackedItem> GetByStatus(TrackedItemStatus status)

@@ -12,6 +12,8 @@ namespace NzbDrone.Core.ArrClients.Radarr
         List<RadarrMovie> GetAllMovies(RadarrSettings settings);
         RadarrMovie GetMovieByTmdbId(int tmdbId, RadarrSettings settings);
         List<RadarrQueueItem> GetQueue(RadarrSettings settings);
+        List<ArrTag> GetTags(RadarrSettings settings);
+        List<RadarrMovie> LookupMovie(string term, RadarrSettings settings);
         ValidationFailure Test(RadarrSettings settings);
     }
 
@@ -43,6 +45,20 @@ namespace NzbDrone.Core.ArrClients.Radarr
             var request = BuildRequest(settings, "/api/v3/queue?pageSize=100&includeUnknownMovieItems=false");
             var response = _httpClient.Get<RadarrQueueResponse>(request);
             return response?.Resource?.Records ?? new List<RadarrQueueItem>();
+        }
+
+        public List<ArrTag> GetTags(RadarrSettings settings)
+        {
+            var request = BuildRequest(settings, "/api/v3/tag");
+            var response = _httpClient.Get<List<ArrTag>>(request);
+            return response?.Resource ?? new List<ArrTag>();
+        }
+
+        public List<RadarrMovie> LookupMovie(string term, RadarrSettings settings)
+        {
+            var request = BuildRequest(settings, $"/api/v3/movie/lookup?term={Uri.EscapeDataString(term)}");
+            var response = _httpClient.Get<List<RadarrMovie>>(request);
+            return response?.Resource ?? new List<RadarrMovie>();
         }
 
         public ValidationFailure Test(RadarrSettings settings)
@@ -90,6 +106,9 @@ namespace NzbDrone.Core.ArrClients.Radarr
         public string Status { get; set; }
         public string Overview { get; set; }
         public int Runtime { get; set; }
+        public string Studio { get; set; }
+        public List<int> Tags { get; set; } = new();
+        public List<ArrImage> Images { get; set; } = new();
     }
 
     public class RadarrQueueResponse

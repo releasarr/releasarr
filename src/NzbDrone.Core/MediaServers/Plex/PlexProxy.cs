@@ -13,6 +13,7 @@ namespace NzbDrone.Core.MediaServers.Plex
     {
         List<PlexWatchlistItem> GetWatchlist(PlexSettings settings);
         List<PlexWatchlistItem> GetPlaylistItems(string playlistName, PlexSettings settings);
+        void AddToWatchlist(string ratingKey, PlexSettings settings);
         ValidationFailure Test(PlexSettings settings);
     }
 
@@ -79,6 +80,20 @@ namespace NzbDrone.Core.MediaServers.Plex
             return metadata
                 .Select(ParseWatchlistItem)
                 .ToList();
+        }
+
+        public void AddToWatchlist(string ratingKey, PlexSettings settings)
+        {
+            var requestBuilder = new HttpRequestBuilder("https://discover.provider.plex.tv/actions/addToWatchlist")
+                .AddQueryParam("ratingKey", ratingKey)
+                .AddQueryParam("X-Plex-Token", settings.AuthToken);
+
+            requestBuilder.Headers.Add("X-Plex-Client-Identifier", "releasarr");
+
+            var request = requestBuilder.Build();
+            request.Method = System.Net.Http.HttpMethod.Put;
+
+            _httpClient.Execute(request);
         }
 
         public ValidationFailure Test(PlexSettings settings)

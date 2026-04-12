@@ -27,6 +27,12 @@ export const weekColumnOptions = [
   { key: 'ddd DD/MM', value: 'Tue 25/03', hint: 'ddd DD/MM' }
 ];
 
+const episodeNotificationModeOptions = [
+  { key: 'NewEpisodesOnly', value: 'New Episodes Only', hint: 'Only episodes airing after item was added' },
+  { key: 'AllNewFiles', value: 'All New Files', hint: 'Any newly detected file going forward' },
+  { key: 'AllEpisodes', value: 'All Episodes', hint: 'First detection of any episode with a file' }
+];
+
 const shortDateFormatOptions = [
   { key: 'MMM D YYYY', value: 'Mar 25 2014', hint: 'MMM D YYYY' },
   { key: 'DD MMM YYYY', value: '25 Mar 2014', hint: 'DD MMM YYYY' },
@@ -92,6 +98,21 @@ class UISettings extends Component {
                 id="uiSettings"
                 {...otherProps}
               >
+                <FieldSet legend="Notifications">
+                  <FormGroup>
+                    <FormLabel>Episode Notification Mode</FormLabel>
+
+                    <FormInputGroup
+                      type={inputTypes.SELECT}
+                      name="episodeNotificationMode"
+                      values={episodeNotificationModeOptions}
+                      helpText="Controls which series episodes trigger notifications"
+                      onChange={onInputChange}
+                      {...settings.episodeNotificationMode}
+                    />
+                  </FormGroup>
+                </FieldSet>
+
                 <FieldSet legend={translate('Dates')}>
                   <FormGroup>
                     <FormLabel>{translate('SettingsShortDateFormat')}</FormLabel>

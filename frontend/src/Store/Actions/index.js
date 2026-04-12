@@ -8,6 +8,7 @@ import * as localization from './localizationActions';
 import * as oAuth from './oAuthActions';
 import * as paths from './pathActions';
 import * as providerOptions from './providerOptionActions';
+import * as search from './searchActions';
 import * as settings from './settingsActions';
 import * as system from './systemActions';
 import * as tags from './tagActions';
@@ -24,6 +25,7 @@ export default [
   paths,
   providerOptions,
   localization,
+  search,
   settings,
   system,
   tags,
