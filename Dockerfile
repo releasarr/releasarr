@@ -11,6 +11,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-build
 ARG TARGETARCH
 WORKDIR /app
 COPY src/ ./src/
+COPY Logo/ ./Logo/
 WORKDIR /app/src
 RUN dotnet_rid="linux-$(echo $TARGETARCH | sed 's/amd64/x64/' | sed 's/arm64/arm64/')" && \
     dotnet publish NzbDrone.Console/Releasarr.Console.csproj \
