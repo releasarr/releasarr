@@ -42,10 +42,21 @@ Plex Watchlist/Playlist
 
 ### Docker
 
+```bash
+docker run -d \
+  --name releasarr \
+  -p 9898:9898 \
+  -v ./config:/config \
+  -e TZ=America/New_York \
+  ghcr.io/releasarr/releasarr:latest
+```
+
+### Docker Compose
+
 ```yaml
 services:
   releasarr:
-    image: releasarr/releasarr:latest
+    image: ghcr.io/releasarr/releasarr:latest
     ports:
       - "9898:9898"
     volumes:
