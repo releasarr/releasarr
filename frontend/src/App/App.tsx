@@ -14,7 +14,7 @@ interface AppProps {
 
 function App({ store, history }: AppProps) {
   return (
-    <DocumentTitle title={window.Prowlarr.instanceName}>
+    <DocumentTitle title={window.Releasarr.instanceName}>
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <ApplyTheme />

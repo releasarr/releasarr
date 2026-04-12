@@ -19,28 +19,10 @@ const SIDEBAR_WIDTH = parseInt(dimensions.sidebarWidth);
 
 const links = [
   {
-    iconName: icons.MOVIE_CONTINUING,
-    title: () => translate('Indexers'),
-    to: '/',
-    alias: '/indexers',
-    children: [
-      {
-        title: () => translate('Stats'),
-        to: '/indexers/stats'
-      }
-    ]
-  },
-
-  {
-    iconName: icons.SEARCH,
-    title: () => translate('Search'),
-    to: '/search'
-  },
-
-  {
     iconName: icons.ACTIVITY,
     title: () => translate('History'),
-    to: '/history'
+    to: '/',
+    alias: '/history'
   },
 
   {
@@ -48,18 +30,6 @@ const links = [
     title: () => translate('Settings'),
     to: '/settings',
     children: [
-      {
-        title: () => translate('Indexers'),
-        to: '/settings/indexers'
-      },
-      {
-        title: () => translate('Apps'),
-        to: '/settings/applications'
-      },
-      {
-        title: () => translate('DownloadClients'),
-        to: '/settings/downloadclients'
-      },
       {
         title: () => translate('Connect'),
         to: '/settings/connect'
@@ -371,7 +341,7 @@ class PageSidebar extends Component {
       transform
     } = this.state;
 
-    const urlBase = window.Prowlarr.urlBase;
+    const urlBase = window.Releasarr.urlBase;
     const pathname = urlBase ? location.pathname.substr(urlBase.length) || '/' : location.pathname;
     const activeParent = getActiveParent(pathname);
 

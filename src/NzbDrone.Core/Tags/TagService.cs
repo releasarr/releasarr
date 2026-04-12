@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using NzbDrone.Core.Applications;
 using NzbDrone.Core.Datastore;
-using NzbDrone.Core.IndexerProxies;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Notifications;
 
@@ -27,23 +24,14 @@ namespace NzbDrone.Core.Tags
         private readonly ITagRepository _repo;
         private readonly IEventAggregator _eventAggregator;
         private readonly INotificationFactory _notificationFactory;
-        private readonly IIndexerFactory _indexerFactory;
-        private readonly IIndexerProxyFactory _indexerProxyFactory;
-        private readonly IApplicationFactory _applicationFactory;
 
         public TagService(ITagRepository repo,
                           IEventAggregator eventAggregator,
-                          INotificationFactory notificationFactory,
-                          IIndexerFactory indexerFactory,
-                          IIndexerProxyFactory indexerProxyFactory,
-                          IApplicationFactory applicationFactory)
+                          INotificationFactory notificationFactory)
         {
             _repo = repo;
             _eventAggregator = eventAggregator;
             _notificationFactory = notificationFactory;
-            _indexerFactory = indexerFactory;
-            _indexerProxyFactory = indexerProxyFactory;
-            _applicationFactory = applicationFactory;
         }
 
         public Tag GetTag(int tagId)
@@ -72,18 +60,12 @@ namespace NzbDrone.Core.Tags
         {
             var tag = GetTag(tagId);
             var notifications = _notificationFactory.AllForTag(tagId);
-            var indexers = _indexerFactory.AllForTag(tagId);
-            var indexerProxies = _indexerProxyFactory.AllForTag(tagId);
-            var applications = _applicationFactory.AllForTag(tagId);
 
             return new TagDetails
             {
                 Id = tagId,
                 Label = tag.Label,
-                NotificationIds = notifications.Select(c => c.Id).ToList(),
-                IndexerIds = indexers.Select(c => c.Id).ToList(),
-                IndexerProxyIds = indexerProxies.Select(c => c.Id).ToList(),
-                ApplicationIds = applications.Select(c => c.Id).ToList()
+                NotificationIds = notifications.Select(c => c.Id).ToList()
             };
         }
 
@@ -91,9 +73,6 @@ namespace NzbDrone.Core.Tags
         {
             var tags = All();
             var notifications = _notificationFactory.All();
-            var indexers = _indexerFactory.All();
-            var indexerProxies = _indexerProxyFactory.All();
-            var applications = _applicationFactory.All();
 
             var details = new List<TagDetails>();
 
@@ -103,10 +82,7 @@ namespace NzbDrone.Core.Tags
                 {
                     Id = tag.Id,
                     Label = tag.Label,
-                    NotificationIds = notifications.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
-                    IndexerIds = indexers.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
-                    IndexerProxyIds = indexerProxies.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
-                    ApplicationIds = applications.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList()
+                    NotificationIds = notifications.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList()
                 });
             }
 

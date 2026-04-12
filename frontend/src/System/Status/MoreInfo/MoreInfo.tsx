@@ -14,13 +14,13 @@ function MoreInfo() {
           {translate('HomePage')}
         </DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://prowlarr.com/">prowlarr.com</Link>
+          <Link to="https://releasarr.com/">releasarr.com</Link>
         </DescriptionListItemDescription>
 
         <DescriptionListItemTitle>{translate('Wiki')}</DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://wiki.servarr.com/prowlarr">
-            wiki.servarr.com/prowlarr
+          <Link to="https://wiki.servarr.com/releasarr">
+            wiki.servarr.com/releasarr
           </Link>
         </DescriptionListItemDescription>
 
@@ -28,22 +28,22 @@ function MoreInfo() {
           {translate('Reddit')}
         </DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://reddit.com/r/prowlarr">r/prowlarr</Link>
+          <Link to="https://reddit.com/r/releasarr">r/releasarr</Link>
         </DescriptionListItemDescription>
 
         <DescriptionListItemTitle>
           {translate('Discord')}
         </DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://prowlarr.com/discord">prowlarr.com/discord</Link>
+          <Link to="https://releasarr.com/discord">releasarr.com/discord</Link>
         </DescriptionListItemDescription>
 
         <DescriptionListItemTitle>
           {translate('Source')}
         </DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://github.com/Prowlarr/Prowlarr/">
-            github.com/Prowlarr/Prowlarr
+          <Link to="https://github.com/Releasarr/Releasarr/">
+            github.com/Releasarr/Releasarr
           </Link>
         </DescriptionListItemDescription>
 
@@ -51,8 +51,8 @@ function MoreInfo() {
           {translate('FeatureRequests')}
         </DescriptionListItemTitle>
         <DescriptionListItemDescription>
-          <Link to="https://github.com/Prowlarr/Prowlarr/issues">
-            github.com/Prowlarr/Prowlarr/issues
+          <Link to="https://github.com/Releasarr/Releasarr/issues">
+            github.com/Releasarr/Releasarr/issues
           </Link>
         </DescriptionListItemDescription>
       </DescriptionList>

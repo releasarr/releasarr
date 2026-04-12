@@ -1,9 +1,14 @@
 import ModelBase from 'App/ModelBase';
-import { IndexerCategory } from 'Indexer/Indexer';
+
+interface ReleaseCategory {
+  id: number;
+  name: string;
+  subCategories?: ReleaseCategory[];
+}
 
 interface Release extends ModelBase {
   guid: string;
-  categories: IndexerCategory[];
+  categories: ReleaseCategory[];
   protocol: string;
   title: string;
   sortTitle: string;

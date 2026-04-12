@@ -11,13 +11,12 @@ using NLog.Targets;
 using NUnit.Framework;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Processes;
-using NzbDrone.Integration.Test.Client;
 using NzbDrone.SignalR;
 using NzbDrone.Test.Common.Categories;
-using Prowlarr.Api.V1.Config;
-using Prowlarr.Api.V1.History;
-using Prowlarr.Api.V1.System.Tasks;
-using Prowlarr.Api.V1.Tags;
+using Releasarr.Api.V1.Config;
+using Releasarr.Api.V1.History;
+using Releasarr.Api.V1.System.Tasks;
+using Releasarr.Api.V1.Tags;
 using RestSharp;
 using RestSharp.Serializers.SystemTextJson;
 
@@ -32,7 +31,6 @@ namespace NzbDrone.Integration.Test
         public ClientBase<TaskResource> Tasks;
         public ClientBase<HistoryResource> History;
         public ClientBase<HostConfigResource> HostConfig;
-        public IndexerClient Indexers;
         public LogsClient Logs;
         public NotificationClient Notifications;
 
@@ -88,7 +86,6 @@ namespace NzbDrone.Integration.Test
             Tasks = new ClientBase<TaskResource>(RestClient, ApiKey, "system/task");
             History = new ClientBase<HistoryResource>(RestClient, ApiKey);
             HostConfig = new ClientBase<HostConfigResource>(RestClient, ApiKey, "config/host");
-            Indexers = new IndexerClient(RestClient, ApiKey);
             Logs = new LogsClient(RestClient, ApiKey);
             Notifications = new NotificationClient(RestClient, ApiKey);
 
@@ -146,7 +143,7 @@ namespace NzbDrone.Integration.Test
         protected async Task ConnectSignalR()
         {
             _signalRReceived = new List<SignalRMessage>();
-            _signalrConnection = new HubConnectionBuilder().WithUrl("http://localhost:9696/signalr/messages").Build();
+            _signalrConnection = new HubConnectionBuilder().WithUrl("http://localhost:9898/signalr/messages").Build();
 
             var cts = new CancellationTokenSource();
 

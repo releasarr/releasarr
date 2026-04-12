@@ -35,8 +35,8 @@ namespace NzbDrone.Common.Processes
     {
         private readonly Logger _logger;
 
-        public const string PROWLARR_PROCESS_NAME = "Prowlarr";
-        public const string PROWLARR_CONSOLE_PROCESS_NAME = "Prowlarr.Console";
+        public const string RELEASARR_PROCESS_NAME = "Releasarr";
+        public const string RELEASARR_CONSOLE_PROCESS_NAME = "Releasarr.Console";
 
         public ProcessProvider(Logger logger)
         {

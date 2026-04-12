@@ -6,7 +6,7 @@ import AppState from './State/AppState';
 
 function createThemeSelector() {
   return createSelector(
-    (state: AppState) => state.settings.ui.item.theme || window.Prowlarr.theme,
+    (state: AppState) => state.settings.ui.item.theme || window.Releasarr.theme,
     (theme) => {
       return theme;
     }

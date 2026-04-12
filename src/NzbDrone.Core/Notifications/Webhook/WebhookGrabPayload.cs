@@ -1,5 +1,3 @@
-using NzbDrone.Core.Indexers.Events;
-
 namespace NzbDrone.Core.Notifications.Webhook
 {
     public class WebhookGrabPayload : WebhookPayload

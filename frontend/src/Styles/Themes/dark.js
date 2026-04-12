@@ -1,4 +1,4 @@
-const prowlarrOrange = '#e66000';
+const releasarrColor = '#00B4D8';
 
 module.exports = {
   textColor: '#ccc',
@@ -14,17 +14,17 @@ module.exports = {
   warningColor: '#ffa500',
   infoColor: '#5d9cec',
   purple: '#7a43b6',
-  prowlarrOrange,
+  releasarrColor,
   helpTextColor: '#909293',
   darkGray: '#888',
   gray: '#adadad',
 
   // Theme Colors
 
-  themeBlue: prowlarrOrange,
+  themeBlue: releasarrColor,
   themeRed: '#c4273c',
   themeDarkColor: '#595959',
-  themeLightColor: prowlarrOrange,
+  themeLightColor: releasarrColor,
   pageBackground: '#202020',
   pageFooterBackgroud: 'rgba(0, 0, 0, .25)',
 
@@ -33,7 +33,7 @@ module.exports = {
 
   // Labels
   inverseLabelColor: '#ddd',
-  inverseLabelTextColor: prowlarrOrange,
+  inverseLabelTextColor: releasarrColor,
 
   // Links
   defaultLinkHoverColor: '#fff',
@@ -112,14 +112,14 @@ module.exports = {
   //
   // Menu
   menuItemColor: '#e1e2e3',
-  menuItemHoverColor: '#e66000',
+  menuItemHoverColor: '#00B4D8',
   menuItemHoverBackgroundColor: '#606060',
 
   //
   // Toolbar
 
-  toobarButtonHoverColor: '#e66000',
-  toobarButtonSelectedColor: '#e66000',
+  toobarButtonHoverColor: '#00B4D8',
+  toobarButtonSelectedColor: '#00B4D8',
 
   //
   // Scroller

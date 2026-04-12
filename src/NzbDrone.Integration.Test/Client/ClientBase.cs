@@ -4,8 +4,8 @@ using System.Net;
 using FluentAssertions;
 using NLog;
 using NzbDrone.Common.Serializer;
-using Prowlarr.Http;
-using Prowlarr.Http.REST;
+using Releasarr.Http;
+using Releasarr.Http.REST;
 using RestSharp;
 
 namespace NzbDrone.Integration.Test.Client

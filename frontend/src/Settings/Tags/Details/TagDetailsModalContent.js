@@ -14,10 +14,7 @@ function TagDetailsModalContent(props) {
   const {
     label,
     isTagUsed,
-    indexers,
     notifications,
-    indexerProxies,
-    applications,
     onModalClose,
     onDeleteTagPress
   } = props;
@@ -37,55 +34,10 @@ function TagDetailsModalContent(props) {
         }
 
         {
-          !!indexers.length &&
-            <FieldSet legend={translate('Indexers')}>
-              {
-                indexers.map((item) => {
-                  return (
-                    <div key={item.id}>
-                      {item.name}
-                    </div>
-                  );
-                })
-              }
-            </FieldSet>
-        }
-
-        {
           !!notifications.length &&
             <FieldSet legend={translate('Connections')}>
               {
                 notifications.map((item) => {
-                  return (
-                    <div key={item.id}>
-                      {item.name}
-                    </div>
-                  );
-                })
-              }
-            </FieldSet>
-        }
-
-        {
-          !!indexerProxies.length &&
-            <FieldSet legend={translate('IndexerProxies')}>
-              {
-                indexerProxies.map((item) => {
-                  return (
-                    <div key={item.id}>
-                      {item.name}
-                    </div>
-                  );
-                })
-              }
-            </FieldSet>
-        }
-
-        {
-          !!applications.length &&
-            <FieldSet legend={translate('Applications')}>
-              {
-                applications.map((item) => {
                   return (
                     <div key={item.id}>
                       {item.name}
@@ -123,10 +75,7 @@ function TagDetailsModalContent(props) {
 TagDetailsModalContent.propTypes = {
   label: PropTypes.string.isRequired,
   isTagUsed: PropTypes.bool.isRequired,
-  indexers: PropTypes.arrayOf(PropTypes.object).isRequired,
   notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
-  indexerProxies: PropTypes.arrayOf(PropTypes.object).isRequired,
-  applications: PropTypes.arrayOf(PropTypes.object).isRequired,
   onModalClose: PropTypes.func.isRequired,
   onDeleteTagPress: PropTypes.func.isRequired
 };

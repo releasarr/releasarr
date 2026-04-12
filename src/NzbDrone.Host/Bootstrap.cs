@@ -35,18 +35,18 @@ namespace NzbDrone.Host
 
         public static readonly List<string> ASSEMBLIES = new List<string>
         {
-            "Prowlarr.Host",
-            "Prowlarr.Core",
-            "Prowlarr.SignalR",
-            "Prowlarr.Api.V1",
-            "Prowlarr.Http"
+            "Releasarr.Host",
+            "Releasarr.Core",
+            "Releasarr.SignalR",
+            "Releasarr.Api.V1",
+            "Releasarr.Http"
         };
 
         public static void Start(string[] args, Action<IHostBuilder> trayCallback = null)
         {
             try
             {
-                Logger.Info("Starting Prowlarr - {0} - Version {1}",
+                Logger.Info("Starting Releasarr - {0} - Version {1}",
                             Environment.ProcessPath,
                             Assembly.GetExecutingAssembly().GetName().Version);
 
@@ -106,12 +106,12 @@ namespace NzbDrone.Host
                             })
                             .ConfigureServices(services =>
                             {
-                                services.Configure<PostgresOptions>(config.GetSection("Prowlarr:Postgres"));
-                                services.Configure<AppOptions>(config.GetSection("Prowlarr:App"));
-                                services.Configure<AuthOptions>(config.GetSection("Prowlarr:Auth"));
-                                services.Configure<ServerOptions>(config.GetSection("Prowlarr:Server"));
-                                services.Configure<LogOptions>(config.GetSection("Prowlarr:Log"));
-                                services.Configure<UpdateOptions>(config.GetSection("Prowlarr:Update"));
+                                services.Configure<PostgresOptions>(config.GetSection("Releasarr:Postgres"));
+                                services.Configure<AppOptions>(config.GetSection("Releasarr:App"));
+                                services.Configure<AuthOptions>(config.GetSection("Releasarr:Auth"));
+                                services.Configure<ServerOptions>(config.GetSection("Releasarr:Server"));
+                                services.Configure<LogOptions>(config.GetSection("Releasarr:Log"));
+                                services.Configure<UpdateOptions>(config.GetSection("Releasarr:Update"));
                             }).Build();
 
                         break;
@@ -120,7 +120,7 @@ namespace NzbDrone.Host
             }
             catch (InvalidConfigFileException ex)
             {
-                throw new ProwlarrStartupException(ex);
+                throw new ReleasarrStartupException(ex);
             }
             catch (TerminateApplicationException e)
             {
@@ -139,13 +139,13 @@ namespace NzbDrone.Host
         {
             var config = GetConfiguration(context);
 
-            var bindAddress = config.GetValue<string>($"Prowlarr:Server:{nameof(ServerOptions.BindAddress)}") ?? config.GetValue(nameof(ConfigFileProvider.BindAddress), "*");
-            var port = config.GetValue<int?>($"Prowlarr:Server:{nameof(ServerOptions.Port)}") ?? config.GetValue(nameof(ConfigFileProvider.Port), ConfigFileProvider.DEFAULT_PORT);
-            var sslPort = config.GetValue<int?>($"Prowlarr:Server:{nameof(ServerOptions.SslPort)}") ?? config.GetValue(nameof(ConfigFileProvider.SslPort), ConfigFileProvider.DEFAULT_SSL_PORT);
-            var enableSsl = config.GetValue<bool?>($"Prowlarr:Server:{nameof(ServerOptions.EnableSsl)}") ?? config.GetValue(nameof(ConfigFileProvider.EnableSsl), false);
-            var sslCertPath = config.GetValue<string>($"Prowlarr:Server:{nameof(ServerOptions.SslCertPath)}") ?? config.GetValue<string>(nameof(ConfigFileProvider.SslCertPath));
-            var sslCertPassword = config.GetValue<string>($"Prowlarr:Server:{nameof(ServerOptions.SslCertPassword)}") ?? config.GetValue<string>(nameof(ConfigFileProvider.SslCertPassword));
-            var logDbEnabled = config.GetValue<bool?>($"Prowlarr:Log:{nameof(LogOptions.DbEnabled)}") ?? config.GetValue(nameof(ConfigFileProvider.LogDbEnabled), true);
+            var bindAddress = config.GetValue<string>($"Releasarr:Server:{nameof(ServerOptions.BindAddress)}") ?? config.GetValue(nameof(ConfigFileProvider.BindAddress), "*");
+            var port = config.GetValue<int?>($"Releasarr:Server:{nameof(ServerOptions.Port)}") ?? config.GetValue(nameof(ConfigFileProvider.Port), ConfigFileProvider.DEFAULT_PORT);
+            var sslPort = config.GetValue<int?>($"Releasarr:Server:{nameof(ServerOptions.SslPort)}") ?? config.GetValue(nameof(ConfigFileProvider.SslPort), ConfigFileProvider.DEFAULT_SSL_PORT);
+            var enableSsl = config.GetValue<bool?>($"Releasarr:Server:{nameof(ServerOptions.EnableSsl)}") ?? config.GetValue(nameof(ConfigFileProvider.EnableSsl), false);
+            var sslCertPath = config.GetValue<string>($"Releasarr:Server:{nameof(ServerOptions.SslCertPath)}") ?? config.GetValue<string>(nameof(ConfigFileProvider.SslCertPath));
+            var sslCertPassword = config.GetValue<string>($"Releasarr:Server:{nameof(ServerOptions.SslCertPassword)}") ?? config.GetValue<string>(nameof(ConfigFileProvider.SslCertPassword));
+            var logDbEnabled = config.GetValue<bool?>($"Releasarr:Log:{nameof(LogOptions.DbEnabled)}") ?? config.GetValue(nameof(ConfigFileProvider.LogDbEnabled), true);
 
             var urls = new List<string> { BuildUrl("http", bindAddress, port) };
 
@@ -175,12 +175,12 @@ namespace NzbDrone.Host
                 })
                 .ConfigureServices(services =>
                 {
-                    services.Configure<PostgresOptions>(config.GetSection("Prowlarr:Postgres"));
-                    services.Configure<AppOptions>(config.GetSection("Prowlarr:App"));
-                    services.Configure<AuthOptions>(config.GetSection("Prowlarr:Auth"));
-                    services.Configure<ServerOptions>(config.GetSection("Prowlarr:Server"));
-                    services.Configure<LogOptions>(config.GetSection("Prowlarr:Log"));
-                    services.Configure<UpdateOptions>(config.GetSection("Prowlarr:Update"));
+                    services.Configure<PostgresOptions>(config.GetSection("Releasarr:Postgres"));
+                    services.Configure<AppOptions>(config.GetSection("Releasarr:App"));
+                    services.Configure<AuthOptions>(config.GetSection("Releasarr:Auth"));
+                    services.Configure<ServerOptions>(config.GetSection("Releasarr:Server"));
+                    services.Configure<LogOptions>(config.GetSection("Releasarr:Log"));
+                    services.Configure<UpdateOptions>(config.GetSection("Releasarr:Update"));
                     services.Configure<FormOptions>(x =>
                     {
                         //Double the default multipart body length from 128 MB to 256 MB
@@ -268,7 +268,7 @@ namespace NzbDrone.Host
             {
                 Logger.Error(ex, ex.Message);
 
-                throw new InvalidConfigFileException($"{configPath} is corrupt or invalid. Please delete the config file and Prowlarr will recreate it.", ex);
+                throw new InvalidConfigFileException($"{configPath} is corrupt or invalid. Please delete the config file and Releasarr will recreate it.", ex);
             }
         }
 
@@ -289,11 +289,11 @@ namespace NzbDrone.Host
             {
                 if (ex.HResult == 0x2 || ex.HResult == 0x2006D080)
                 {
-                    throw new ProwlarrStartupException(ex,
+                    throw new ReleasarrStartupException(ex,
                         $"The SSL certificate file {cert} does not exist");
                 }
 
-                throw new ProwlarrStartupException(ex);
+                throw new ReleasarrStartupException(ex);
             }
 
             return certificate;

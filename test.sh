@@ -4,7 +4,7 @@ TYPE=$2
 COVERAGE=$3
 WHERE="Category!=ManualTest"
 TEST_PATTERN="*Test.dll"
-FILES=( "Prowlarr.Api.V1.Test.dll" "Prowlarr.Automation.Test.dll" "Prowlarr.Common.Test.dll" "Prowlarr.Core.Test.dll" "Prowlarr.Host.Test.dll" "Prowlarr.Integration.Test.dll" "Prowlarr.Libraries.Test.dll" "Prowlarr.Mono.Test.dll" "Prowlarr.Update.Test.dll" "Prowlarr.Windows.Test.dll" )
+FILES=( "Releasarr.Api.V1.Test.dll" "Releasarr.Automation.Test.dll" "Releasarr.Common.Test.dll" "Releasarr.Core.Test.dll" "Releasarr.Host.Test.dll" "Releasarr.Integration.Test.dll" "Releasarr.Libraries.Test.dll" "Releasarr.Mono.Test.dll" "Releasarr.Update.Test.dll" "Releasarr.Windows.Test.dll" )
 ASSMEBLIES=""
 TEST_LOG_FILE="TestLog.txt"
 
@@ -20,7 +20,7 @@ fi
 rm -f "$TEST_LOG_FILE"
 
 # Uncomment to log test output to a file instead of the console
-export PROWLARR_TESTS_LOG_OUTPUT="File"
+export RELEASARR_TESTS_LOG_OUTPUT="File"
 
 VSTEST_PARAMS="--logger:nunit;LogFilePath=TestResult.xml"
 
@@ -35,13 +35,13 @@ if [ "$PLATFORM" = "Mac" ]; then
 fi
 
 if [ "$PLATFORM" = "Windows" ]; then
-  mkdir -p "$ProgramData/Prowlarr"
+  mkdir -p "$ProgramData/Releasarr"
   WHERE="$WHERE&Category!=LINUX"
 elif [ "$PLATFORM" = "Linux" ]; then
-  mkdir -p ~/.config/Prowlarr
+  mkdir -p ~/.config/Releasarr
   WHERE="$WHERE&Category!=WINDOWS"
 elif  [ "$PLATFORM" = "Mac" ]; then
-  mkdir -p ~/Library/Application\ Support/Prowlarr
+  mkdir -p ~/Library/Application\ Support/Releasarr
   WHERE="$WHERE&Category!=WINDOWS"
 else
   echo "Platform must be provided as first argument: Windows, Linux or Mac"

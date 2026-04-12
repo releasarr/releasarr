@@ -6,7 +6,6 @@ import RelativeDateCell from 'Components/Table/Cells/RelativeDateCell';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { icons, kinds } from 'Helpers/Props';
-import CapabilitiesLabel from 'Indexer/Index/Table/CapabilitiesLabel';
 import translate from 'Utilities/String/translate';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
 import * as historyDataTypes from './historyDataTypes';
@@ -114,60 +113,6 @@ class HistoryRow extends Component {
 
   //
   // Listeners
-
-  onSearchPress = () => {
-    const {
-      indexer,
-      data
-    } = this.props;
-
-    const { query, queryType, limit, offset } = data;
-
-    let searchQuery = query;
-    let categories = [];
-
-    if (data.categories) {
-      categories = data.categories.split(',').map((item) => parseInt(item));
-    }
-
-    const searchParams = [
-      historyDataTypes.IMDB_ID,
-      historyDataTypes.TMDB_ID,
-      historyDataTypes.TVDB_ID,
-      historyDataTypes.TRAKT_ID,
-      historyDataTypes.R_ID,
-      historyDataTypes.TVMAZE_ID,
-      historyDataTypes.SEASON,
-      historyDataTypes.EPISODE,
-      historyDataTypes.ARTIST,
-      historyDataTypes.ALBUM,
-      historyDataTypes.LABEL,
-      historyDataTypes.TRACK,
-      historyDataTypes.YEAR,
-      historyDataTypes.GENRE,
-      historyDataTypes.AUTHOR,
-      historyDataTypes.TITLE,
-      historyDataTypes.PUBLISHER
-    ]
-      .reduce((acc, key) => {
-        if (key in data && data[key].length > 0) {
-          const value = data[key];
-
-          acc.push({ key, value });
-        }
-
-        return acc;
-      }, [])
-      .map((item) => `{${item.key}:${item.value}}`)
-      .join('')
-    ;
-
-    if (searchParams.length > 0) {
-      searchQuery += `${searchParams}`;
-    }
-
-    this.props.onSearchPress(searchQuery, indexer.id, categories, queryType, parseInt(limit), parseInt(offset));
-  };
 
   onDetailsPress = () => {
     this.setState({ isDetailsModalOpen: true });
@@ -307,10 +252,7 @@ class HistoryRow extends Component {
                 >
                   {
                     data.categories ?
-                      <CapabilitiesLabel
-                        capabilities={indexer.capabilities}
-                        categoryFilter={data.categories.split(',').map(Number)}
-                      /> :
+                      data.categories :
                       null
                   }
                 </TableRowCell>
@@ -389,16 +331,6 @@ class HistoryRow extends Component {
                     onPress={this.onDetailsPress}
                     title={translate('HistoryDetails')}
                   />
-
-                  {
-                    eventType === 'indexerQuery' ?
-                      <IconButton
-                        name={icons.SEARCH}
-                        onPress={this.onSearchPress}
-                        title={translate('RepeatSearch')}
-                      /> :
-                      null
-                  }
                 </TableRowCell>
               );
             }
@@ -437,8 +369,7 @@ HistoryRow.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   shortDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,
-  onMarkAsFailedPress: PropTypes.func.isRequired,
-  onSearchPress: PropTypes.func.isRequired
+  onMarkAsFailedPress: PropTypes.func.isRequired
 };
 
 export default HistoryRow;

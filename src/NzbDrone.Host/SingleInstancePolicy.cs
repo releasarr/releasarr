@@ -32,7 +32,7 @@ namespace NzbDrone.Host
         {
             if (IsAlreadyRunning())
             {
-                _logger.Warn("Another instance of Prowlarr is already running.");
+                _logger.Warn("Another instance of Releasarr is already running.");
                 _browserService.LaunchWebUI();
                 throw new TerminateApplicationException("Another instance is already running");
             }
@@ -50,7 +50,7 @@ namespace NzbDrone.Host
         {
             if (IsAlreadyRunning())
             {
-                _logger.Debug("Another instance of Prowlarr is already running.");
+                _logger.Debug("Another instance of Releasarr is already running.");
             }
         }
 
@@ -65,22 +65,22 @@ namespace NzbDrone.Host
             {
                 var currentId = _processProvider.GetCurrentProcess().Id;
 
-                var otherProcesses = _processProvider.FindProcessByName(ProcessProvider.PROWLARR_CONSOLE_PROCESS_NAME)
-                                                     .Union(_processProvider.FindProcessByName(ProcessProvider.PROWLARR_PROCESS_NAME))
+                var otherProcesses = _processProvider.FindProcessByName(ProcessProvider.RELEASARR_CONSOLE_PROCESS_NAME)
+                                                     .Union(_processProvider.FindProcessByName(ProcessProvider.RELEASARR_PROCESS_NAME))
                                                      .Select(c => c.Id)
                                                      .Except(new[] { currentId })
                                                      .ToList();
 
                 if (otherProcesses.Any())
                 {
-                    _logger.Info("{0} instance(s) of Prowlarr are running", otherProcesses.Count);
+                    _logger.Info("{0} instance(s) of Releasarr are running", otherProcesses.Count);
                 }
 
                 return otherProcesses;
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Failed to check for multiple instances of Prowlarr.");
+                _logger.Warn(ex, "Failed to check for multiple instances of Releasarr.");
                 return new List<int>();
             }
         }

@@ -8,22 +8,6 @@ function findMatchingItems(ids, items) {
   });
 }
 
-function createMatchingIndexersSelector() {
-  return createSelector(
-    (state, { indexerIds }) => indexerIds,
-    (state) => state.indexers.items,
-    findMatchingItems
-  );
-}
-
-function createMatchingIndexerProxiesSelector() {
-  return createSelector(
-    (state, { indexerProxyIds }) => indexerProxyIds,
-    (state) => state.settings.indexerProxies.items,
-    findMatchingItems
-  );
-}
-
 function createMatchingNotificationsSelector() {
   return createSelector(
     (state, { notificationIds }) => notificationIds,
@@ -32,26 +16,12 @@ function createMatchingNotificationsSelector() {
   );
 }
 
-function createMatchingApplicationsSelector() {
-  return createSelector(
-    (state, { applicationIds }) => applicationIds,
-    (state) => state.settings.applications.items,
-    findMatchingItems
-  );
-}
-
 function createMapStateToProps() {
   return createSelector(
-    createMatchingIndexersSelector(),
-    createMatchingIndexerProxiesSelector(),
     createMatchingNotificationsSelector(),
-    createMatchingApplicationsSelector(),
-    (indexers, indexerProxies, notifications, applications) => {
+    (notifications) => {
       return {
-        indexers,
-        indexerProxies,
-        notifications,
-        applications
+        notifications
       };
     }
   );
