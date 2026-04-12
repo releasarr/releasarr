@@ -41,4 +41,4 @@ ENV RELEASARR__SERVER__PORT=9898
 EXPOSE 9898
 VOLUME /config
 
-ENTRYPOINT ["dotnet", "Releasarr.Console.dll", "--nobrowser", "--data=/config"]
+ENTRYPOINT ["dotnet", "Releasarr.dll", "--nobrowser", "--data=/config"]
