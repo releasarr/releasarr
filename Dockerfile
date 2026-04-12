@@ -8,13 +8,15 @@ RUN yarn build --env production
 
 # Stage 2: Build backend
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-build
+ARG TARGETARCH
 WORKDIR /app
 COPY src/ ./src/
 WORKDIR /app/src
-RUN dotnet publish NzbDrone.Console/Releasarr.Console.csproj \
+RUN dotnet_rid="linux-$(echo $TARGETARCH | sed 's/amd64/x64/' | sed 's/arm64/arm64/')" && \
+    dotnet publish NzbDrone.Console/Releasarr.Console.csproj \
     -c Release \
     -o /app/publish \
-    -r linux-x64 \
+    -r "$dotnet_rid" \
     --self-contained false
 
 # Stage 3: Runtime
@@ -27,7 +29,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=backend-build /app/publish .
-COPY --from=frontend-build /app/_output/UI ./UI
+COPY --from=frontend-build /app/_output/net8.0/UI ./UI
 
 ENV RELEASARR__APP__INSTANCENAME=Releasarr
 ENV RELEASARR__SERVER__PORT=9898
