@@ -13,10 +13,13 @@ namespace NzbDrone.Core.Notifications
         protected const string HEALTH_RESTORED_TITLE = "Health Check Restored";
         protected const string APPLICATION_UPDATE_TITLE = "Application Updated";
 
+        protected const string CONTENT_AVAILABLE_TITLE = "Content Available";
+
         protected const string RELEASE_GRABBED_TITLE_BRANDED = "Releasarr - " + RELEASE_GRABBED_TITLE;
         protected const string HEALTH_ISSUE_TITLE_BRANDED = "Releasarr - " + HEALTH_ISSUE_TITLE;
         protected const string HEALTH_RESTORED_TITLE_BRANDED = "Releasarr - " + HEALTH_RESTORED_TITLE;
         protected const string APPLICATION_UPDATE_TITLE_BRANDED = "Releasarr - " + APPLICATION_UPDATE_TITLE;
+        protected const string CONTENT_AVAILABLE_TITLE_BRANDED = "Releasarr - " + CONTENT_AVAILABLE_TITLE;
 
         public abstract string Name { get; }
 
@@ -47,6 +50,10 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
+        public virtual void OnContentAvailable(ContentAvailableMessage message)
+        {
+        }
+
         public virtual void ProcessQueue()
         {
         }
@@ -55,6 +62,7 @@ namespace NzbDrone.Core.Notifications
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
         public bool SupportsOnHealthRestored => HasConcreteImplementation("OnHealthRestored");
         public bool SupportsOnApplicationUpdate => HasConcreteImplementation("OnApplicationUpdate");
+        public bool SupportsOnContentAvailable => HasConcreteImplementation("OnContentAvailable");
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 

@@ -11,8 +11,11 @@ using NzbDrone.Core.Instrumentation;
 using NzbDrone.Core.Jobs;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Notifications;
+using NzbDrone.Core.ArrClients;
+using NzbDrone.Core.MediaServers;
 using NzbDrone.Core.Tags;
 using NzbDrone.Core.ThingiProvider;
+using NzbDrone.Core.TrackedContent;
 using NzbDrone.Core.Update.History;
 using static Dapper.SqlMapper;
 
@@ -41,7 +44,8 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(i => i.SupportsOnGrab)
                   .Ignore(i => i.SupportsOnHealthIssue)
                   .Ignore(i => i.SupportsOnHealthRestored)
-                  .Ignore(i => i.SupportsOnApplicationUpdate);
+                  .Ignore(i => i.SupportsOnApplicationUpdate)
+                  .Ignore(i => i.SupportsOnContentAvailable);
 
             Mapper.Entity<History.History>("History").RegisterModel();
 
@@ -57,6 +61,18 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
             Mapper.Entity<UpdateHistory>("UpdateHistory").RegisterModel();
+
+            Mapper.Entity<MediaServerDefinition>("MediaServers").RegisterModel()
+                  .Ignore(x => x.ImplementationName);
+
+            Mapper.Entity<MediaServerStatus>("MediaServerStatus").RegisterModel();
+
+            Mapper.Entity<ArrClientDefinition>("ArrClients").RegisterModel()
+                  .Ignore(x => x.ImplementationName);
+
+            Mapper.Entity<ArrClientStatus>("ArrClientStatus").RegisterModel();
+
+            Mapper.Entity<TrackedItem>("TrackedItems").RegisterModel();
         }
 
         private static void RegisterMappers()

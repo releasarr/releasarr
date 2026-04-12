@@ -13,7 +13,8 @@ namespace NzbDrone.Core.Notifications
         : IHandle<HealthCheckFailedEvent>,
           IHandle<HealthCheckRestoredEvent>,
           IHandleAsync<HealthCheckCompleteEvent>,
-          IHandle<UpdateInstalledEvent>
+          IHandle<UpdateInstalledEvent>,
+          IHandle<ContentAvailableEvent>
     {
         private readonly INotificationFactory _notificationFactory;
         private readonly INotificationStatusService _notificationStatusService;
@@ -111,6 +112,25 @@ namespace NzbDrone.Core.Notifications
                 {
                     _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Warn(ex, "Unable to send OnApplicationUpdate notification to: " + notification.Definition.Name);
+                }
+            }
+        }
+
+        public void Handle(ContentAvailableEvent message)
+        {
+            var enabled = _notificationFactory.OnContentAvailableEnabled();
+
+            foreach (var notification in enabled)
+            {
+                try
+                {
+                    notification.OnContentAvailable(message.ContentMessage);
+                    _notificationStatusService.RecordSuccess(notification.Definition.Id);
+                }
+                catch (Exception ex)
+                {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
+                    _logger.Warn(ex, "Unable to send OnContentAvailable notification to: " + notification.Definition.Name);
                 }
             }
         }

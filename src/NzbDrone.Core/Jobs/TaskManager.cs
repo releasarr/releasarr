@@ -12,6 +12,7 @@ using NzbDrone.Core.Housekeeping;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Monitoring;
 using NzbDrone.Core.Update.Commands;
 
 namespace NzbDrone.Core.Jobs
@@ -95,6 +96,18 @@ namespace NzbDrone.Core.Jobs
                     {
                         Interval = GetBackupInterval(),
                         TypeName = typeof(BackupCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
+                        Interval = 15,
+                        TypeName = typeof(WatchlistSyncCommand).FullName
+                    },
+
+                    new ScheduledTask
+                    {
+                        Interval = 5,
+                        TypeName = typeof(DownloadStatusCheckCommand).FullName
                     }
                 };
 
