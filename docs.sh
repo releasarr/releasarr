@@ -22,14 +22,14 @@ testPackageFolder='_tests'
 rm -rf $outputFolder
 rm -rf $testPackageFolder
 
-slnFile=src/Prowlarr.sln
+slnFile=src/Releasarr.sln
 
 platform=Posix
 
  if [ "$PLATFORM" = "Windows" ]; then
-    application=Prowlarr.Console.dll
+    application=Releasarr.Console.dll
 else
-    application=Prowlarr.dll
+    application=Releasarr.dll
 fi
 
 dotnet clean $slnFile -c Debug
@@ -40,7 +40,7 @@ dotnet msbuild -restore $slnFile -p:Configuration=Debug -p:Platform=$platform -p
 dotnet new tool-manifest
 dotnet tool install --version 8.1.4 Swashbuckle.AspNetCore.Cli
 
-dotnet tool run swagger tofile --output ./src/Prowlarr.Api.V1/openapi.json "$outputFolder/$FRAMEWORK/$RUNTIME/$application" v1 &
+dotnet tool run swagger tofile --output ./src/Releasarr.Api.V1/openapi.json "$outputFolder/$FRAMEWORK/$RUNTIME/$application" v1 &
 
 sleep 45
 

@@ -362,7 +362,7 @@
     "ClearHistory": "ניקוי היסטוריה",
     "ClearHistoryMessageText": "האם לנקות את כל ההיסטוריה של {appName}?",
     "ConnectSettingsSummary": "התראות וסקריפטים",
-    "AddDownloadClientToProwlarr": "הוספת קליינט להורדות מאפשר ל-{appName} לשלוח הפצות מהממשק משתמש בזמן חיפוש ידני.",
+    "AddDownloadClientToReleasarr": "הוספת קליינט להורדות מאפשר ל-{appName} לשלוח הפצות מהממשק משתמש בזמן חיפוש ידני.",
     "AppProfileSelectHelpText": "פרופיל אפליקציות נועדו לשליטה ב- RSS, חיפוש אוטומטי והגדרות חיפוש מושהה בעת סינכרון אפליקציה",
     "AppSettingsSummary": "אפליקציות והגדרות אינטרקציה עם תוכניות PVR",
     "AuthenticationRequiredWarning": "בכדי למנוע גישה מרחוק ללא אימות, {appName} דורש הגדרת אימות.\nהגדר את הפרטים ושיטת האימות. ישנה אפשרות לדלג על אימות מהרשת הביתית שלך. \nבמידת הצורך יש לפנות אל שו״ת למידע נוסף.",

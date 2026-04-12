@@ -3,14 +3,8 @@ import { Redirect, Route } from 'react-router-dom';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
 import HistoryConnector from 'History/HistoryConnector';
-import IndexerIndex from 'Indexer/Index/IndexerIndex';
-import IndexerStats from 'Indexer/Stats/IndexerStats';
-import SearchIndexConnector from 'Search/SearchIndexConnector';
-import ApplicationSettings from 'Settings/Applications/ApplicationSettings';
 import DevelopmentSettingsConnector from 'Settings/Development/DevelopmentSettingsConnector';
-import DownloadClientSettingsConnector from 'Settings/DownloadClients/DownloadClientSettingsConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
-import IndexerSettings from 'Settings/Indexers/IndexerSettings';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
 import Settings from 'Settings/Settings';
 import TagSettings from 'Settings/Tags/TagSettings';
@@ -31,12 +25,12 @@ function AppRoutes() {
   return (
     <Switch>
       {/*
-        Indexers
+        Home
       */}
 
-      <Route exact={true} path="/" component={IndexerIndex} />
+      <Route exact={true} path="/" component={HistoryConnector} />
 
-      {window.Prowlarr.urlBase && (
+      {window.Releasarr.urlBase && (
         <Route
           exact={true}
           path="/"
@@ -46,14 +40,6 @@ function AppRoutes() {
           render={RedirectWithUrlBase}
         />
       )}
-
-      <Route path="/indexers/stats" component={IndexerStats} />
-
-      {/*
-        Search
-      */}
-
-      <Route path="/search" component={SearchIndexConnector} />
 
       {/*
         Activity
@@ -66,15 +52,6 @@ function AppRoutes() {
       */}
 
       <Route exact={true} path="/settings" component={Settings} />
-
-      <Route path="/settings/indexers" component={IndexerSettings} />
-
-      <Route path="/settings/applications" component={ApplicationSettings} />
-
-      <Route
-        path="/settings/downloadclients"
-        component={DownloadClientSettingsConnector}
-      />
 
       <Route path="/settings/connect" component={NotificationSettings} />
 

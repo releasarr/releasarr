@@ -175,12 +175,6 @@ export const defaultState = {
       valueType: filterBuilderValueTypes.HISTORY_EVENT_TYPE
     },
     {
-      name: 'indexerIds',
-      label: () => translate('Indexer'),
-      type: filterBuilderTypes.EQUAL,
-      valueType: filterBuilderValueTypes.INDEXER
-    },
-    {
       name: 'successful',
       label: () => translate('Successful'),
       type: filterBuilderTypes.EQUAL,

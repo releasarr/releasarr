@@ -11,7 +11,7 @@ function Donations() {
         <Link to="https://radarr.video/donate">
           <img
             className={styles.logo}
-            src={`${window.Prowlarr.urlBase}/Content/Images/Icons/logo-radarr.png`}
+            src={`${window.Releasarr.urlBase}/Content/Images/Icons/logo-radarr.png`}
           />
         </Link>
       </div>
@@ -20,7 +20,7 @@ function Donations() {
         <Link to="https://lidarr.audio/donate">
           <img
             className={styles.logo}
-            src={`${window.Prowlarr.urlBase}/Content/Images/Icons/logo-lidarr.png`}
+            src={`${window.Releasarr.urlBase}/Content/Images/Icons/logo-lidarr.png`}
           />
         </Link>
       </div>
@@ -29,16 +29,16 @@ function Donations() {
         <Link to="https://readarr.com/donate">
           <img
             className={styles.logo}
-            src={`${window.Prowlarr.urlBase}/Content/Images/Icons/logo-readarr.png`}
+            src={`${window.Releasarr.urlBase}/Content/Images/Icons/logo-readarr.png`}
           />
         </Link>
       </div>
 
-      <div className={styles.logoContainer} title="Prowlarr">
-        <Link to="https://prowlarr.com/donate">
+      <div className={styles.logoContainer} title="Releasarr">
+        <Link to="https://releasarr.com/donate">
           <img
             className={styles.logo}
-            src={`${window.Prowlarr.urlBase}/Content/Images/Icons/logo-prowlarr.png`}
+            src={`${window.Releasarr.urlBase}/Content/Images/Icons/logo-releasarr.png`}
           />
         </Link>
       </div>
@@ -47,7 +47,7 @@ function Donations() {
         <Link to="https://opencollective.com/sonarr">
           <img
             className={styles.logo}
-            src={`${window.Prowlarr.urlBase}/Content/Images/Icons/logo-sonarr.png`}
+            src={`${window.Releasarr.urlBase}/Content/Images/Icons/logo-sonarr.png`}
           />
         </Link>
       </div>

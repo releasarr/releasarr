@@ -1,7 +1,7 @@
 'Area: API':
   - changed-files:
       - any-glob-to-any-file:
-          - src/Prowlarr.Api.V1/**/*
+          - src/Releasarr.Api.V1/**/*
 
 'Area: Db-migration':
   - changed-files:

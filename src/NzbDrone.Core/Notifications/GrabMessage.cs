@@ -1,6 +1,3 @@
-using NzbDrone.Core.Indexers.Events;
-using NzbDrone.Core.Parser.Model;
-
 namespace NzbDrone.Core.Notifications
 {
     public class GrabMessage

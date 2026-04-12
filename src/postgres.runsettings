@@ -2,10 +2,10 @@
 <RunSettings>
     <RunConfiguration>
         <EnvironmentVariables>
-            <Prowlarr__Postgres__Host>192.168.100.5</Prowlarr__Postgres__Host>
-			<Prowlarr__Postgres__Port>5432</Prowlarr__Postgres__Port>
-			<Prowlarr__Postgres__User>abc</Prowlarr__Postgres__User>
-			<Prowlarr__Postgres__Password>abc</Prowlarr__Postgres__Password>
+            <Releasarr__Postgres__Host>192.168.100.5</Releasarr__Postgres__Host>
+			<Releasarr__Postgres__Port>5432</Releasarr__Postgres__Port>
+			<Releasarr__Postgres__User>abc</Releasarr__Postgres__User>
+			<Releasarr__Postgres__Password>abc</Releasarr__Postgres__Password>
         </EnvironmentVariables>
     </RunConfiguration>
 </RunSettings>

@@ -68,10 +68,10 @@ namespace NzbDrone.Core.Validation
             return ruleBuilder.WithState(v => NzbDroneValidationState.Warning);
         }
 
-        public static IRuleBuilderOptions<T, string> ContainsProwlarr<T>(this IRuleBuilder<T, string> ruleBuilder)
+        public static IRuleBuilderOptions<T, string> ContainsReleasarr<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             ruleBuilder.SetValidator(new NotEmptyValidator(null));
-            return ruleBuilder.SetValidator(new RegularExpressionValidator("prowlarr", RegexOptions.IgnoreCase)).WithMessage("Must contain Prowlarr");
+            return ruleBuilder.SetValidator(new RegularExpressionValidator("releasarr", RegexOptions.IgnoreCase)).WithMessage("Must contain Releasarr");
         }
     }
 }

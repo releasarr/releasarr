@@ -14,14 +14,10 @@ import History from './History';
 function createMapStateToProps() {
   return createSelector(
     (state) => state.history,
-    (state) => state.indexers,
     createCustomFiltersSelector('history'),
     createCommandExecutingSelector(commandNames.CLEAR_HISTORY),
-    (history, indexers, customFilters, isHistoryClearing) => {
+    (history, customFilters, isHistoryClearing) => {
       return {
-        isIndexersFetching: indexers.isFetching,
-        isIndexersPopulated: indexers.isPopulated,
-        indexersError: indexers.error,
         isHistoryClearing,
         customFilters,
         ...history

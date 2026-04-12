@@ -116,7 +116,7 @@ namespace NzbDrone.Common.Instrumentation
 
             coloredConsoleTarget.Name = "consoleLogger";
 
-            var logFormat = Enum.TryParse<ConsoleLogFormat>(Environment.GetEnvironmentVariable("PROWLARR__LOG__CONSOLEFORMAT"), out var formatEnumValue)
+            var logFormat = Enum.TryParse<ConsoleLogFormat>(Environment.GetEnvironmentVariable("RELEASARR__LOG__CONSOLEFORMAT"), out var formatEnumValue)
                 ? formatEnumValue
                 : ConsoleLogFormat.Standard;
 
@@ -130,9 +130,9 @@ namespace NzbDrone.Common.Instrumentation
 
         private static void RegisterAppFile(IAppFolderInfo appFolderInfo)
         {
-            RegisterAppFile(appFolderInfo, "appFileInfo", "prowlarr.txt", 50, LogLevel.Info);
-            RegisterAppFile(appFolderInfo, "appFileDebug", "prowlarr.debug.txt", 500, LogLevel.Off);
-            RegisterAppFile(appFolderInfo, "appFileTrace", "prowlarr.trace.txt", 500, LogLevel.Off);
+            RegisterAppFile(appFolderInfo, "appFileInfo", "releasarr.txt", 50, LogLevel.Info);
+            RegisterAppFile(appFolderInfo, "appFileDebug", "releasarr.debug.txt", 500, LogLevel.Off);
+            RegisterAppFile(appFolderInfo, "appFileTrace", "releasarr.trace.txt", 500, LogLevel.Off);
         }
 
         private static void RegisterAppFile(IAppFolderInfo appFolderInfo, string name, string fileName, int maxArchiveFiles, LogLevel minLogLevel)
@@ -202,7 +202,7 @@ namespace NzbDrone.Common.Instrumentation
                 c.ForLogger("Microsoft.*").WriteToNil(LogLevel.Warn);
                 c.ForLogger("Microsoft.Hosting.Lifetime*").WriteToNil(LogLevel.Info);
                 c.ForLogger("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware").WriteToNil(LogLevel.Fatal);
-                c.ForLogger("Prowlarr.Http.Authentication.ApiKeyAuthenticationHandler").WriteToNil(LogLevel.Info);
+                c.ForLogger("Releasarr.Http.Authentication.ApiKeyAuthenticationHandler").WriteToNil(LogLevel.Info);
             });
         }
 

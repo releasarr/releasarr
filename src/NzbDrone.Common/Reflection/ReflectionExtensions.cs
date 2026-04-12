@@ -7,7 +7,7 @@ namespace NzbDrone.Common.Reflection
 {
     public static class ReflectionExtensions
     {
-        public static readonly Assembly CoreAssembly = Assembly.Load("Prowlarr.Core");
+        public static readonly Assembly CoreAssembly = Assembly.Load("Releasarr.Core");
 
         public static List<PropertyInfo> GetSimpleProperties(this Type type)
         {

@@ -47,15 +47,15 @@ namespace NzbDrone.Update.UpdateEngine
 
                 _logger.Info("Killing all running processes");
 
-                _processProvider.KillAll(ProcessProvider.PROWLARR_CONSOLE_PROCESS_NAME);
-                _processProvider.KillAll(ProcessProvider.PROWLARR_PROCESS_NAME);
+                _processProvider.KillAll(ProcessProvider.RELEASARR_CONSOLE_PROCESS_NAME);
+                _processProvider.KillAll(ProcessProvider.RELEASARR_PROCESS_NAME);
             }
             else
             {
                 _logger.Info("Killing all running processes");
 
-                _processProvider.KillAll(ProcessProvider.PROWLARR_CONSOLE_PROCESS_NAME);
-                _processProvider.KillAll(ProcessProvider.PROWLARR_PROCESS_NAME);
+                _processProvider.KillAll(ProcessProvider.RELEASARR_CONSOLE_PROCESS_NAME);
+                _processProvider.KillAll(ProcessProvider.RELEASARR_PROCESS_NAME);
 
                 _processProvider.Kill(processId);
             }

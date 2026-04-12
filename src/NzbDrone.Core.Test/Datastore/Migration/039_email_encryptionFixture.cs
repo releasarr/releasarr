@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                     OnGrab = true,
                     OnHealthIssue = true,
                     IncludeHealthWarnings = true,
-                    Name = "Mail Prowlarr",
+                    Name = "Mail Releasarr",
                     Implementation = "Email",
                     Tags = "[]",
                     Settings = new EmailSettings38
@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                     OnGrab = true,
                     OnHealthIssue = true,
                     IncludeHealthWarnings = true,
-                    Name = "Mail Prowlarr",
+                    Name = "Mail Releasarr",
                     Implementation = "Email",
                     Tags = "[]",
                     Settings = new EmailSettings38
@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                     OnGrab = true,
                     OnHealthIssue = true,
                     IncludeHealthWarnings = true,
-                    Name = "Mail Prowlarr",
+                    Name = "Mail Releasarr",
                     Implementation = "Email",
                     Tags = "[]",
                     Settings = new { }.ToJson(),

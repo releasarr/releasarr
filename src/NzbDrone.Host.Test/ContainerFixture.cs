@@ -15,8 +15,6 @@ using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Common.Options;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Datastore.Extensions;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Jobs;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
@@ -57,23 +55,11 @@ namespace NzbDrone.App.Test
         }
 
         [Test]
-        public void should_be_able_to_resolve_indexers()
-        {
-            _container.GetRequiredService<IEnumerable<IIndexer>>().Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void should_be_able_to_resolve_downloadclients()
-        {
-            _container.GetRequiredService<IEnumerable<IDownloadClient>>().Should().NotBeEmpty();
-        }
-
-        [Test]
         public void container_should_inject_itself()
         {
             var factory = _container.GetRequiredService<IServiceFactory>();
 
-            factory.Build<IIndexerFactory>().Should().NotBeNull();
+            factory.Should().NotBeNull();
         }
 
         [Test]

@@ -284,8 +284,8 @@ function Updates() {
               <div>
                 <InlineMarkdown
                   data={translate('InstallMajorVersionUpdateMessageLink', {
-                    domain: 'prowlarr.com',
-                    url: 'https://prowlarr.com/#downloads',
+                    domain: 'releasarr.com',
+                    url: 'https://releasarr.com/#downloads',
                   })}
                 />
               </div>

@@ -23,7 +23,7 @@
     "About": "Om",
     "AcceptConfirmationModal": "Godta bekreftelsesmodal",
     "Actions": "Handlinger",
-    "AddDownloadClientToProwlarr": "Ved å legge til en nedlastingsklient kan {appName} sende utgivelser direkte fra brukergrensesnittet mens du gjør et manuelt søk.",
+    "AddDownloadClientToReleasarr": "Ved å legge til en nedlastingsklient kan {appName} sende utgivelser direkte fra brukergrensesnittet mens du gjør et manuelt søk.",
     "AddIndexer": "Legg til indekser",
     "Age": "Alder",
     "ApiKey": "API Nøkkel",

@@ -348,7 +348,7 @@ namespace NzbDrone.Common.Test.Http
 
             var userAgent = response.Resource.Headers["User-Agent"].ToString();
 
-            userAgent.Should().Contain("Prowlarr");
+            userAgent.Should().Contain("Releasarr");
         }
 
         [TestCase("Accept", "text/xml, text/rss+xml, application/rss+xml")]

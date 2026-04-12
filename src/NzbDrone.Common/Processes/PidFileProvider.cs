@@ -29,7 +29,7 @@ namespace NzbDrone.Common.Processes
                 return;
             }
 
-            var filename = Path.Combine(_appFolderInfo.AppDataFolder, "prowlarr.pid");
+            var filename = Path.Combine(_appFolderInfo.AppDataFolder, "releasarr.pid");
             try
             {
                 File.WriteAllText(filename, ProcessProvider.GetCurrentProcessId().ToString());
@@ -37,7 +37,7 @@ namespace NzbDrone.Common.Processes
             catch (Exception ex)
             {
                 _logger.Error(ex, "Unable to write PID file: " + filename);
-                throw new ProwlarrStartupException(ex, "Unable to write PID file {0}", filename);
+                throw new ReleasarrStartupException(ex, "Unable to write PID file {0}", filename);
             }
         }
     }

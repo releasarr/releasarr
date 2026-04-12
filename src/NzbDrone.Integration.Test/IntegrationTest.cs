@@ -6,7 +6,6 @@ using NUnit.Framework;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Test.Common;
 using NzbDrone.Test.Common.Datastore;
 
@@ -15,7 +14,7 @@ namespace NzbDrone.Integration.Test
     [Parallelizable(ParallelScope.Fixtures)]
     public abstract class IntegrationTest : IntegrationTestBase
     {
-        protected static int StaticPort = 9696;
+        protected static int StaticPort = 9898;
 
         protected NzbDroneRunner _runner;
 
@@ -49,20 +48,6 @@ namespace NzbDrone.Integration.Test
         protected override void InitializeTestTarget()
         {
             WaitForCompletion(() => Tasks.All().SelectList(x => x.TaskName).Contains("CheckHealth"), 20000);
-
-            var indexer = Indexers.Schema().FirstOrDefault(i => i.Implementation == nameof(Newznab));
-
-            if (indexer == null)
-            {
-                throw new NullReferenceException("Expected valid indexer schema, found null");
-            }
-
-            indexer.Enable = false;
-            indexer.ConfigContract = nameof(NewznabSettings);
-            indexer.Implementation = nameof(Newznab);
-            indexer.Name = "NewznabTest";
-            indexer.Protocol = Core.Indexers.DownloadProtocol.Usenet;
-            indexer.AppProfileId = 1;
 
             // Change Console Log Level to Debug so we get more details.
             var config = HostConfig.Get(1);

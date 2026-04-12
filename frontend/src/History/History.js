@@ -57,9 +57,6 @@ class History extends Component {
       isPopulated,
       isHistoryClearing,
       error,
-      isIndexersFetching,
-      isIndexersPopulated,
-      indexersError,
       items,
       columns,
       selectedFilterKey,
@@ -72,9 +69,9 @@ class History extends Component {
       ...otherProps
     } = this.props;
 
-    const isFetchingAny = isFetching || isIndexersFetching;
-    const isAllPopulated = isPopulated && (isIndexersPopulated || !items.length);
-    const hasError = error || indexersError;
+    const isFetchingAny = isFetching;
+    const isAllPopulated = isPopulated;
+    const hasError = error;
 
     return (
       <PageContent title={translate('History')}>
@@ -191,9 +188,6 @@ History.propTypes = {
   isPopulated: PropTypes.bool.isRequired,
   isHistoryClearing: PropTypes.bool.isRequired,
   error: PropTypes.object,
-  isIndexersFetching: PropTypes.bool.isRequired,
-  isIndexersPopulated: PropTypes.bool.isRequired,
-  indexersError: PropTypes.object,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedFilterKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,

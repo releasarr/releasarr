@@ -29,7 +29,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 Author = new DiscordAuthor
                 {
                     Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
-                    IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
+                    IconUrl = "https://raw.githubusercontent.com/Releasarr/Releasarr/develop/Logo/256.png"
                 },
                 Title = RELEASE_GRABBED_TITLE,
                 Description = message.Message,
@@ -88,7 +88,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 Author = new DiscordAuthor
                 {
                     Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
-                    IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
+                    IconUrl = "https://raw.githubusercontent.com/Releasarr/Releasarr/develop/Logo/256.png"
                 },
                 Title = healthCheck.Source.Name,
                 Description = healthCheck.Message,
@@ -108,7 +108,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 Author = new DiscordAuthor
                 {
                     Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
-                    IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
+                    IconUrl = "https://raw.githubusercontent.com/Releasarr/Releasarr/develop/Logo/256.png"
                 },
                 Title = "Health Issue Resolved: " + previousCheck.Source.Name,
                 Description = $"The following issue is now resolved: {previousCheck.Message}",
@@ -128,7 +128,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 Author = new DiscordAuthor
                 {
                     Name = Settings.Author.IsNullOrWhiteSpace() ? _configFileProvider.InstanceName : Settings.Author,
-                    IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
+                    IconUrl = "https://raw.githubusercontent.com/Releasarr/Releasarr/develop/Logo/256.png"
                 },
                 Title = APPLICATION_UPDATE_TITLE,
                 Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
@@ -166,7 +166,7 @@ namespace NzbDrone.Core.Notifications.Discord
         {
             try
             {
-                var message = $"Test message from Prowlarr posted at {DateTime.Now}";
+                var message = $"Test message from Releasarr posted at {DateTime.Now}";
                 var payload = CreatePayload(message);
 
                 _proxy.SendPayload(payload, Settings);

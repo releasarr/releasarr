@@ -11,8 +11,8 @@ variables:
   nugetCacheFolder: $(Pipeline.Workspace)/.nuget/packages
   majorVersion: '2.3.6'
   minorVersion: $[counter('minorVersion', 1)]
-  prowlarrVersion: '$(majorVersion).$(minorVersion)'
-  buildName: '$(Build.SourceBranchName).$(prowlarrVersion)'
+  releasarrVersion: '$(majorVersion).$(minorVersion)'
+  buildName: '$(Build.SourceBranchName).$(releasarrVersion)'
   sentryOrg: 'servarr'
   sentryUrl: 'https://sentry.servarr.com'
   dotnetVersion: '8.0.405'
@@ -30,7 +30,7 @@ trigger:
   paths:
     exclude:
       - .github
-      - src/Prowlarr.Api.*/openapi.json
+      - src/Releasarr.Api.*/openapi.json
 
 pr:
   branches:
@@ -40,7 +40,7 @@ pr:
     exclude:
     - .github
     - src/NzbDrone.Core/Localization/Core
-    - src/Prowlarr.Api.*/openapi.json
+    - src/Releasarr.Api.*/openapi.json
 
 stages:
   - stage: Setup
@@ -52,7 +52,7 @@ stages:
         vmImage: ${{ variables.linuxImage }}
       steps:
       # Set the build name properly.  The 'name' property won't recursively expand so hack here:
-      - bash: echo "##vso[build.updatebuildnumber]$PROWLARRVERSION"
+      - bash: echo "##vso[build.updatebuildnumber]$RELEASARRVERSION"
         displayName: Set Build Name
       - bash: |
           if [[ $BUILD_REASON == "PullRequest" ]]; then
@@ -110,7 +110,7 @@ stages:
           fi
         displayName: Enable Extra Platform Support
       - bash: ./build.sh --backend --enable-extra-platforms
-        displayName: Build Prowlarr Backend
+        displayName: Build Releasarr Backend
       - bash: |
           find ${OUTPUTFOLDER} -type f ! -path "*/publish/*" -exec rm -rf {} \;
           find ${OUTPUTFOLDER} -depth -empty -type d -exec rm -r "{}" \;
@@ -177,7 +177,7 @@ stages:
           path: $(yarnCacheFolder)
         displayName: Cache Yarn packages
       - bash: ./build.sh --frontend
-        displayName: Build Prowlarr Frontend
+        displayName: Build Releasarr Frontend
         env:
           FORCE_COLOR: 0
           YARN_CACHE_FOLDER: $(yarnCacheFolder)
@@ -212,8 +212,8 @@ stages:
         displayName: Fetch Frontend
       - bash: |
           ./build.sh --packages --installer
-          cp distribution/windows/setup/output/Prowlarr.*win-x64.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Prowlarr.${BUILDNAME}.windows-core-x64-installer.exe
-          cp distribution/windows/setup/output/Prowlarr.*win-x86.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Prowlarr.${BUILDNAME}.windows-core-x86-installer.exe
+          cp distribution/windows/setup/output/Releasarr.*win-x64.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Releasarr.${BUILDNAME}.windows-core-x64-installer.exe
+          cp distribution/windows/setup/output/Releasarr.*win-x86.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Releasarr.${BUILDNAME}.windows-core-x86-installer.exe
         displayName: Create Installers
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'WindowsInstaller'
@@ -246,34 +246,34 @@ stages:
       - bash: ./build.sh --packages --enable-extra-platforms
         displayName: Create Packages
       - bash: |
-          find . -name "Prowlarr" -exec chmod a+x {} \;
-          find . -name "Prowlarr.Update" -exec chmod a+x {} \;
+          find . -name "Releasarr" -exec chmod a+x {} \;
+          find . -name "Releasarr.Update" -exec chmod a+x {} \;
         displayName: Set executable bits
       - task: ArchiveFiles@2
         displayName: Create win-x64 zip
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).windows-core-x64.zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).windows-core-x64.zip'
           archiveType: 'zip'
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/win-x64/net8.0
       - task: ArchiveFiles@2
         displayName: Create win-x86 zip
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).windows-core-x86.zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).windows-core-x86.zip'
           archiveType: 'zip'
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/win-x86/net8.0
       - task: ArchiveFiles@2
         displayName: Create osx-x64 app
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).osx-app-core-x64.zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).osx-app-core-x64.zip'
           archiveType: 'zip'
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/osx-x64-app/net8.0
       - task: ArchiveFiles@2
         displayName: Create osx-x64 tar
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).osx-core-x64.tar.gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).osx-core-x64.tar.gz'
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
@@ -281,14 +281,14 @@ stages:
       - task: ArchiveFiles@2
         displayName: Create osx-arm64 app
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).osx-app-core-arm64.zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).osx-app-core-arm64.zip'
           archiveType: 'zip'
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/osx-arm64-app/net8.0
       - task: ArchiveFiles@2
         displayName: Create osx-arm64 tar
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).osx-core-arm64.tar.gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).osx-core-arm64.tar.gz'
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
@@ -296,7 +296,7 @@ stages:
       - task: ArchiveFiles@2
         displayName: Create linux-x64 tar
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).linux-core-x64.tar.gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).linux-core-x64.tar.gz'
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
@@ -304,7 +304,7 @@ stages:
       - task: ArchiveFiles@2
         displayName: Create linux-musl-x64 tar
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).linux-musl-core-x64.tar.gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).linux-musl-core-x64.tar.gz'
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
@@ -312,7 +312,7 @@ stages:
       - task: ArchiveFiles@2
         displayName: Create linux-arm tar
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).linux-core-arm.tar.gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).linux-core-arm.tar.gz'
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
@@ -320,7 +320,7 @@ stages:
       - task: ArchiveFiles@2
         displayName: Create linux-musl-arm tar
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).linux-musl-core-arm.tar.gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).linux-musl-core-arm.tar.gz'
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
@@ -328,7 +328,7 @@ stages:
       - task: ArchiveFiles@2
         displayName: Create linux-arm64 tar
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).linux-core-arm64.tar.gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).linux-core-arm64.tar.gz'
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
@@ -336,7 +336,7 @@ stages:
       - task: ArchiveFiles@2
         displayName: Create linux-musl-arm64 tar
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).linux-musl-core-arm64.tar.gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).linux-musl-core-arm64.tar.gz'
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
@@ -344,7 +344,7 @@ stages:
       - task: ArchiveFiles@2
         displayName: Create freebsd-x64 tar
         inputs:
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).freebsd-core-x64.tar.gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Releasarr.$(buildName).freebsd-core-x64.tar.gz'
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
@@ -355,9 +355,9 @@ stages:
       - bash: |
           echo "Uploading source maps to sentry"
           curl -sL https://sentry.io/get-cli/ | bash
-          RELEASENAME="Prowlarr@${PROWLARRVERSION}-${BUILD_SOURCEBRANCHNAME}"
-          sentry-cli releases new --finalize -p prowlarr -p prowlarr-ui -p prowlarr-update "${RELEASENAME}"
-          sentry-cli releases -p prowlarr-ui files "${RELEASENAME}" upload-sourcemaps _output/UI/ --rewrite
+          RELEASENAME="Releasarr@${RELEASARRVERSION}-${BUILD_SOURCEBRANCHNAME}"
+          sentry-cli releases new --finalize -p releasarr -p releasarr-ui -p releasarr-update "${RELEASENAME}"
+          sentry-cli releases -p releasarr-ui files "${RELEASENAME}" upload-sourcemaps _output/UI/ --rewrite
           sentry-cli releases set-commits --auto "${RELEASENAME}"
           if [[ ${BUILD_SOURCEBRANCH} == "refs/heads/develop" ]]; then
           sentry-cli releases deploys "${RELEASENAME}" new -e nightly
@@ -448,7 +448,7 @@ stages:
       - powershell: Set-Service SCardSvr -StartupType Manual
         displayName: Enable Windows Test Service
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - bash: find ${TESTSFOLDER} -name "Prowlarr.Test.Dummy" -exec chmod a+x {} \;
+      - bash: find ${TESTSFOLDER} -name "Releasarr.Test.Dummy" -exec chmod a+x {} \;
         displayName: Make Test Dummy Executable
         condition: and(succeeded(), ne(variables['osName'], 'Windows'))
       - bash: |
@@ -496,7 +496,7 @@ stages:
           buildType: 'current'
           artifactName: $(artifactName)
           targetPath: $(testsFolder)
-      - bash: find ${TESTSFOLDER} -name "Prowlarr.Test.Dummy" -exec chmod a+x {} \;
+      - bash: find ${TESTSFOLDER} -name "Releasarr.Test.Dummy" -exec chmod a+x {} \;
         displayName: Make Test Dummy Executable
         condition: and(succeeded(), ne(variables['osName'], 'Windows'))
       - bash: |
@@ -518,12 +518,12 @@ stages:
       dependsOn: Prepare
       condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
       variables:
-        pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
+        pattern: 'Releasarr.*.linux-core-x64.tar.gz'
         artifactName: linux-x64-tests
-        Prowlarr__Postgres__Host: 'localhost'
-        Prowlarr__Postgres__Port: '5432'
-        Prowlarr__Postgres__User: 'prowlarr'
-        Prowlarr__Postgres__Password: 'prowlarr'
+        Releasarr__Postgres__Host: 'localhost'
+        Releasarr__Postgres__Port: '5432'
+        Releasarr__Postgres__User: 'releasarr'
+        Releasarr__Postgres__Password: 'releasarr'
 
       pool:
         vmImage: ${{ variables.linuxImage }}
@@ -542,13 +542,13 @@ stages:
           buildType: 'current'
           artifactName: $(artifactName)
           targetPath: $(testsFolder)
-      - bash: find ${TESTSFOLDER} -name "Prowlarr.Test.Dummy" -exec chmod a+x {} \;
+      - bash: find ${TESTSFOLDER} -name "Releasarr.Test.Dummy" -exec chmod a+x {} \;
         displayName: Make Test Dummy Executable
         condition: and(succeeded(), ne(variables['osName'], 'Windows'))
       - bash: |
           docker run -d --name=postgres14 \
-          -e POSTGRES_PASSWORD=prowlarr \
-          -e POSTGRES_USER=prowlarr \
+          -e POSTGRES_PASSWORD=releasarr \
+          -e POSTGRES_USER=releasarr \
           -p 5432:5432/tcp \
           -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
           postgres:14
@@ -572,12 +572,12 @@ stages:
       dependsOn: Prepare
       condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
       variables:
-        pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
+        pattern: 'Releasarr.*.linux-core-x64.tar.gz'
         artifactName: linux-x64-tests
-        Prowlarr__Postgres__Host: 'localhost'
-        Prowlarr__Postgres__Port: '5432'
-        Prowlarr__Postgres__User: 'prowlarr'
-        Prowlarr__Postgres__Password: 'prowlarr'
+        Releasarr__Postgres__Host: 'localhost'
+        Releasarr__Postgres__Port: '5432'
+        Releasarr__Postgres__User: 'releasarr'
+        Releasarr__Postgres__Password: 'releasarr'
 
       pool:
         vmImage: ${{ variables.linuxImage }}
@@ -596,13 +596,13 @@ stages:
           buildType: 'current'
           artifactName: $(artifactName)
           targetPath: $(testsFolder)
-      - bash: find ${TESTSFOLDER} -name "Prowlarr.Test.Dummy" -exec chmod a+x {} \;
+      - bash: find ${TESTSFOLDER} -name "Releasarr.Test.Dummy" -exec chmod a+x {} \;
         displayName: Make Test Dummy Executable
         condition: and(succeeded(), ne(variables['osName'], 'Windows'))
       - bash: |
           docker run -d --name=postgres15 \
-          -e POSTGRES_PASSWORD=prowlarr \
-          -e POSTGRES_USER=prowlarr \
+          -e POSTGRES_PASSWORD=releasarr \
+          -e POSTGRES_USER=releasarr \
           -p 5432:5432/tcp \
           -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
           postgres:15
@@ -649,17 +649,17 @@ stages:
             osName: 'Mac'
             testName: 'osx-x64'
             imageName: ${{ variables.macImage }}
-            pattern: 'Prowlarr.*.osx-core-x64.tar.gz'
+            pattern: 'Releasarr.*.osx-core-x64.tar.gz'
           WindowsCore:
             osName: 'Windows'
             testName: 'win-x64'
             imageName: ${{ variables.windowsImage }}
-            pattern: 'Prowlarr.*.windows-core-x64.zip'
+            pattern: 'Releasarr.*.windows-core-x64.zip'
           LinuxCore:
             osName: 'Linux'
             testName: 'linux-x64'
             imageName: ${{ variables.linuxImage }}
-            pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
+            pattern: 'Releasarr.*.linux-core-x64.tar.gz'
 
       pool:
         vmImage: $(imageName)
@@ -690,7 +690,7 @@ stages:
         displayName: Extract Package
       - bash: |
           mkdir -p ./bin/
-          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
+          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Releasarr/. ./bin/
         displayName: Move Package Contents
       - bash: |
           chmod a+x ${TESTSFOLDER}/test.sh
@@ -710,11 +710,11 @@ stages:
       dependsOn: Prepare
       condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
       variables:
-        pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
-        Prowlarr__Postgres__Host: 'localhost'
-        Prowlarr__Postgres__Port: '5432'
-        Prowlarr__Postgres__User: 'prowlarr'
-        Prowlarr__Postgres__Password: 'prowlarr'
+        pattern: 'Releasarr.*.linux-core-x64.tar.gz'
+        Releasarr__Postgres__Host: 'localhost'
+        Releasarr__Postgres__Port: '5432'
+        Releasarr__Postgres__User: 'releasarr'
+        Releasarr__Postgres__Password: 'releasarr'
 
       pool:
         vmImage: ${{ variables.linuxImage }}
@@ -745,12 +745,12 @@ stages:
           displayName: Extract Package
         - bash: |
             mkdir -p ./bin/
-            cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
+            cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Releasarr/. ./bin/
           displayName: Move Package Contents
         - bash: |
             docker run -d --name=postgres14 \
-            -e POSTGRES_PASSWORD=prowlarr \
-            -e POSTGRES_USER=prowlarr \
+            -e POSTGRES_PASSWORD=releasarr \
+            -e POSTGRES_USER=releasarr \
             -p 5432:5432/tcp \
             -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
             postgres:14
@@ -774,11 +774,11 @@ stages:
       dependsOn: Prepare
       condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
       variables:
-        pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
-        Prowlarr__Postgres__Host: 'localhost'
-        Prowlarr__Postgres__Port: '5432'
-        Prowlarr__Postgres__User: 'prowlarr'
-        Prowlarr__Postgres__Password: 'prowlarr'
+        pattern: 'Releasarr.*.linux-core-x64.tar.gz'
+        Releasarr__Postgres__Host: 'localhost'
+        Releasarr__Postgres__Port: '5432'
+        Releasarr__Postgres__User: 'releasarr'
+        Releasarr__Postgres__Password: 'releasarr'
 
       pool:
         vmImage: ${{ variables.linuxImage }}
@@ -809,12 +809,12 @@ stages:
           displayName: Extract Package
         - bash: |
             mkdir -p ./bin/
-            cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
+            cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Releasarr/. ./bin/
           displayName: Move Package Contents
         - bash: |
             docker run -d --name=postgres15 \
-            -e POSTGRES_PASSWORD=prowlarr \
-            -e POSTGRES_USER=prowlarr \
+            -e POSTGRES_PASSWORD=releasarr \
+            -e POSTGRES_USER=releasarr \
             -p 5432:5432/tcp \
             -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
             postgres:15
@@ -839,7 +839,7 @@ stages:
       workspace:
         clean: all
       variables:
-        pattern: 'Prowlarr.*.freebsd-core-x64.tar.gz'
+        pattern: 'Releasarr.*.freebsd-core-x64.tar.gz'
       pool:
         name: 'FreeBSD'
 
@@ -864,7 +864,7 @@ stages:
         displayName: Extract Package
       - bash: |
           mkdir -p ./bin/
-          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
+          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Releasarr/. ./bin/
         displayName: Move Package Contents
       - bash: |
           chmod a+x ${TESTSFOLDER}/test.sh
@@ -889,7 +889,7 @@ stages:
             testName: 'linux-musl-x64'
             artifactName: linux-musl-x64-tests
             containerImage: ghcr.io/servarr/testimages:alpine
-            pattern: 'Prowlarr.*.linux-musl-core-x64.tar.gz'
+            pattern: 'Releasarr.*.linux-musl-core-x64.tar.gz'
       pool:
         vmImage: ${{ variables.linuxImage }}
 
@@ -923,7 +923,7 @@ stages:
         displayName: Extract Package
       - bash: |
           mkdir -p ./bin/
-          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
+          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Releasarr/. ./bin/
         displayName: Move Package Contents
       - bash: |
           chmod a+x ${TESTSFOLDER}/test.sh
@@ -950,19 +950,19 @@ stages:
             osName: 'Linux'
             artifactName: 'linux-x64'
             imageName: ${{ variables.linuxImage }}
-            pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
+            pattern: 'Releasarr.*.linux-core-x64.tar.gz'
             failBuild: true
           Mac:
             osName: 'Mac'
             artifactName: 'osx-x64'
             imageName: ${{ variables.macImage }}
-            pattern: 'Prowlarr.*.osx-core-x64.tar.gz'
+            pattern: 'Releasarr.*.osx-core-x64.tar.gz'
             failBuild: true
           Windows:
             osName: 'Windows'
             artifactName: 'win-x64'
             imageName: ${{ variables.windowsImage }}
-            pattern: 'Prowlarr.*.windows-core-x64.zip'
+            pattern: 'Releasarr.*.windows-core-x64.zip'
             failBuild: true
 
       pool:
@@ -994,7 +994,7 @@ stages:
         displayName: Extract Package
       - bash: |
           mkdir -p ./bin/
-          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
+          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Releasarr/. ./bin/
         displayName: Move Package Contents
       - bash: |
           chmod a+x ${TESTSFOLDER}/test.sh
@@ -1067,7 +1067,7 @@ stages:
           path: $(yarnCacheFolder)
         displayName: Cache Yarn packages
       - bash: ./build.sh --lint
-        displayName: Lint Prowlarr Frontend
+        displayName: Lint Releasarr Frontend
         env:
           FORCE_COLOR: 0
           YARN_CACHE_FOLDER: $(yarnCacheFolder)
@@ -1105,7 +1105,7 @@ stages:
           then
             git commit -am 'Automated API Docs update'
             git push -f --set-upstream origin api-docs
-            curl -X POST -H "Authorization: token ${GITHUBTOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/prowlarr/prowlarr/pulls -d '{"head":"api-docs","base":"develop","title":"Update API docs"}'
+            curl -X POST -H "Authorization: token ${GITHUBTOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/releasarr/releasarr/pulls -d '{"head":"api-docs","base":"develop","title":"Update API docs"}'
           else
             echo "No changes since last run"
           fi
@@ -1150,14 +1150,14 @@ stages:
         condition: eq(variables['System.PullRequest.IsFork'], 'False')
         inputs:
           SonarCloud: 'SonarCloud'
-          organization: 'prowlarr'
+          organization: 'releasarr'
           scannerMode: 'dotnet'
-          projectKey: 'Prowlarr_Prowlarr'
-          projectName: 'Prowlarr'
-          projectVersion: '$(prowlarrVersion)'
+          projectKey: 'Releasarr_Releasarr'
+          projectName: 'Releasarr'
+          projectVersion: '$(releasarrVersion)'
           extraProperties: |
             sonar.exclusions=**/obj/**,**/*.dll,**/NzbDrone.Core.Test/Files/**/*,./frontend/**,**/ExternalModules/**,./src/Libraries/**
-            sonar.coverage.exclusions=**/Prowlarr.Api.V1/**/*
+            sonar.coverage.exclusions=**/Releasarr.Api.V1/**/*
             sonar.cs.cobertura.reportsPaths=$(Build.SourcesDirectory)/CoverageResults/**/coverage.cobertura.xml
             sonar.cs.nunit.reportsPaths=$(Build.SourcesDirectory)/TestResult.xml
       - bash: |
