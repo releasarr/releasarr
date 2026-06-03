@@ -56,6 +56,15 @@ namespace NzbDrone.Core.Monitoring
                 arrClientMap[client.Definition.Id] = client;
             }
 
+            // The library and queue are fetched once per arr client per run and reused across
+            // every tracked item. Fetching them per item previously meant pulling the entire
+            // Sonarr/Radarr library (and queue) hundreds of times each cycle, which overloaded
+            // the arr APIs and caused HTTP timeouts that silently skipped items (missed
+            // notifications). Build the context lazily so we only hit clients that are actually
+            // referenced by pending items.
+            var sonarrContexts = new Dictionary<int, SonarrRunContext>();
+            var radarrContexts = new Dictionary<int, RadarrRunContext>();
+
             foreach (var item in pendingItems)
             {
                 try
@@ -70,7 +79,22 @@ namespace NzbDrone.Core.Monitoring
                         continue;
                     }
 
-                    CheckItemStatus(item, client);
+                    if (item.ContentType == ContentType.Movie && client is RadarrClient radarr)
+                    {
+                        var context = GetOrBuildRadarrContext(radarrContexts, radarr);
+                        if (context != null)
+                        {
+                            CheckRadarrStatus(item, context);
+                        }
+                    }
+                    else if (item.ContentType == ContentType.Series && client is SonarrClient sonarr)
+                    {
+                        var context = GetOrBuildSonarrContext(sonarrContexts, sonarr);
+                        if (context != null)
+                        {
+                            CheckSonarrStatus(item, context);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -79,16 +103,85 @@ namespace NzbDrone.Core.Monitoring
             }
         }
 
-        private void CheckItemStatus(TrackedItem item, IArrClient client)
+        private SonarrRunContext GetOrBuildSonarrContext(Dictionary<int, SonarrRunContext> cache, SonarrClient client)
         {
-            if (item.ContentType == ContentType.Movie && client is RadarrClient radarr)
+            if (cache.TryGetValue(client.Definition.Id, out var existing))
             {
-                CheckRadarrStatus(item, radarr);
+                return existing;
             }
-            else if (item.ContentType == ContentType.Series && client is SonarrClient sonarr)
+
+            SonarrRunContext context = null;
+
+            try
             {
-                CheckSonarrStatus(item, sonarr);
+                var proxy = GetSonarrProxy(client);
+                if (proxy != null)
+                {
+                    var settings = (SonarrSettings)client.Definition.Settings;
+                    var seriesByTvdbId = new Dictionary<int, SonarrSeries>();
+
+                    foreach (var series in proxy.GetAllSeries(settings) ?? new List<SonarrSeries>())
+                    {
+                        seriesByTvdbId[series.TvdbId] = series;
+                    }
+
+                    context = new SonarrRunContext
+                    {
+                        Proxy = proxy,
+                        Settings = settings,
+                        Queue = proxy.GetQueue(settings) ?? new List<SonarrQueueItem>(),
+                        SeriesByTvdbId = seriesByTvdbId
+                    };
+                }
             }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Failed to load library from Sonarr client: {0}", client.Definition.Name);
+            }
+
+            // Cache the result (even when null) so a failing client is not retried for every item.
+            cache[client.Definition.Id] = context;
+            return context;
+        }
+
+        private RadarrRunContext GetOrBuildRadarrContext(Dictionary<int, RadarrRunContext> cache, RadarrClient client)
+        {
+            if (cache.TryGetValue(client.Definition.Id, out var existing))
+            {
+                return existing;
+            }
+
+            RadarrRunContext context = null;
+
+            try
+            {
+                var proxy = GetRadarrProxy(client);
+                if (proxy != null)
+                {
+                    var settings = (RadarrSettings)client.Definition.Settings;
+                    var moviesByTmdbId = new Dictionary<int, RadarrMovie>();
+
+                    foreach (var movie in proxy.GetAllMovies(settings) ?? new List<RadarrMovie>())
+                    {
+                        moviesByTmdbId[movie.TmdbId] = movie;
+                    }
+
+                    context = new RadarrRunContext
+                    {
+                        Proxy = proxy,
+                        Settings = settings,
+                        Queue = proxy.GetQueue(settings) ?? new List<RadarrQueueItem>(),
+                        MoviesByTmdbId = moviesByTmdbId
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Failed to load library from Radarr client: {0}", client.Definition.Name);
+            }
+
+            cache[client.Definition.Id] = context;
+            return context;
         }
 
         private ContentAvailableMessage BuildBasicMessage(TrackedItem item)
@@ -107,22 +200,12 @@ namespace NzbDrone.Core.Monitoring
             };
         }
 
-        private void CheckRadarrStatus(TrackedItem item, RadarrClient radarr)
+        private void CheckRadarrStatus(TrackedItem item, RadarrRunContext context)
         {
-            var settings = (RadarrSettings)radarr.Definition.Settings;
-            var field = typeof(RadarrClient).GetField("_proxy", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var proxy = field?.GetValue(radarr) as IRadarrProxy;
-
-            if (proxy == null)
-            {
-                return;
-            }
-
             var metadata = item.GetMetadata();
 
             // Check queue for downloading status
-            var queue = proxy.GetQueue(settings);
-            var queueItem = queue.FirstOrDefault(q => q.MovieId == item.ArrItemId.Value);
+            var queueItem = context.Queue.FirstOrDefault(q => q.MovieId == item.ArrItemId.Value);
 
             if (queueItem != null)
             {
@@ -142,7 +225,7 @@ namespace NzbDrone.Core.Monitoring
             }
 
             // Check if movie has file (available)
-            var movie = proxy.GetMovieByTmdbId(item.TmdbId ?? 0, settings);
+            var movie = context.MoviesByTmdbId.TryGetValue(item.TmdbId ?? 0, out var matchedMovie) ? matchedMovie : null;
             if (movie != null)
             {
                 metadata.Studio = movie.Studio;
@@ -169,22 +252,12 @@ namespace NzbDrone.Core.Monitoring
             _trackedItemService.Update(item);
         }
 
-        private void CheckSonarrStatus(TrackedItem item, SonarrClient sonarr)
+        private void CheckSonarrStatus(TrackedItem item, SonarrRunContext context)
         {
-            var settings = (SonarrSettings)sonarr.Definition.Settings;
-            var field = typeof(SonarrClient).GetField("_proxy", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var proxy = field?.GetValue(sonarr) as ISonarrProxy;
-
-            if (proxy == null)
-            {
-                return;
-            }
-
             var metadata = item.GetMetadata();
 
             // Check queue for downloading status
-            var queue = proxy.GetQueue(settings);
-            var queueItem = queue.FirstOrDefault(q => q.SeriesId == item.ArrItemId.Value);
+            var queueItem = context.Queue.FirstOrDefault(q => q.SeriesId == item.ArrItemId.Value);
 
             if (queueItem != null)
             {
@@ -204,7 +277,7 @@ namespace NzbDrone.Core.Monitoring
             }
 
             // Check episodes for availability + per-episode notifications
-            var series = proxy.GetSeriesByTvdbId(item.TvdbId ?? 0, settings);
+            var series = context.SeriesByTvdbId.TryGetValue(item.TvdbId ?? 0, out var matchedSeries) ? matchedSeries : null;
             if (series == null)
             {
                 item.SetMetadata(metadata);
@@ -239,7 +312,7 @@ namespace NzbDrone.Core.Monitoring
             // Per-episode notification logic
             try
             {
-                var episodes = proxy.GetEpisodes(series.Id, settings);
+                var episodes = context.Proxy.GetEpisodes(series.Id, context.Settings);
 
                 // Populate air date metadata
                 var allEpisodes = episodes.Where(e => e.SeasonNumber > 0).ToList();
@@ -350,6 +423,34 @@ namespace NzbDrone.Core.Monitoring
                 default:
                     return new List<SonarrEpisode>();
             }
+        }
+
+        private ISonarrProxy GetSonarrProxy(SonarrClient client)
+        {
+            var field = typeof(SonarrClient).GetField("_proxy", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            return field?.GetValue(client) as ISonarrProxy;
+        }
+
+        private IRadarrProxy GetRadarrProxy(RadarrClient client)
+        {
+            var field = typeof(RadarrClient).GetField("_proxy", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            return field?.GetValue(client) as IRadarrProxy;
+        }
+
+        private sealed class SonarrRunContext
+        {
+            public ISonarrProxy Proxy { get; set; }
+            public SonarrSettings Settings { get; set; }
+            public List<SonarrQueueItem> Queue { get; set; }
+            public Dictionary<int, SonarrSeries> SeriesByTvdbId { get; set; }
+        }
+
+        private sealed class RadarrRunContext
+        {
+            public IRadarrProxy Proxy { get; set; }
+            public RadarrSettings Settings { get; set; }
+            public List<RadarrQueueItem> Queue { get; set; }
+            public Dictionary<int, RadarrMovie> MoviesByTmdbId { get; set; }
         }
     }
 }
