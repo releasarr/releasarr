@@ -18,18 +18,24 @@ namespace NzbDrone.Core.Monitoring
     {
         private readonly ITrackedItemService _trackedItemService;
         private readonly IArrClientFactory _arrClientFactory;
+        private readonly ISonarrProxy _sonarrProxy;
+        private readonly IRadarrProxy _radarrProxy;
         private readonly IEventAggregator _eventAggregator;
         private readonly IConfigService _configService;
         private readonly Logger _logger;
 
         public DownloadStatusCheckService(ITrackedItemService trackedItemService,
                                            IArrClientFactory arrClientFactory,
+                                           ISonarrProxy sonarrProxy,
+                                           IRadarrProxy radarrProxy,
                                            IEventAggregator eventAggregator,
                                            IConfigService configService,
                                            Logger logger)
         {
             _trackedItemService = trackedItemService;
             _arrClientFactory = arrClientFactory;
+            _sonarrProxy = sonarrProxy;
+            _radarrProxy = radarrProxy;
             _eventAggregator = eventAggregator;
             _configService = configService;
             _logger = logger;
@@ -114,25 +120,20 @@ namespace NzbDrone.Core.Monitoring
 
             try
             {
-                var proxy = GetSonarrProxy(client);
-                if (proxy != null)
+                var settings = (SonarrSettings)client.Definition.Settings;
+                var seriesByTvdbId = new Dictionary<int, SonarrSeries>();
+
+                foreach (var series in _sonarrProxy.GetAllSeries(settings) ?? new List<SonarrSeries>())
                 {
-                    var settings = (SonarrSettings)client.Definition.Settings;
-                    var seriesByTvdbId = new Dictionary<int, SonarrSeries>();
-
-                    foreach (var series in proxy.GetAllSeries(settings) ?? new List<SonarrSeries>())
-                    {
-                        seriesByTvdbId[series.TvdbId] = series;
-                    }
-
-                    context = new SonarrRunContext
-                    {
-                        Proxy = proxy,
-                        Settings = settings,
-                        Queue = proxy.GetQueue(settings) ?? new List<SonarrQueueItem>(),
-                        SeriesByTvdbId = seriesByTvdbId
-                    };
+                    seriesByTvdbId[series.TvdbId] = series;
                 }
+
+                context = new SonarrRunContext
+                {
+                    Settings = settings,
+                    Queue = _sonarrProxy.GetQueue(settings) ?? new List<SonarrQueueItem>(),
+                    SeriesByTvdbId = seriesByTvdbId
+                };
             }
             catch (Exception ex)
             {
@@ -155,25 +156,20 @@ namespace NzbDrone.Core.Monitoring
 
             try
             {
-                var proxy = GetRadarrProxy(client);
-                if (proxy != null)
+                var settings = (RadarrSettings)client.Definition.Settings;
+                var moviesByTmdbId = new Dictionary<int, RadarrMovie>();
+
+                foreach (var movie in _radarrProxy.GetAllMovies(settings) ?? new List<RadarrMovie>())
                 {
-                    var settings = (RadarrSettings)client.Definition.Settings;
-                    var moviesByTmdbId = new Dictionary<int, RadarrMovie>();
-
-                    foreach (var movie in proxy.GetAllMovies(settings) ?? new List<RadarrMovie>())
-                    {
-                        moviesByTmdbId[movie.TmdbId] = movie;
-                    }
-
-                    context = new RadarrRunContext
-                    {
-                        Proxy = proxy,
-                        Settings = settings,
-                        Queue = proxy.GetQueue(settings) ?? new List<RadarrQueueItem>(),
-                        MoviesByTmdbId = moviesByTmdbId
-                    };
+                    moviesByTmdbId[movie.TmdbId] = movie;
                 }
+
+                context = new RadarrRunContext
+                {
+                    Settings = settings,
+                    Queue = _radarrProxy.GetQueue(settings) ?? new List<RadarrQueueItem>(),
+                    MoviesByTmdbId = moviesByTmdbId
+                };
             }
             catch (Exception ex)
             {
@@ -200,9 +196,23 @@ namespace NzbDrone.Core.Monitoring
             };
         }
 
+        // Marks status/metadata transitions on the in-memory item and persists exactly once,
+        // before any notification is published. Persisting first means a crash mid-dispatch
+        // results in (at worst) a missed notification rather than a duplicate on the next run,
+        // and avoids the reload-and-clobber pattern that previously dropped AvailableAt/NotifiedAt.
+        private void SetAvailable(TrackedItem item)
+        {
+            if (item.Status != TrackedItemStatus.Available)
+            {
+                item.Status = TrackedItemStatus.Available;
+                item.AvailableAt = DateTime.UtcNow;
+            }
+        }
+
         private void CheckRadarrStatus(TrackedItem item, RadarrRunContext context)
         {
             var metadata = item.GetMetadata();
+            ContentAvailableMessage pendingNotification = null;
 
             // Check queue for downloading status
             var queueItem = context.Queue.FirstOrDefault(q => q.MovieId == item.ArrItemId.Value);
@@ -212,9 +222,8 @@ namespace NzbDrone.Core.Monitoring
                 metadata.QueueStatus = queueItem.Status;
                 metadata.QueueTimeleft = queueItem.Timeleft;
 
-                if (item.Status != TrackedItemStatus.Downloading)
+                if (item.Status != TrackedItemStatus.Downloading && item.Status != TrackedItemStatus.Notified)
                 {
-                    _trackedItemService.UpdateStatus(item.Id, TrackedItemStatus.Downloading);
                     item.Status = TrackedItemStatus.Downloading;
                 }
             }
@@ -232,24 +241,26 @@ namespace NzbDrone.Core.Monitoring
 
                 if (movie.HasFile && item.Status != TrackedItemStatus.Notified)
                 {
-                    _trackedItemService.UpdateStatus(item.Id, TrackedItemStatus.Available);
-                    item.Status = TrackedItemStatus.Available;
-
-                    var msg = BuildBasicMessage(item);
-                    msg.Overview = movie.Overview;
-                    msg.Runtime = movie.Runtime > 0 ? movie.Runtime : null;
-                    msg.Message = $"{movie.Title} ({movie.Year}) is now available!";
-
-                    _logger.Info("Now available: {0}", msg.Message);
-                    _eventAggregator.PublishEvent(new ContentAvailableEvent(msg));
-
-                    _trackedItemService.UpdateStatus(item.Id, TrackedItemStatus.Notified);
                     item.Status = TrackedItemStatus.Notified;
+                    item.AvailableAt ??= DateTime.UtcNow;
+                    item.NotifiedAt = DateTime.UtcNow;
+
+                    pendingNotification = BuildBasicMessage(item);
+                    pendingNotification.Overview = movie.Overview;
+                    pendingNotification.Runtime = movie.Runtime > 0 ? movie.Runtime : null;
+                    pendingNotification.Message = $"{movie.Title} ({movie.Year}) is now available!";
                 }
             }
 
+            // Persist all state changes once, before dispatching the notification.
             item.SetMetadata(metadata);
             _trackedItemService.Update(item);
+
+            if (pendingNotification != null)
+            {
+                _logger.Info("Now available: {0}", pendingNotification.Message);
+                _eventAggregator.PublishEvent(new ContentAvailableEvent(pendingNotification));
+            }
         }
 
         private void CheckSonarrStatus(TrackedItem item, SonarrRunContext context)
@@ -264,9 +275,8 @@ namespace NzbDrone.Core.Monitoring
                 metadata.QueueStatus = queueItem.Status;
                 metadata.QueueTimeleft = queueItem.TimeleftStr;
 
-                if (item.Status != TrackedItemStatus.Downloading)
+                if (item.Status != TrackedItemStatus.Downloading && item.Status != TrackedItemStatus.Available)
                 {
-                    _trackedItemService.UpdateStatus(item.Id, TrackedItemStatus.Downloading);
                     item.Status = TrackedItemStatus.Downloading;
                 }
             }
@@ -302,17 +312,16 @@ namespace NzbDrone.Core.Monitoring
                 return;
             }
 
-            // Update to Available if not already
-            if (item.Status != TrackedItemStatus.Available)
-            {
-                _trackedItemService.UpdateStatus(item.Id, TrackedItemStatus.Available);
-                item.Status = TrackedItemStatus.Available;
-            }
+            // At least one episode has a file - the series is available.
+            SetAvailable(item);
 
-            // Per-episode notification logic
+            // Per-episode notification logic. Build the notification list first, commit the
+            // "already notified" state to the database, then dispatch (mark-then-notify).
+            var notifications = new List<ContentAvailableMessage>();
+
             try
             {
-                var episodes = context.Proxy.GetEpisodes(series.Id, context.Settings);
+                var episodes = _sonarrProxy.GetEpisodes(series.Id, context.Settings);
 
                 // Populate air date metadata
                 var allEpisodes = episodes.Where(e => e.SeasonNumber > 0).ToList();
@@ -357,9 +366,7 @@ namespace NzbDrone.Core.Monitoring
                     msg.EpisodeTitle = episode.Title;
                     msg.Message = $"{series.Title} - S{episode.SeasonNumber:D2}E{episode.EpisodeNumber:D2} - {episode.Title} is now available!";
 
-                    _logger.Info("Now available: {0}", msg.Message);
-                    _eventAggregator.PublishEvent(new ContentAvailableEvent(msg));
-
+                    notifications.Add(msg);
                     metadata.NotifiedEpisodeIds.Add(episode.Id);
                 }
 
@@ -367,11 +374,19 @@ namespace NzbDrone.Core.Monitoring
             }
             catch (Exception ex)
             {
-                _logger.Debug(ex, "Could not fetch episode details for {0}", item.Title);
+                _logger.Warn(ex, "Could not fetch episode details for {0}", item.Title);
             }
 
+            // Commit the notified-episode set before dispatching, so a failure mid-dispatch
+            // does not re-notify the same episodes on the next run.
             item.SetMetadata(metadata);
             _trackedItemService.Update(item);
+
+            foreach (var msg in notifications)
+            {
+                _logger.Info("Now available: {0}", msg.Message);
+                _eventAggregator.PublishEvent(new ContentAvailableEvent(msg));
+            }
         }
 
         private List<SonarrEpisode> GetEpisodesToNotify(
@@ -425,21 +440,8 @@ namespace NzbDrone.Core.Monitoring
             }
         }
 
-        private ISonarrProxy GetSonarrProxy(SonarrClient client)
-        {
-            var field = typeof(SonarrClient).GetField("_proxy", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            return field?.GetValue(client) as ISonarrProxy;
-        }
-
-        private IRadarrProxy GetRadarrProxy(RadarrClient client)
-        {
-            var field = typeof(RadarrClient).GetField("_proxy", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            return field?.GetValue(client) as IRadarrProxy;
-        }
-
         private sealed class SonarrRunContext
         {
-            public ISonarrProxy Proxy { get; set; }
             public SonarrSettings Settings { get; set; }
             public List<SonarrQueueItem> Queue { get; set; }
             public Dictionary<int, SonarrSeries> SeriesByTvdbId { get; set; }
@@ -447,7 +449,6 @@ namespace NzbDrone.Core.Monitoring
 
         private sealed class RadarrRunContext
         {
-            public IRadarrProxy Proxy { get; set; }
             public RadarrSettings Settings { get; set; }
             public List<RadarrQueueItem> Queue { get; set; }
             public Dictionary<int, RadarrMovie> MoviesByTmdbId { get; set; }

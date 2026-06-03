@@ -16,16 +16,22 @@ namespace NzbDrone.Core.Monitoring
     {
         private readonly IMediaServerFactory _mediaServerFactory;
         private readonly IArrClientFactory _arrClientFactory;
+        private readonly ISonarrProxy _sonarrProxy;
+        private readonly IRadarrProxy _radarrProxy;
         private readonly ITrackedItemService _trackedItemService;
         private readonly Logger _logger;
 
         public WatchlistSyncService(IMediaServerFactory mediaServerFactory,
                                      IArrClientFactory arrClientFactory,
+                                     ISonarrProxy sonarrProxy,
+                                     IRadarrProxy radarrProxy,
                                      ITrackedItemService trackedItemService,
                                      Logger logger)
         {
             _mediaServerFactory = mediaServerFactory;
             _arrClientFactory = arrClientFactory;
+            _sonarrProxy = sonarrProxy;
+            _radarrProxy = radarrProxy;
             _trackedItemService = trackedItemService;
             _logger = logger;
         }
@@ -112,34 +118,26 @@ namespace NzbDrone.Core.Monitoring
                 {
                     if (item.ContentType == ContentType.Series && client is SonarrClient sonarr && item.TvdbId.HasValue)
                     {
-                        var sonarrProxy = GetSonarrProxy(sonarr);
-                        if (sonarrProxy != null)
+                        var series = _sonarrProxy.GetSeriesByTvdbId(item.TvdbId.Value, (SonarrSettings)sonarr.Definition.Settings);
+                        if (series != null)
                         {
-                            var series = sonarrProxy.GetSeriesByTvdbId(item.TvdbId.Value, (SonarrSettings)sonarr.Definition.Settings);
-                            if (series != null)
-                            {
-                                item.ArrClientId = sonarr.Definition.Id;
-                                item.ArrItemId = series.Id;
-                                item.Status = TrackedItemStatus.Monitored;
-                                _logger.Debug("Matched {0} to Sonarr series ID {1}", item.Title, series.Id);
-                                return;
-                            }
+                            item.ArrClientId = sonarr.Definition.Id;
+                            item.ArrItemId = series.Id;
+                            item.Status = TrackedItemStatus.Monitored;
+                            _logger.Debug("Matched {0} to Sonarr series ID {1}", item.Title, series.Id);
+                            return;
                         }
                     }
                     else if (item.ContentType == ContentType.Movie && client is RadarrClient radarr && item.TmdbId.HasValue)
                     {
-                        var radarrProxy = GetRadarrProxy(radarr);
-                        if (radarrProxy != null)
+                        var movie = _radarrProxy.GetMovieByTmdbId(item.TmdbId.Value, (RadarrSettings)radarr.Definition.Settings);
+                        if (movie != null)
                         {
-                            var movie = radarrProxy.GetMovieByTmdbId(item.TmdbId.Value, (RadarrSettings)radarr.Definition.Settings);
-                            if (movie != null)
-                            {
-                                item.ArrClientId = radarr.Definition.Id;
-                                item.ArrItemId = movie.Id;
-                                item.Status = movie.HasFile ? TrackedItemStatus.Available : TrackedItemStatus.Monitored;
-                                _logger.Debug("Matched {0} to Radarr movie ID {1}", item.Title, movie.Id);
-                                return;
-                            }
+                            item.ArrClientId = radarr.Definition.Id;
+                            item.ArrItemId = movie.Id;
+                            item.Status = movie.HasFile ? TrackedItemStatus.Available : TrackedItemStatus.Monitored;
+                            _logger.Debug("Matched {0} to Radarr movie ID {1}", item.Title, movie.Id);
+                            return;
                         }
                     }
                 }
@@ -167,13 +165,7 @@ namespace NzbDrone.Core.Monitoring
                             continue;
                         }
 
-                        var proxy = GetSonarrProxy(sonarr);
-                        if (proxy == null)
-                        {
-                            continue;
-                        }
-
-                        SyncSonarrTag(sonarr, proxy, settings);
+                        SyncSonarrTag(sonarr, _sonarrProxy, settings);
                     }
                     else if (client is RadarrClient radarr)
                     {
@@ -184,13 +176,7 @@ namespace NzbDrone.Core.Monitoring
                             continue;
                         }
 
-                        var proxy = GetRadarrProxy(radarr);
-                        if (proxy == null)
-                        {
-                            continue;
-                        }
-
-                        SyncRadarrTag(radarr, proxy, settings);
+                        SyncRadarrTag(radarr, _radarrProxy, settings);
                     }
                 }
                 catch (Exception ex)
@@ -279,18 +265,6 @@ namespace NzbDrone.Core.Monitoring
                     _logger.Warn(ex, "Failed to add tagged movie: {0}", movie.Title);
                 }
             }
-        }
-
-        private ISonarrProxy GetSonarrProxy(SonarrClient client)
-        {
-            var field = typeof(SonarrClient).GetField("_proxy", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            return field?.GetValue(client) as ISonarrProxy;
-        }
-
-        private IRadarrProxy GetRadarrProxy(RadarrClient client)
-        {
-            var field = typeof(RadarrClient).GetField("_proxy", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            return field?.GetValue(client) as IRadarrProxy;
         }
     }
 }
